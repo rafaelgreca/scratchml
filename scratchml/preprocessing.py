@@ -100,3 +100,109 @@ class MinMaxScaler(BaseScaler):
     ) -> np.ndarray:
         self.fit(X=X, y=y)
         return self.transform(X=X)
+    
+class StandardScaler(BaseScaler):
+    def __init__(
+        self,
+        copy: bool = True,
+        with_mean: bool = True,
+        with_std: bool = True
+    ) -> None:
+        self.copy = copy
+        self.with_std = with_std
+        self.with_mean = with_mean
+        self.scale_ = None
+        self.mean_ = None
+        self.var_ = None
+        self.n_features_in_ = None
+        self.n_samples_seen_ = None
+
+    def fit(
+        self,
+        X: Union[np.ndarray, List],
+        y: np.array = None
+    ) -> None:
+        if isinstance(X, list):
+            X = np.asarray(X)
+        if isinstance(X, np.ndarray):
+            pass
+        else:
+            return TypeError
+
+        self.n_samples_seen_ = X.shape[0]
+        self.n_features_in_ = X.shape[1]
+
+        if not self.with_mean and not self.with_std:
+            self.var_ = None
+            self.mean_ = None
+        else:
+            self.var_ = X.var(axis=0)
+            self.mean_ = X.mean(axis=0)
+        
+        if not self.with_mean:
+            self.mean_ = None
+        else:
+            self.mean_ = X.mean(axis=0)
+
+        if not self.with_std:
+            self.scale_ = None
+            self.var_ = None
+            
+        else:
+            self.std = np.std(X, axis=0)
+            self.var_[self.var_ == 0] = 1
+            self.scale_ = np.sqrt(self.var_)
+
+    def transform(
+        self,
+        X: np.ndarray
+    ) -> np.ndarray:
+        if isinstance(X, list):
+            X = np.asarray(X)
+        if isinstance(X, np.ndarray):
+            pass
+        else:
+            return TypeError
+               
+        if not self.with_std:
+            self.std = 1
+
+        if not self.with_mean:
+            X_ = X / self.std
+        else:
+            X_ = (X - self.mean_) / self.std
+
+        if self.copy:
+            return X_
+        else:
+            X = X_.copy()
+            return X
+    
+    def inverse_transform(
+        self,
+        X: np.ndarray
+    ) -> np.ndarray:
+        if isinstance(X, list):
+            X = np.asarray(X)
+        if isinstance(X, np.ndarray):
+            pass
+        else:
+            return TypeError
+        
+        if not self.with_std:
+            self.std = 1
+
+        if not self.with_mean:
+            Xt = (X * self.std)
+        else:
+            Xt = (X * self.std) + self.mean_
+
+        return Xt
+
+    def fit_transform(
+        self,
+        X: np.ndarray,
+        y: np.array = None
+    ) -> np.ndarray:
+        self.fit(X=X, y=y)
+        return self.transform(X=X)
