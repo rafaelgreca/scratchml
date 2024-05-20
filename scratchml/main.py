@@ -16,3 +16,4 @@ if __name__ == "__main__":
 
     print(lr.coef_)
     print(lr.intercept_)
+    print(lr.score(X, y))

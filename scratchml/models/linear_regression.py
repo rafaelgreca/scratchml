@@ -1,5 +1,5 @@
 import numpy as np
-from scratchml.models.losses import mse
+from scratchml.models.losses import mse, r_squared
 from scratchml.utils import convert_array_numpy
     
 class LinearRegression(object):
@@ -51,3 +51,11 @@ class LinearRegression(object):
         X: np.ndarray
     ) -> np.ndarray:
         return np.matmul(X, self.coef_) + self.intercept_
+    
+    def score(
+        self,
+        X: np.ndarray,
+        y: np.ndarray
+    ) -> np.float32:
+        y_hat = self.predict(X)
+        return r_squared(y, y_hat)

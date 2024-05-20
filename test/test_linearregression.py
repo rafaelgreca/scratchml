@@ -19,6 +19,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert sklr.intercept_.shape == lr.intercept_.shape
         assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
     
     @repeat(10)
     def test_2(self):
@@ -34,6 +35,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert sklr.intercept_.shape == lr.intercept_.shape
         assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
     
     @repeat(10)
     def test_3(self):
@@ -49,6 +51,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert sklr.intercept_.shape == lr.intercept_.shape
         assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
