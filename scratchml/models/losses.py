@@ -26,7 +26,7 @@ def binary_cross_entropy(
     y: np.ndarray,
     y_hat: np.ndarray,
     derivative: bool = False,
-    epsilon: float = 1e-9
+    epsilon: np.float32 = 1e-9
 ) -> np.ndarray:
     if derivative:
         return (y_hat - y)

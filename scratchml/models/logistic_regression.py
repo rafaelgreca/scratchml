@@ -58,7 +58,7 @@ class LogisticRegression(object):
         threshold: float = 0.5
     ) -> np.ndarray:
         y_hat = np.matmul(X, self.coef_.T) + self.intercept_
-        y_hat = sigmoid(y_hat)
+        y_hat = np.squeeze(sigmoid(y_hat))
         y_hat = (y_hat > threshold).astype(int)
         return y_hat
 
@@ -67,7 +67,7 @@ class LogisticRegression(object):
         X: np.ndarray
     ) -> np.ndarray:
         y_hat = np.matmul(X, self.coef_.T) + self.intercept_
-        y_hat = sigmoid(y_hat)
+        y_hat = np.squeeze(sigmoid(y_hat))
         return y_hat
 
     def score(
