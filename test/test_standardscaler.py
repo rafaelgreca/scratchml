@@ -1,8 +1,7 @@
 import unittest
 from numpy.testing import assert_almost_equal, assert_equal
-from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler as SkStandardScaler
-from scratchml.preprocessing import StandardScaler
+from scratchml.scalers import StandardScaler
 from test.utils import generate_regression_dataset, repeat
 
 class Test_StandardScaler(unittest.TestCase):
