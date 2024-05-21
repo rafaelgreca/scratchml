@@ -13,7 +13,6 @@ class LinearRegression(object):
         self.n_jobs = n_jobs
         self.coef_ = None
         self.intercept_ = None
-        self.intercept_ = None
         self.n_features_in = None
         self.lr = learning_rate
         self.tol = tol
@@ -23,6 +22,7 @@ class LinearRegression(object):
         X: np.ndarray,
         y: np.ndarray
     ) -> None:
+        self.n_features_in_ = X.shape[1]
         X = convert_array_numpy(X)
         y = convert_array_numpy(y)
         

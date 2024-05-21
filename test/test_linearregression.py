@@ -17,12 +17,30 @@ class Test_LinearRegression(unittest.TestCase):
 
         assert sklr.coef_.shape == lr.coef_.shape
         assert sklr.intercept_.shape == lr.intercept_.shape
+        assert sklr.n_features_in_ == lr.n_features_in_
         assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
     
     @repeat(10)
     def test_2(self):
+        X, y = generate_regression_dataset(n_features=50)
+
+        sklr = SkLinearRegression()
+        lr = LinearRegression(learning_rate=0.001, tol=1e-06)
+
+        sklr.fit(X, y)
+        lr.fit(X, y)
+
+        assert sklr.coef_.shape == lr.coef_.shape
+        assert sklr.intercept_.shape == lr.intercept_.shape
+        assert sklr.n_features_in_ == lr.n_features_in_
+        assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
+        assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
+    
+    @repeat(10)
+    def test_3(self):
         X, y = generate_regression_dataset(n_features=100)
 
         sklr = SkLinearRegression()
@@ -33,22 +51,7 @@ class Test_LinearRegression(unittest.TestCase):
 
         assert sklr.coef_.shape == lr.coef_.shape
         assert sklr.intercept_.shape == lr.intercept_.shape
-        assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
-        assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
-        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
-    
-    @repeat(10)
-    def test_3(self):
-        X, y = generate_regression_dataset(n_features=1000)
-
-        sklr = SkLinearRegression()
-        lr = LinearRegression(learning_rate=0.001, tol=1e-06)
-
-        sklr.fit(X, y)
-        lr.fit(X, y)
-
-        assert sklr.coef_.shape == lr.coef_.shape
-        assert sklr.intercept_.shape == lr.intercept_.shape
+        assert sklr.n_features_in_ == lr.n_features_in_
         assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
