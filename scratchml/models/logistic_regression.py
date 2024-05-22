@@ -1,7 +1,7 @@
 import numpy as np
-from scratchml.models.losses import binary_cross_entropy
+from scratchml.losses import binary_cross_entropy
 from scratchml.utils import convert_array_numpy
-from scratchml.models.activations import sigmoid
+from scratchml.activations import sigmoid
 from scratchml.metrics import accuracy
 
 class LogisticRegression(object):

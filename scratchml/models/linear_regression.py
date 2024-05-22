@@ -1,5 +1,5 @@
 import numpy as np
-from scratchml.models.losses import mse, r_squared
+from scratchml.losses import mse, r_squared
 from scratchml.utils import convert_array_numpy
     
 class LinearRegression(object):
