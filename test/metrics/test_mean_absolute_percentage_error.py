@@ -1,11 +1,11 @@
 import unittest
 import numpy as np
-from sklearn.metrics import median_absolute_error as SkMedAE
+from sklearn.metrics import mean_absolute_percentage_error  as SkMAPE
 from sklearn.linear_model import LinearRegression as SkLinearRegression
-from scratchml.metrics import median_absolute_error
+from scratchml.metrics import mean_absolute_percentage_error
 from test.utils import generate_regression_dataset, repeat
 
-class Test_MedianAbsoluteError(unittest.TestCase):
+class Test_MeanAbsolutePercentageError(unittest.TestCase):
     @repeat(10)
     def test_1(self):
         X, y = generate_regression_dataset(
@@ -20,8 +20,8 @@ class Test_MedianAbsoluteError(unittest.TestCase):
 
         sklr_prediction = sklr.predict(X)
 
-        sklr_score = SkMedAE(y, sklr_prediction)
-        score = median_absolute_error(y, sklr_prediction, derivative=False)
+        sklr_score = SkMAPE(y, sklr_prediction)
+        score = mean_absolute_percentage_error(y, sklr_prediction, derivative=False)
 
         assert np.abs(score - sklr_score) < 1
         

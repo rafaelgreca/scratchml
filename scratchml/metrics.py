@@ -117,7 +117,11 @@ def mean_absolute_percentage_error(
     if derivative:
         raise NotImplementedError
     else:
-        score = np.sum(np.abs((y - y_hat)/ np.max(epsilon, np.abs(y))))
+        score = np.sum(
+            [np.abs(y[i] - y_hat[i])/ np.maximum(epsilon, np.abs(y[i]))
+             for i in range(y.shape[0])
+            ]
+        )
         return  score / (y.shape[0])
 
 def mean_squared_logarithmic_error(
