@@ -197,14 +197,68 @@ def accuracy(
     y_hat: np.ndarray
 ) -> np.float32:
     """
-    Calculates the Accuracy.
+    Calculates the Accuracy score.
 
     Args:
         y (np.ndarray): the true value for y.
         y_hat (np.ndarray): the predicted value for y.
 
     Returns:
-        np.float32: the value of the accuracy metric.
+        np.float32: the value of the Accuracy score.
     """
     score = (y == np.squeeze(y_hat)).astype(int)
     return np.sum(score) / y.shape[0]
+
+def precision(
+    y: np.ndarray,
+    y_hat: np.ndarray
+) -> np.float32:
+    """
+    Calculates the Precision score.
+
+    Args:
+        y (np.ndarray): the true value for y.
+        y_hat (np.ndarray): the predicted value for y.
+
+    Returns:
+        np.float32: the value of the Precision score.
+    """
+    tp = y_hat[(y == 1) == 1].sum()
+    fp = y[(y_hat == 1) == 0].sum()
+    return tp / (tp + fp)
+
+def recall(
+    y: np.ndarray,
+    y_hat: np.ndarray
+) -> np.float32:
+    """
+    Calculates the Recall score.
+
+    Args:
+        y (np.ndarray): the true value for y.
+        y_hat (np.ndarray): the predicted value for y.
+
+    Returns:
+        np.float32: the value of the Recall score.
+    """
+    tp = y_hat[(y == 1) == 1].sum()
+    fn = y[(y_hat == 0) == 1].sum()
+    return tp / (tp + fn)
+
+def f1_score(
+    y: np.ndarray,
+    y_hat: np.ndarray
+) -> np.float32:
+    """
+    Calculates the F1-Score (F1).
+
+    Args:
+        y (np.ndarray): the true value for y.
+        y_hat (np.ndarray): the predicted value for y.
+
+    Returns:
+        np.float32: the value of the F1 Score.
+    """
+    op = (precision(y, y_hat) * recall(y, y_hat))
+    div = (precision(y, y_hat) + recall(y, y_hat))
+    return 2 * (op / div)
