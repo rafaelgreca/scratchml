@@ -22,7 +22,7 @@ def mean_squared_error(
     if derivative:
         return (y_hat - y)
     else:
-        return np.sum((y_hat - y) ** 2) / (2 * y.shape[0])
+        return np.sum((y_hat - y) ** 2) / y.shape[0]
 
 def root_mean_squared_error(
     y: np.ndarray,
