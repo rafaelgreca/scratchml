@@ -12,7 +12,7 @@ class Test_LogisticRegression(unittest.TestCase):
 
         lr = LogisticRegression(learning_rate=0.1, tol=1e-4)
         sklr = SkLogisticRegression(
-            penalty=None,
+            penalty='none',
             fit_intercept=True,
             max_iter=1000000,
             tol=1e-4
@@ -47,7 +47,7 @@ class Test_LogisticRegression(unittest.TestCase):
 
         lr = LogisticRegression(learning_rate=0.1, tol=1e-4)
         sklr = SkLogisticRegression(
-            penalty=None,
+            penalty='none',
             fit_intercept=True,
             max_iter=1000000,
             tol=1e-4
@@ -82,7 +82,7 @@ class Test_LogisticRegression(unittest.TestCase):
 
         lr = LogisticRegression(learning_rate=0.1, tol=1e-4)
         sklr = SkLogisticRegression(
-            penalty=None,
+            penalty='none',
             fit_intercept=True,
             max_iter=1000000,
             tol=1e-4
@@ -117,7 +117,7 @@ class Test_LogisticRegression(unittest.TestCase):
 
         lr = LogisticRegression(learning_rate=0.1, tol=1e-4)
         sklr = SkLogisticRegression(
-            penalty=None,
+            penalty='none',
             fit_intercept=True,
             max_iter=1000000,
             tol=1e-4

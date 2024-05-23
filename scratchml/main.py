@@ -13,7 +13,7 @@ if __name__ == "__main__":
     print(lr.score(X, y))
     print(lr.classes_)
 
-    sklr = SkLogisticRegression(penalty=None, fit_intercept=True, max_iter=1000000, tol=1e-4)
+    sklr = SkLogisticRegression(penalty='none', fit_intercept=True, max_iter=1000000, tol=1e-4)
     sklr.fit(X, y)
 
     print(sklr.coef_)
