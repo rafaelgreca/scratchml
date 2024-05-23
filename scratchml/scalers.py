@@ -3,6 +3,9 @@ from typing import Tuple, Union, List
 from abc import ABC
 
 class BaseScaler(ABC):
+    """
+    Scalers base class.
+    """
     def __init__(self) -> None:
         pass
 
@@ -25,6 +28,17 @@ class MinMaxScaler(BaseScaler):
         copy: bool = True,
         clip: bool = False
     ) -> None:
+        """
+        Creates a MinMaxScaler's instance.
+
+        Args:
+            feature_range (Tuple[float, float], optional): the range of
+                the new values after applying the scaler. Defaults to (0, 1).
+            copy (bool, optional): whether to create a copy of the
+                transformed values or not. Defaults to True.
+            clip (bool, optional): whether to clip the scaler's
+                output to be within the feature range or not. Defaults to False.
+        """
         self.feature_range = feature_range
         self.copy = copy
         self.clip = clip
@@ -42,12 +56,21 @@ class MinMaxScaler(BaseScaler):
         X: Union[np.ndarray, List],
         y: np.array = None
     ) -> None:
+        """
+        Fits the MinMaxScaler.
+
+        Args:
+            X (Union[np.ndarray, List]): the features array.
+            y (np.array, optional): the targets array (will be
+                ignore). Defaults to None.
+        """
+        # converting the features array, if needed
         if isinstance(X, list):
             X = np.asarray(X)
         if isinstance(X, np.ndarray):
             pass
         else:
-            return TypeError
+            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
 
         self.n_samples_seen_ = X.shape[0]
         self.n_features_in_ = X.shape[1]
@@ -61,9 +84,20 @@ class MinMaxScaler(BaseScaler):
         self,
         X: np.ndarray
     ) -> np.ndarray:
+        """
+        Using the fitted MinMaxScaler to transform a given set of features.
+
+        Args:
+            X (np.ndarray): the features array.
+
+        Returns:
+            X | X_scaled (np.ndarray): the new transformed features.
+        """
+        # transforming the features set
         X_std = (X - self.data_min_) / (self.data_max_ - self.data_min_)
         X_scaled = X_std * (self.feature_range[1] - self.feature_range[0]) + self.feature_range[0]
 
+        # clipping the scaler's output
         if self.clip:
             X_scaled = np.clip(
                 a=X_scaled,
@@ -81,12 +115,22 @@ class MinMaxScaler(BaseScaler):
         self,
         X: np.ndarray
     ) -> np.ndarray:
+        """
+        Applies the inverse transformation (converts a transformed
+        set of features to its original values).
+
+        Args:
+            X (np.ndarray): the transformed features array.
+
+        Returns:
+            Xt (np.ndarray): the original features array.
+        """
         if isinstance(X, list):
             X = np.asarray(X)
         if isinstance(X, np.ndarray):
             pass
         else:
-            return TypeError
+            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
         
         Xt = ((X - self.feature_range[0]) / (self.feature_range[1] - self.feature_range[0]))
         Xt *= (self.data_max_ - self.data_min_)
@@ -98,6 +142,16 @@ class MinMaxScaler(BaseScaler):
         X: np.ndarray,
         y: np.array = None
     ) -> np.ndarray:
+        """
+        Fits the MinMaxScaler and then transforms the given set of features in sequence.
+
+        Args:
+            X (np.ndarray): the features array.
+            y (np.array, optional): the targets array (will be ignored). Defaults to None.
+
+        Returns:
+            np.ndarray: the new transformed features.
+        """
         self.fit(X=X, y=y)
         return self.transform(X=X)
     
@@ -108,6 +162,17 @@ class StandardScaler(BaseScaler):
         with_mean: bool = True,
         with_std: bool = True
     ) -> None:
+        """
+        Creates a StandardScaler's instance.
+
+        Args:
+            copy (bool, optional): whether to create a copy of the
+                transformed values or not. Defaults to True.
+            with_mean (bool, optional): whether to use the mean or not.
+                Defaults to True.
+            with_std (bool, optional): whether to use the standard
+                deviation or not. Defaults to True.
+        """
         self.copy = copy
         self.with_std = with_std
         self.with_mean = with_mean
@@ -122,12 +187,20 @@ class StandardScaler(BaseScaler):
         X: Union[np.ndarray, List],
         y: np.array = None
     ) -> None:
+        """
+        Fits the StandardScaler.
+
+        Args:
+            X (Union[np.ndarray, List]): the features array.
+            y (np.array, optional): the targets array (will be
+                ignore). Defaults to None.
+        """
         if isinstance(X, list):
             X = np.asarray(X)
         if isinstance(X, np.ndarray):
             pass
         else:
-            return TypeError
+            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
 
         self.n_samples_seen_ = X.shape[0]
         self.n_features_in_ = X.shape[1]
@@ -136,9 +209,12 @@ class StandardScaler(BaseScaler):
             self.var_ = None
             self.mean_ = None
         else:
+            # calculating the variance and the mean of
+            # the given features
             self.var_ = X.var(axis=0)
             self.mean_ = X.mean(axis=0)
         
+        # calculating the mean of the given features
         if not self.with_mean:
             self.mean_ = None
         else:
@@ -147,8 +223,9 @@ class StandardScaler(BaseScaler):
         if not self.with_std:
             self.scale_ = None
             self.var_ = None
-            
         else:
+            # calculating the standard deviation, the variance
+            # and the scale of the given features
             self.std = np.std(X, axis=0)
             self.var_[self.var_ == 0] = 1
             self.scale_ = np.sqrt(self.var_)
@@ -157,12 +234,21 @@ class StandardScaler(BaseScaler):
         self,
         X: np.ndarray
     ) -> np.ndarray:
+        """
+        Using the fitted StandardScaler to transform a given set of features.
+
+        Args:
+            X (np.ndarray): the features array.
+
+        Returns:
+            X_ | X (np.ndarray): the new transformed features.
+        """
         if isinstance(X, list):
             X = np.asarray(X)
         if isinstance(X, np.ndarray):
             pass
         else:
-            return TypeError
+            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
                
         if not self.with_std:
             self.std = 1
@@ -182,12 +268,22 @@ class StandardScaler(BaseScaler):
         self,
         X: np.ndarray
     ) -> np.ndarray:
+        """
+        Applies the inverse transformation (converts a transformed
+        set of features to its original values).
+
+        Args:
+            X (np.ndarray): the transformed features array.
+
+        Returns:
+            Xt (np.ndarray): the original features array.
+        """
         if isinstance(X, list):
             X = np.asarray(X)
         if isinstance(X, np.ndarray):
             pass
         else:
-            return TypeError
+            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
         
         if not self.with_std:
             self.std = 1
@@ -204,5 +300,15 @@ class StandardScaler(BaseScaler):
         X: np.ndarray,
         y: np.array = None
     ) -> np.ndarray:
+        """
+        Fits the StandardScaler and then transforms the given set of features in sequence.
+
+        Args:
+            X (np.ndarray): the features array.
+            y (np.array, optional): the targets array (will be ignored). Defaults to None.
+
+        Returns:
+            np.ndarray: the new transformed features.
+        """
         self.fit(X=X, y=y)
         return self.transform(X=X)

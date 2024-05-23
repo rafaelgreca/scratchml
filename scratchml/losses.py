@@ -6,6 +6,21 @@ def binary_cross_entropy(
     derivative: bool = False,
     epsilon: np.float32 = 1e-9
 ) -> np.ndarray:
+    """
+    Applies the Binary Cross Entropy (BCE) loss function.
+
+    Args:
+        y (np.ndarray): the true targets.
+        y_hat (np.ndarray): the predicted targets.
+        derivative (bool, optional): whether to use the
+            derivative function or not. Defaults to False.
+        epsilon (np.float32): a really small value (called epsilon)
+            used to avoid calculate the log of 0. Defaults to 1e-9.
+
+    Returns:
+        np.ndarray: the output of the loss function with respect
+            to the real targets and the predicted targets.
+    """
     if derivative:
         return (y_hat - y)
     else:
