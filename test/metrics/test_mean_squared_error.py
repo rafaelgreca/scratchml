@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from sklearn.metrics import mean_squared_error as SkMSE
 from sklearn.linear_model import LinearRegression as SkLinearRegression
-from scratchml.metrics import mean_squared_error
+from scratchml.metrics import mean_squared_error, root_mean_squared_error
 from test.utils import generate_regression_dataset, repeat
 
 class Test_MeanSquaredError(unittest.TestCase):
@@ -22,6 +22,27 @@ class Test_MeanSquaredError(unittest.TestCase):
 
         sklr_score = SkMSE(y, sklr_prediction, squared=True)
         score = mean_squared_error(y, sklr_prediction, derivative=False)
+
+        assert np.abs(score - sklr_score) < 1
+    
+    @repeat(10)
+    def test_2(self):
+        X, y = generate_regression_dataset(
+            n_samples=10000,
+            n_features=10,
+            n_targets=1
+        )
+
+        sklr = SkLinearRegression()
+
+        sklr.fit(X, y)
+
+        sklr_prediction = sklr.predict(X)
+
+        sklr_score = SkMSE(y, sklr_prediction, squared=False)
+        score = root_mean_squared_error(y, sklr_prediction, derivative=False)
+
+        print(sklr_score, score)
 
         assert np.abs(score - sklr_score) < 1
 

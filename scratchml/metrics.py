@@ -45,7 +45,7 @@ def root_mean_squared_error(
     if derivative:
         raise NotImplementedError
     else:
-        return np.sqrt(np.sum((y_hat - y) ** 2) / (2 * y.shape[0]))
+        return np.sqrt(np.sum((y_hat - y) ** 2) / y.shape[0])
     
 def mean_absolute_error(
     y: np.ndarray,
