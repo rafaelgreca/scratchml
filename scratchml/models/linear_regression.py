@@ -1,5 +1,5 @@
 import numpy as np
-from scratchml.losses import mse, r_squared
+from scratchml.metrics import mean_squared_error, r_squared
 from scratchml.utils import convert_array_numpy
     
 class LinearRegression(object):
@@ -83,7 +83,7 @@ class LinearRegression(object):
             # calculating the loss according to the chosen
             # loss function
             if self.loss_function == "mse":
-                loss = mse(y, y_hat, derivative=True)
+                loss = mean_squared_error(y, y_hat, derivative=True)
                 derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
                 derivative_intercept = (np.sum(loss)) / y.shape[0]
 
