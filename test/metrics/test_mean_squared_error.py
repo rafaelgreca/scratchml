@@ -23,7 +23,7 @@ class Test_MeanSquaredError(unittest.TestCase):
         sklr_score = SkMSE(y, sklr_prediction, squared=True)
         score = mean_squared_error(y, sklr_prediction, derivative=False)
 
-        assert np.abs(score - sklr_score) < 1
+        assert np.abs(score - sklr_score) < 0.1
     
     @repeat(10)
     def test_2(self):
@@ -42,9 +42,7 @@ class Test_MeanSquaredError(unittest.TestCase):
         sklr_score = SkMSE(y, sklr_prediction, squared=False)
         score = root_mean_squared_error(y, sklr_prediction, derivative=False)
 
-        print(sklr_score, score)
-
-        assert np.abs(score - sklr_score) < 1
+        assert np.abs(score - sklr_score) < 0.1
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

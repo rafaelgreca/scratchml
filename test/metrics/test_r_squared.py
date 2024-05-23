@@ -23,7 +23,7 @@ class Test_RSquared(unittest.TestCase):
         sklr_score = SkR2(y, sklr_prediction)
         score = r_squared(y, sklr_prediction)
 
-        assert np.abs(score - sklr_score) < 1
+        assert np.abs(score - sklr_score) < 0.1
         
 if __name__ == "__main__":
     unittest.main(verbosity=2)
