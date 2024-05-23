@@ -172,7 +172,7 @@ def max_error(
     if derivative:
         raise NotImplementedError
     else:
-        return np.abs(y - y_hat)
+        return np.max(np.abs(y - y_hat))
     
 def r_squared(
     y: np.ndarray,
