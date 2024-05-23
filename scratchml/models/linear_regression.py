@@ -124,7 +124,7 @@ class LinearRegression(object):
         metric: str = "r_squared"
     ) -> np.float32:
         """
-        Calculates the score of the model on a given test for a
+        Calculates the score of the model on a given set for a
         determined metric.
 
         Args:
