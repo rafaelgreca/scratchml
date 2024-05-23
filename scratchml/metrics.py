@@ -91,7 +91,7 @@ def median_absolute_error(
     if derivative:
         return NotImplementedError
     else:
-        return np.median(np.abs(y - y_hat)) / (y.shape[0])
+        return np.median(np.abs(y - y_hat))
 
 def mean_absolute_percentage_error(
     y: np.ndarray,
