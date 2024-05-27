@@ -25,9 +25,42 @@ class Test_Precision(unittest.TestCase):
         
         sklr_prediction = sklr.predict(X)
         sklr_score = precision_score(y, sklr_prediction)
-        acc_score = precision(y, sklr_prediction)
+        score = precision(y, sklr_prediction)
 
-        assert np.abs(acc_score - sklr_score) < 0.1
+        assert np.abs(score - sklr_score) < 0.05
+    
+    @repeat(10)
+    def test_2(self):
+        X, y = generate_classification_dataset(
+            n_features=10,
+            n_samples=10000,
+            n_classes=5
+        )
+
+        sklr = SkLogisticRegression(
+            penalty=None,
+            fit_intercept=True,
+            max_iter=1000000,
+            tol=1e-4
+        )
+
+        sklr.fit(X, y)
+        
+        sklr_prediction = sklr.predict(X)
+        sklr_score = precision_score(y, sklr_prediction, average="micro")
+        score = precision(y, sklr_prediction, average="micro")
+
+        assert np.abs(score - sklr_score) < 0.05
+    
+        sklr_score = precision_score(y, sklr_prediction, average="macro")
+        score = precision(y, sklr_prediction, average="macro")
+
+        assert np.abs(score - sklr_score) < 0.05
+
+        sklr_score = precision_score(y, sklr_prediction, average="weighted")
+        score = precision(y, sklr_prediction, average="weighted")
+
+        assert np.abs(score - sklr_score) < 0.05
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
