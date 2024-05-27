@@ -14,7 +14,7 @@ def convert_array_numpy(
         array (np.ndarray): the converted numpy array.
     """
     if isinstance(array, list):
-        array = np.asarray(array)
+        array = np.asarray(array, dtype="O")
         return array
     if isinstance(array, np.ndarray):
         return array

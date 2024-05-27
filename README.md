@@ -60,3 +60,4 @@ Features:
 - [ ] Run models on GPU and/or multiple CPUs
 - [ ] Create examples folder
 - [ ] Upgrade Linear and Regression models to use more than one loss function and metric
+- [ ] Make a type and shape verification on the Label Encoder and One Hot Encoder
