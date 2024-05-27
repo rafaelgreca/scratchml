@@ -216,7 +216,15 @@ class OneHotEncoder(BaseEncoder):
         checking their frequency among the feature.
 
         Args:
-            X (np.ndarray): _description_
+            X (np.ndarray): the features array.
+            categories (List): a list with the known categories
+                for all the features and that is created during
+                the fitting.
+        
+        Returns:
+            categories (List): the list with the know categories
+                filtered by the max categories and min frequency
+                parameters (if desired).
         """
         min_frequency = 0
         self.infrequents = {}
