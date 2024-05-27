@@ -38,9 +38,9 @@ Implementations:
         - [x] F1-Score
         - [ ] Confusion Matrix
         - [ ] AUC Score
-- [ ] Encoders
-    - [ ] One-hot encoding
-    - [ ] Label encoding
+- [X] Encoders
+    - [X] One-hot encoding
+    - [X] Label encoding
 - [ ] Splitters
     - [ ] KFold
     - [ ] Stratify KFold
@@ -61,3 +61,4 @@ Features:
 - [ ] Create examples folder
 - [ ] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Make a type and shape verification on the Label Encoder and One Hot Encoder
+- [ ] Improving testing

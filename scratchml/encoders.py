@@ -3,7 +3,7 @@ import math
 from scipy.sparse import csr_matrix
 from abc import ABC
 from typing import List, Union, Any, Tuple
-from utils import convert_array_numpy
+from scratchml.utils import convert_array_numpy
 from sklearn.preprocessing import OneHotEncoder as SkOneHotEncoder
 
 class BaseEncoder(ABC):
@@ -184,24 +184,8 @@ class OneHotEncoder(BaseEncoder):
         # if the min frequency parameter is specified, then detect
         # the infrequent categories within the features. moreover, we also
         # need to "delete" the infrequent categories and add a "infrequent" category
-        if self.min_frequency_ != None:
-            self._check_infrequents(X)
-
-            for c in range(len(_ordered_categories)):
-                if len(self.infrequents[c]) > 0:
-                    _temp = list(_ordered_categories[c])
-                    _temp.append("infrequent")
-                    _ordered_categories[c] = np.asarray(_temp, dtype="O")
-                    _indexes = [np.where(_ordered_categories[c] == i) for i in self.infrequents[c]]
-                    _ordered_categories[c] = np.delete(
-                        _ordered_categories[c],
-                        _indexes
-                    )
-        
-        # if the max categories parameter is specified, then we need
-        # to filter the categories
-        if self.max_categories_ != None:
-            _ordered_categories = self._check_max_categories(_ordered_categories, X)
+        if self.min_frequency_ != None or self.max_categories_ != None:
+            _ordered_categories = self._check_infrequents(X, _ordered_categories)
         
         self.categories_map_ = dict()
 
@@ -222,44 +206,86 @@ class OneHotEncoder(BaseEncoder):
             
             self.categories_map_[i] = _features_map
     
-    def _check_max_categories(
+    def _check_infrequents(
         self,
+        X: np.ndarray,
         categories: List,
-        X: np.ndarray
     ) -> List:
         """
-        Auxiliary function to map features that exceed the max number of
-        categories and then filter them.
+        Auxiliary function to detect the infrequent categories by
+        checking their frequency among the feature.
 
         Args:
-            categories (List): an ordered list of categories for each feature.
-                This list is created during the fit process.
-            X (np.ndarray): the features array.
-
-        Returns:
-            List: the filtered categories for each feature.
+            X (np.ndarray): _description_
         """
-        # validating the max categories value
+        min_frequency = 0
+        self.infrequents = {}
+
+        # validating the min frequency value
+        if self.min_frequency_ != None:
+            if isinstance(self.min_frequency_, int):
+                try:
+                    assert self.min_frequency_ > 0
+                    min_frequency = self.min_frequency_
+                except AssertionError:
+                    raise ValueError("The min frequency value must be greater than 0.\n")
+            elif isinstance(self.min_frequency_, float):
+                try:
+                    assert (self.min_frequency_ > 0) and (self.min_frequency_ < 1)
+                    min_frequency = math.floor(self.min_frequency_ * self.n_features_in_)
+                except AssertionError:
+                    raise ValueError("The min frequency value must be between [0, 1].\n")
+            else:
+                raise TypeError(f"The min frequency value must be int or float, got {type(self.min_frequency_)}")
+        
+            for feature in range(self.n_features_in_):
+                # counting the occurencies of each category within the feature
+                unique, counts = np.unique(X[:, feature], return_counts=True)
+                counts = np.asarray((unique, counts)).T
+
+                # filtering and mapping the infrequent categories (with number
+                #  of occurencies lower than the min frequency)
+                infrequent_categories = list(filter(lambda x: x[1] < min_frequency, counts))
+
+                if len(infrequent_categories) > 0:
+                    self.infrequents[feature] = [i[0] for i in infrequent_categories]
+                else:
+                    self.infrequents[feature] = []
+            
+            if self.max_categories_ == None:
+                for c in range(len(categories)):
+                    if len(self.infrequents[c]) > 0:
+                        _temp = list(categories[c])
+                        _temp.append("infrequent")
+                        categories[c] = np.asarray(_temp, dtype="O")
+                        _indexes = [np.where(categories[c] == i) for i in self.infrequents[c]]
+                        categories[c] = np.delete(
+                            categories[c],
+                            _indexes
+                        )
+        
         if self.max_categories_ != None:
+            # validating the max categories value
             try:
                 assert self.max_categories_ > 0
             except AssertionError:
                 raise ValueError("The max categories value should be greater than 0.\n")
-        
-        for i in range(self.n_features_in_):
-            # checking if the categories within the features exceeded the max value
-            if len(categories[i]) > self.max_categories_:
-                # sorting the categories based on its counts
-                unique, counts = np.unique(X[:, i], return_counts=True)
-                counts = np.asarray((unique, counts)).T
-                counts = counts[np.flip(counts[:, 1].argsort())]
+            
+            if self.min_frequency_ == None:
+                self.infrequents = {i:[] for i in range(self.n_features_in_)}
+                        
+            for i in range(self.n_features_in_):                    
+                # checking if the categories within the features exceeded the max value
+                if len(categories[i]) > self.max_categories_:
+                    # sorting the categories based on its counts
+                    unique, counts = np.unique(X[:, i], return_counts=True)
+                    counts = np.asarray((unique, counts)).T
+                    counts = counts[np.flip(counts[:, 1].argsort())]
 
-                # selecting only the categories names, which is sorted by
-                # the name of occurencies, to filter
-                features = [f for f, _ in counts]
-                
-                # checking if there's any infrequent category within this feature
-                if len(self.infrequents[i]) > 0:
+                    # selecting only the categories names, which is sorted by
+                    # the name of occurencies, to filter
+                    features = [f for f, _ in counts]
+
                     # selecting only the categories that were not mapped into
                     # the infrequent category
                     # e.g.: features = ['male', 'female', 'other'], infrequent = ['other']
@@ -299,70 +325,10 @@ class OneHotEncoder(BaseEncoder):
                     remaining_categories.sort()
                     remaining_categories.append("infrequent")
                     remaining_categories = np.asarray(remaining_categories, dtype="O")
-                else:
-                    # getting the first max_categories_ categories
-                    remaining_categories = remaining_categories[:self.max_categories_]
-                    new_infrequents = np.setdiff1d(
-                        features,
-                        remaining_categories,
-                        assume_unique=True
-                    )
-
-                    # updating the infrequents classes with the categories
-                    # that were excluded
-                    self.infrequents[i] = new_infrequents
-
-                    # sorting the remaining categories
-                    remaining_categories = remaining_categories.tolist()
-                    remaining_categories.sort()
-                    remaining_categories = np.asarray(remaining_categories, dtype="O")
-
-                categories[i] = remaining_categories
-
+                    categories[i] = remaining_categories
+        
         return categories
-
-    def _check_infrequents(
-        self,
-        X: np.ndarray
-    ) -> None:
-        """
-        Auxiliary function to detect the infrequent categories by
-        checking their frequency among the feature.
-
-        Args:
-            X (np.ndarray): _description_
-        """
-        min_frequency = 0
-        self.infrequents = {}
-
-        # validating the min frequency value
-        if isinstance(self.min_frequency_, int):
-            try:
-                assert self.min_frequency_ > 0
-                min_frequency = self.min_frequency_
-            except AssertionError:
-                raise ValueError("The min frequency value must be greater than 0.\n")
-        elif isinstance(self.min_frequency_, float):
-            try:
-                assert (self.min_frequency_ > 0) and (self.min_frequency_ < 1)
-                min_frequency = math.floor(self.min_frequency_ * self.n_features_in_)
-            except AssertionError:
-                raise ValueError("The min frequency value must be between [0, 1].\n")
-        else:
-            raise TypeError(f"The min frequency value must be int or float, got {type(self.min_frequency_)}")
     
-        for feature in range(self.n_features_in_):
-            # counting the occurencies of each category within the feature
-            unique, counts = np.unique(X[:, feature], return_counts=True)
-            counts = np.asarray((unique, counts)).T
-
-            # filtering and mapping the infrequent categories (with number
-            #  of occurencies lower than the min frequency)
-            infrequent_categories = list(filter(lambda x: x[1] < min_frequency, counts))
-
-            if len(infrequent_categories) > 0:
-                self.infrequents[feature] = [i[0] for i in infrequent_categories]
-            
     def transform(
         self,
         X: np.ndarray
@@ -438,27 +404,28 @@ class OneHotEncoder(BaseEncoder):
                 count += 1
 
             for v in X[:, i]:
-                try:
-                    # checking if the category was mapped into
-                    # the infrequent category
-                    if v in self.infrequents[i]:
+                if self.handle_unknown_ == "ignore":
+                    try:
+                        _X = np.array([self.categories_map_[i][v]])
+                        encoded_features.append(np.eye(n_values)[_X])
+                    except KeyError as e:
+                        # creating an array filled with zeros
+                        encoded_features.append(np.zeros(n_values))
+                elif self.handle_unknown_ == "infrequent_if_exist":
+                    # creating an array full of zeros where
+                    # the last position if filled with 1
+                    if (v in self.infrequents[i]) or (v not in self.categories_map_[i].keys()):
                         _X = np.array([self.categories_map_[i]["infrequent"]])
                     else:
                         _X = np.array([self.categories_map_[i][v]])
 
                     encoded_features.append(np.eye(n_values)[_X])
-
-                except KeyError as e:
-                    if self.handle_unknown_ == "error":
-                        raise e
-                    elif self.handle_unknown_ == "ignore":
-                        # creating an array filled with zeros
-                        encoded_features.append(np.zeros(n_values))
-                    elif self.handle_unknown_ == "infrequent_if_exist":
-                        # creating an array full of zeros where
-                        # the last position if filled with 1
-                        _X = np.array([self.categories_map_[i]["infrequent"]])
+                elif self.handle_unknown_ == "error":
+                    try:
+                        _X = np.array([self.categories_map_[i][v]])
                         encoded_features.append(np.eye(n_values)[_X])
+                    except KeyError as e:
+                        raise str(e) + "\n"
             
             new_X.append(np.vstack(encoded_features))
 
@@ -575,18 +542,21 @@ class OneHotEncoder(BaseEncoder):
         """
         X = convert_array_numpy(X)
 
+        # TODO: Think in a better way for validation the shape of array.
+        # The commented code bellow only works when drop == None.
+
         # checking the shape of the array
-        try:
-            count = 0
+        # try:
+        #     count = 0
 
-            for (k, v) in self.categories_map_.items():
-                for _ in self.categories_map_[k].keys():
-                    count += 1
+        #     for (k, v) in self.categories_map_.items():
+        #         for _ in self.categories_map_[k].keys():
+        #             count += 1
 
-            assert X.shape[1] == count
+        #     assert X.shape[1] == count
 
-        except AssertionError:
-            raise ArithmeticError("Array's shape is different from what is expected.\n")
+        # except AssertionError:
+        #     raise ArithmeticError("Array's shape is different from what is expected.\n")
 
         inreverse_mapping = {}
         count = 0
@@ -630,35 +600,3 @@ class OneHotEncoder(BaseEncoder):
         
         Xt = np.asarray(Xt, dtype="O")
         return Xt
-
-if __name__ == "__main__":
-    enc = SkOneHotEncoder(
-        handle_unknown='ignore',
-        min_frequency=2,
-        max_categories=2
-    )
-    X = [['Male', 1], ['Male', 1], ['Female', 3], ['Female', 2], ['Male', 7], ['Other', 9]]
-    enc.fit(X)
-
-    print(enc.categories_)
-    print(enc.n_features_in_)
-    print(enc.transform([['Female', 1], ['Male', 4], ['Other', 9]]).toarray())
-    print(enc.drop_idx_, type(enc.drop_idx_))
-    print(enc.inverse_transform(enc.transform([['Female', 1], ['Male', 4], ['Other', 9]]).toarray()))
-    print()
-
-    ohe = OneHotEncoder(
-        handle_unknown='ignore',
-        min_frequency=2,
-        max_categories=2
-    )
-    X = [['Male', 1], ['Male', 1], ['Female', 3], ['Female', 2], ['Male', 7], ['Other', 9]]
-    ohe.fit(X)
-
-    print(ohe.categories_)
-    print(ohe.n_features_in_)
-    print(ohe.transform([['Female', 1], ['Male', 4], ['Other', 9]]).toarray())
-    print(ohe.drop_idx_, type(ohe.drop_idx_))
-    print(ohe.categories_map_)
-    print(ohe.inverse_transform(ohe.transform([['Female', 1], ['Male', 4], ['Other', 9]]).toarray()))
-    print()
