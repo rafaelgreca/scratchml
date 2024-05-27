@@ -19,4 +19,4 @@ def convert_array_numpy(
     if isinstance(array, np.ndarray):
         return array
     else:
-        return TypeError("Invalid type. Should be np.ndarray or list.\n")
+        raise TypeError("Invalid type. Should be np.ndarray or list.\n")

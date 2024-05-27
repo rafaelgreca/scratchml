@@ -1,6 +1,7 @@
 import numpy as np
 from typing import Tuple, Union, List
 from abc import ABC
+from scratchml.utils import convert_array_numpy
 
 class BaseScaler(ABC):
     """
@@ -64,14 +65,7 @@ class MinMaxScaler(BaseScaler):
             y (np.array, optional): the targets array (will be
                 ignore). Defaults to None.
         """
-        # converting the features array, if needed
-        if isinstance(X, list):
-            X = np.asarray(X)
-        if isinstance(X, np.ndarray):
-            pass
-        else:
-            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
-
+        X = convert_array_numpy(X)
         self.n_samples_seen_ = X.shape[0]
         self.n_features_in_ = X.shape[1]
         self.data_max_ = X.max(axis=0)
@@ -125,12 +119,7 @@ class MinMaxScaler(BaseScaler):
         Returns:
             Xt (np.ndarray): the original features array.
         """
-        if isinstance(X, list):
-            X = np.asarray(X)
-        if isinstance(X, np.ndarray):
-            pass
-        else:
-            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
+        X = convert_array_numpy(X)
         
         Xt = ((X - self.feature_range[0]) / (self.feature_range[1] - self.feature_range[0]))
         Xt *= (self.data_max_ - self.data_min_)
@@ -195,12 +184,7 @@ class StandardScaler(BaseScaler):
             y (np.array, optional): the targets array (will be
                 ignore). Defaults to None.
         """
-        if isinstance(X, list):
-            X = np.asarray(X)
-        if isinstance(X, np.ndarray):
-            pass
-        else:
-            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
+        X = convert_array_numpy(X)
 
         self.n_samples_seen_ = X.shape[0]
         self.n_features_in_ = X.shape[1]
@@ -243,13 +227,8 @@ class StandardScaler(BaseScaler):
         Returns:
             X_ | X (np.ndarray): the new transformed features.
         """
-        if isinstance(X, list):
-            X = np.asarray(X)
-        if isinstance(X, np.ndarray):
-            pass
-        else:
-            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
-               
+        X = convert_array_numpy(X)
+
         if not self.with_std:
             self.std = 1
 
@@ -278,13 +257,8 @@ class StandardScaler(BaseScaler):
         Returns:
             Xt (np.ndarray): the original features array.
         """
-        if isinstance(X, list):
-            X = np.asarray(X)
-        if isinstance(X, np.ndarray):
-            pass
-        else:
-            return TypeError(f"The array type should be np.ndarray or list. Received a {type(X)} instead.")
-        
+        X = convert_array_numpy(X)
+
         if not self.with_std:
             self.std = 1
 

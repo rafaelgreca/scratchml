@@ -54,13 +54,13 @@ class LogisticRegression(object):
         
         # validating the max_iters value
         if self.max_iters < -1 or self.max_iters == 0:
-            return ValueError("Invalid value for 'max_iters'. Must be -1 or >= 1.\n")
+            raise ValueError("Invalid value for 'max_iters'. Must be -1 or >= 1.\n")
         
         # validating the loss_function value
         try:
             assert self.loss_function in self._valid_loss_functions
         except AssertionError:
-            return ValueError(
+            raise ValueError(
                 f"Invalid value for 'loss_function'. Must be {self._valid_loss_functions}.\n"
             )
         
@@ -161,7 +161,9 @@ class LogisticRegression(object):
         try:
             assert metric in self._valid_metrics
         except AssertionError:
-            return f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
+            raise ValueError(
+                f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
+            )
         
         y_hat = self.predict(X, threshold)
 

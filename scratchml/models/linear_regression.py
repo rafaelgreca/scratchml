@@ -62,8 +62,16 @@ class LinearRegression(object):
         try:
             assert self.loss_function in self._valid_loss_functions
         except AssertionError:
-            return ValueError(
+            raise ValueError(
                 f"Invalid value for 'loss_function'. Must be {self._valid_loss_functions}.\n"
+            )
+
+        # validating the regularization function value
+        try:
+            assert self.regularization in self._valid_regularizations
+        except AssertionError:
+            return ValueError(
+                f"Invalid value for 'regularization'. Must be {self._valid_regularizations}.\n"
             )
         
         self.intercept_ = 0.0
@@ -138,7 +146,9 @@ class LinearRegression(object):
         try:
             assert metric in self._valid_metrics
         except AssertionError:
-            return f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
+            raise ValueError(
+                f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
+            )
         
         y_hat = self.predict(X)
 

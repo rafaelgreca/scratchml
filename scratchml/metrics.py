@@ -89,7 +89,7 @@ def median_absolute_error(
             or the value of the MedAE, respectively.
     """
     if derivative:
-        return NotImplementedError
+        raise NotImplementedError
     else:
         return np.median(np.abs(y - y_hat))
 

@@ -56,7 +56,7 @@ class LabelEncoder(BaseEncoder):
             y (np.array): the classes array.
         """
         if not (isinstance(y, np.ndarray) or isinstance(y, List)):
-            return TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
+            raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         self.classes_ = np.sort(np.unique(y))
         self.classes_map_ = {c: i for i, c in enumerate(self.classes_)}
@@ -75,7 +75,7 @@ class LabelEncoder(BaseEncoder):
             y (np.ndarray): the encoded classes array.
         """
         if not (isinstance(y, np.ndarray) or isinstance(y, List)):
-            return TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
+            raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         return np.array([self.classes_map_[v] for v in y])
 
@@ -93,7 +93,7 @@ class LabelEncoder(BaseEncoder):
             np.ndarray: the encoded classes array.
         """
         if not (isinstance(y, np.ndarray) or isinstance(y, List)):
-            return TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
+            raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         self.fit(y)
         return self.transform(y)
@@ -112,7 +112,7 @@ class LabelEncoder(BaseEncoder):
             np.ndarray: the original classes array.
         """
         if not (isinstance(y, np.ndarray) or isinstance(y, List)):
-            return TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
+            raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         inverse_classes_map = dict(map(reversed, self.classes_map_.items()))
         return np.array([inverse_classes_map[v] for v in y])
@@ -177,7 +177,7 @@ class OneHotEncoder(BaseEncoder):
                     _unique_values_feature = np.asarray(_unique_values_feature, dtype=object)
                     _ordered_categories.append(_unique_values_feature)
             else:
-                return TypeError(f"The categories value must be a list or 'auto', got {self.categories_}.\n")
+                raise TypeError(f"The categories value must be a list or 'auto', got {self.categories_}.\n")
         
         self.categories_ = _ordered_categories.copy()
 
@@ -244,7 +244,7 @@ class OneHotEncoder(BaseEncoder):
             try:
                 assert self.max_categories_ > 0
             except AssertionError:
-                return ValueError("The max categories value should be greater than 0.\n")
+                raise ValueError("The max categories value should be greater than 0.\n")
         
         for i in range(self.n_features_in_):
             # checking if the categories within the features exceeded the max value
@@ -341,15 +341,15 @@ class OneHotEncoder(BaseEncoder):
                 assert self.min_frequency_ > 0
                 min_frequency = self.min_frequency_
             except AssertionError:
-                return ValueError("The min frequency value must be greater than 0.\n")
+                raise ValueError("The min frequency value must be greater than 0.\n")
         elif isinstance(self.min_frequency_, float):
             try:
                 assert (self.min_frequency_ > 0) and (self.min_frequency_ < 1)
                 min_frequency = math.floor(self.min_frequency_ * self.n_features_in_)
             except AssertionError:
-                return ValueError("The min frequency value must be between [0, 1].\n")
+                raise ValueError("The min frequency value must be between [0, 1].\n")
         else:
-            return TypeError(f"The min frequency value must be int or float, got {type(self.min_frequency_)}")
+            raise TypeError(f"The min frequency value must be int or float, got {type(self.min_frequency_)}")
     
         for feature in range(self.n_features_in_):
             # counting the occurencies of each category within the feature
@@ -450,7 +450,7 @@ class OneHotEncoder(BaseEncoder):
 
                 except KeyError as e:
                     if self.handle_unknown_ == "error":
-                        return e
+                        raise e
                     elif self.handle_unknown_ == "ignore":
                         # creating an array filled with zeros
                         encoded_features.append(np.zeros(n_values))
@@ -489,10 +489,10 @@ class OneHotEncoder(BaseEncoder):
                 try:
                     assert self.drop_ in self._valid_drop
                 except AssertionError:
-                    return ValueError(f"Invalid drop option, must be {self._valid_drop}.\n")
+                    raise ValueError(f"Invalid drop option, must be {self._valid_drop}.\n")
             else:
                 if not (isinstance(self.drop_, List) or isinstance(self.drop_, np.ndarray)):
-                    return TypeError(f"The drop type must be a list or np.ndarray, got {type(self.drop_)} instead.\n")
+                    raise TypeError(f"The drop type must be a list or np.ndarray, got {type(self.drop_)} instead.\n")
 
         indexes_to_drop = []
         res = []
@@ -586,7 +586,7 @@ class OneHotEncoder(BaseEncoder):
             assert X.shape[1] == count
 
         except AssertionError:
-            return ArithmeticError("Array's shape is different from what is expected.\n")
+            raise ArithmeticError("Array's shape is different from what is expected.\n")
 
         inreverse_mapping = {}
         count = 0
@@ -620,7 +620,7 @@ class OneHotEncoder(BaseEncoder):
 
                 if len(encoded_index) == 0:
                     if self.handle_unknown_ == "error":
-                        return KeyError("Value not found during the model training.\n")
+                        raise KeyError("Value not found during the model training.\n")
                     
                     continue
 
