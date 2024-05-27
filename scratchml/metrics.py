@@ -224,6 +224,8 @@ def precision(
     Args:
         y (np.ndarray): the true value for y.
         y_hat (np.ndarray): the predicted value for y.
+        average (str): how the metric will be calculated.
+            Defaults to binary.
 
     Returns:
         np.float32: the value of the Precision score.
@@ -271,7 +273,8 @@ def precision(
         
 def recall(
     y: np.ndarray,
-    y_hat: np.ndarray
+    y_hat: np.ndarray,
+    average: str = "binary"
 ) -> np.float32:
     """
     Calculates the Recall score.
@@ -279,14 +282,53 @@ def recall(
     Args:
         y (np.ndarray): the true value for y.
         y_hat (np.ndarray): the predicted value for y.
+        average (str): how the metric will be calculated.
+            Defaults to binary.
 
     Returns:
         np.float32: the value of the Recall score.
     """
-    tp = y_hat[(y == 1) == 1].sum()
-    fn = y[(y_hat == 0) == 1].sum()
-    return tp / (tp + fn)
+    _valid_averages = ["binary", "micro", "macro", "weighted"]
 
+    # validating the average value
+    try:
+        assert average in _valid_averages
+    except AssertionError:
+        raise ValueError(
+            f"Average should be {_valid_averages}, got {average}.\n"
+        )
+    
+    if average == "binary":
+        tp = y_hat[(y == 1) == 1].sum()
+        fn = y[(y_hat == 0) == 1].sum()
+        return tp / (tp + fn)
+    elif average == "micro":
+        # calculate globally by counting the total true positives and false positives
+        tp = y_hat[(y_hat == y)].sum()
+        fn = y_hat[(y_hat != y)].sum()
+        return tp / (tp + fn)
+    else:
+        # if macro, calculate for each label, and find their unweighted mean
+        # otherwise, if weighted calculate for each label, and find their weighted mean
+        # based on the true positive classes
+        unique_classes = np.unique(y)
+        recalls = []
+        weights = []
+
+        for c in unique_classes:
+            _y = np.where(y == c, 1, 0)
+            _y_hat = np.where(y_hat == c, 1, 0)
+            _tp = _y_hat[(_y == 1) == 1].sum()
+            _fn = _y[(_y_hat == 0) == 1].sum()
+            _recall = _tp / (_tp + _fn)
+            recalls.append(_recall)
+            weights.append(_y.shape[0]/y.shape[0])
+        
+        if average == "macro":
+            return sum(recalls)/len(recalls)
+        elif average == "weighted":
+            return np.dot(recalls, weights)/len(recalls)
+        
 def f1_score(
     y: np.ndarray,
     y_hat: np.ndarray
