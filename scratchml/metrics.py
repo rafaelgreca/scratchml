@@ -331,7 +331,8 @@ def recall(
         
 def f1_score(
     y: np.ndarray,
-    y_hat: np.ndarray
+    y_hat: np.ndarray,
+    average: str = "binary"
 ) -> np.float32:
     """
     Calculates the F1-Score (F1).
@@ -339,10 +340,35 @@ def f1_score(
     Args:
         y (np.ndarray): the true value for y.
         y_hat (np.ndarray): the predicted value for y.
+        average (str): how the metric will be calculated.
+            Defaults to binary.
 
     Returns:
         np.float32: the value of the F1 Score.
     """
-    op = (precision(y, y_hat) * recall(y, y_hat))
-    div = (precision(y, y_hat) + recall(y, y_hat))
-    return 2 * (op / div)
+    _valid_averages = ["binary", "micro", "macro", "weighted"]
+
+    # validating the average value
+    try:
+        assert average in _valid_averages
+    except AssertionError:
+        raise ValueError(
+            f"Average should be {_valid_averages}, got {average}.\n"
+        )
+    
+    if average == "binary":
+        op = (precision(y, y_hat) * recall(y, y_hat))
+        div = (precision(y, y_hat) + recall(y, y_hat))
+        return 2 * (op / div)
+    elif average == "micro":
+        op = (precision(y, y_hat, "micro") * recall(y, y_hat, "micro"))
+        div = (precision(y, y_hat, "micro") + recall(y, y_hat, "micro"))
+        return 2 * (op / div)
+    elif average == "macro":
+        op = (precision(y, y_hat, "macro") * recall(y, y_hat, "macro"))
+        div = (precision(y, y_hat, "macro") + recall(y, y_hat, "macro"))
+        return 2 * (op / div)
+    elif average == "weighted":
+        op = (precision(y, y_hat, "weighted") * recall(y, y_hat, "weighted"))
+        div = (precision(y, y_hat, "weighted") + recall(y, y_hat, "weighted"))
+        return 2 * (op / div)
