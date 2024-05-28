@@ -1,4 +1,5 @@
 import numpy as np
+from scratchml.utils import convert_array_numpy
 from typing import Union
 
 def mean_squared_error(
@@ -372,3 +373,60 @@ def f1_score(
         op = (precision(y, y_hat, "weighted") * recall(y, y_hat, "weighted"))
         div = (precision(y, y_hat, "weighted") + recall(y, y_hat, "weighted"))
         return 2 * (op / div)
+
+def confusion_matrix(
+    y: np.ndarray,
+    y_hat: np.ndarray,
+    labels: list = None,
+    normalize: bool = None
+) -> Union[np.int16, np.float32]:
+    """
+    Calculates the Confusion Matrix.
+
+    Args:
+        y (np.ndarray): the true value for y.
+        y_hat (np.ndarray): the predicted value for y.
+        labels (str): list of labels to index the matrix.
+            This may be used to reorder or select a subset of labels.
+        normalize (bool): normalizes confusion matrix over the true (rows),
+            predicted (columns) conditions or all the population. If None,
+            confusion matrix will not be normalized. Defaults to None.
+
+    Returns:
+        cm (np.int16, np.float32): the confusion matrix.
+    """
+    _valid_normalizations = ["true", "pred", "all"]
+    
+    if labels != None:
+        labels = convert_array_numpy(labels).reshape(-1)      
+    else:
+        labels = np.sort(np.unique(y)).reshape(-1)
+    
+    if normalize != None:
+        try:
+            assert normalize in _valid_normalizations
+        except AssertionError:
+            raise ValueError(
+                f"Normalize value should be {_valid_normalizations}, got {normalize} instead.\n"
+            )
+
+    cm = np.zeros((labels.shape[0], labels.shape[0]))
+    labels_combinations = np.array(np.meshgrid(labels, labels)).T.reshape(-1, 2) 
+
+    for (i, j) in labels_combinations:
+        _y = np.where(y == i, 1, 0)
+        _y_hat = np.where(y_hat == j, 1, 0)
+
+        if normalize == None:
+            cm[i][j] = _y[(_y_hat == 1) == 1].sum()
+        elif normalize == "pred":
+            cm[i][j] = _y[(_y_hat == 1) == 1].sum() / _y_hat.sum()
+        elif normalize == "true":
+            cm[i][j] = _y[(_y_hat == 1) == 1].sum() / _y.sum()
+        elif normalize == "all":
+            cm[i][j] = _y[(_y_hat == 1) == 1].sum() / y.shape[0]
+    
+    if normalize == None:
+        cm = cm.astype(int)
+    
+    return cm
