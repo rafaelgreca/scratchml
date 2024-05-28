@@ -29,22 +29,30 @@ class Test_Precision(unittest.TestCase):
         score = confusion_matrix(y, sklr_prediction)
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, normalize="all")
         score = confusion_matrix(y, sklr_prediction, normalize="all")
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, normalize="true")
         score = confusion_matrix(y, sklr_prediction, normalize="true")
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, normalize="pred")
         score = confusion_matrix(y, sklr_prediction, normalize="pred")
 
         assert_equal(sklr_score, score)
-    
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
+
     @repeat(10)
     def test_2(self):
         X, y = generate_classification_dataset(
@@ -67,23 +75,31 @@ class Test_Precision(unittest.TestCase):
         score = confusion_matrix(y, sklr_prediction)
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, normalize="all")
         score = confusion_matrix(y, sklr_prediction, normalize="all")
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, normalize="true")
         score = confusion_matrix(y, sklr_prediction, normalize="true")
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, normalize="pred")
         score = confusion_matrix(y, sklr_prediction, normalize="pred")
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
-    @repeat(1)
+    @repeat(10)
     def test_3(self):
         X, y = generate_classification_dataset(
             n_features=10,
@@ -107,21 +123,29 @@ class Test_Precision(unittest.TestCase):
         score = confusion_matrix(y, sklr_prediction, labels=labels)
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="all")
         score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="all")
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="true")
         score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="true")
 
         assert_equal(sklr_score, score)
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
 
         sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="pred")
         score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="pred")
 
         assert_equal(sklr_score, score)
-
+        assert_equal(sklr_score.shape, score.shape)
+        assert_equal(type(sklr_score), type(score))
+        
 if __name__ == "__main__":
     unittest.main(verbosity=2)
