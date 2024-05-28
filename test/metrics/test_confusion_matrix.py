@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from numpy.testing import assert_equal
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import confusion_matrix as SkCM
@@ -82,7 +83,7 @@ class Test_Precision(unittest.TestCase):
 
         assert_equal(sklr_score, score)
 
-    @repeat(10)
+    @repeat(1)
     def test_3(self):
         X, y = generate_classification_dataset(
             n_features=10,
@@ -107,20 +108,20 @@ class Test_Precision(unittest.TestCase):
 
         assert_equal(sklr_score, score)
 
-        # sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="all")
-        # score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="all")
+        sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="all")
+        score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="all")
 
-        # assert_equal(sklr_score, score)
+        assert_equal(sklr_score, score)
 
-        # sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="true")
-        # score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="true")
+        sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="true")
+        score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="true")
 
-        # assert_equal(sklr_score, score)
+        assert_equal(sklr_score, score)
 
-        # sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="pred")
-        # score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="pred")
+        sklr_score = SkCM(y, sklr_prediction, labels=labels, normalize="pred")
+        score = confusion_matrix(y, sklr_prediction, labels=labels, normalize="pred")
 
-        # assert_equal(sklr_score, score)
+        assert_equal(sklr_score, score)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

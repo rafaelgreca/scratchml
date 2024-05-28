@@ -36,7 +36,7 @@ Implementations:
         - [x] Precision
         - [x] Recall
         - [x] F1-Score
-        - [ ] Confusion Matrix
+        - [X] Confusion Matrix
         - [ ] AUC Score
 - [X] Encoders
     - [X] One-hot encoding
@@ -56,7 +56,7 @@ Implementations:
 
 Features:
 
-- [ ] Extend classification metrics to multi-class output
+- [X] Extend classification metrics to multi-class output
 - [ ] Run models on GPU and/or multiple CPUs
 - [ ] Create examples folder
 - [ ] Upgrade Linear and Regression models to use more than one loss function and metric

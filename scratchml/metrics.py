@@ -398,10 +398,11 @@ def confusion_matrix(
     _valid_normalizations = ["true", "pred", "all"]
     
     if labels != None:
-        labels = convert_array_numpy(labels).reshape(-1)      
+        _labels = convert_array_numpy(labels).reshape(-1)      
     else:
-        labels = np.sort(np.unique(y)).reshape(-1)
+        _labels = np.sort(np.unique(y)).reshape(-1)
     
+    # validating the normalize value
     if normalize != None:
         try:
             assert normalize in _valid_normalizations
@@ -410,23 +411,36 @@ def confusion_matrix(
                 f"Normalize value should be {_valid_normalizations}, got {normalize} instead.\n"
             )
 
-    cm = np.zeros((labels.shape[0], labels.shape[0]))
-    labels_combinations = np.array(np.meshgrid(labels, labels)).T.reshape(-1, 2) 
+    # creating the confusion matrix
+    cm = np.zeros((_labels.shape[0], _labels.shape[0]))
+
+    # creating a combination of the labels so we can calculate the metrics
+    # e.g.: labels = [0, 1, 2] => combination = [[0, 0], [0, 1], [0, 2], [1, 0], ..., [2, 2]]
+    # and then we calculate the metrics for the true class 0 and prediction 1, true class 0
+    # and prediction 1, and so on...
+    labels_combinations = np.array(np.meshgrid(_labels, _labels)).T.reshape(-1, 2) 
 
     for (i, j) in labels_combinations:
         _y = np.where(y == i, 1, 0)
         _y_hat = np.where(y_hat == j, 1, 0)
 
-        if normalize == None:
-            cm[i][j] = _y[(_y_hat == 1) == 1].sum()
-        elif normalize == "pred":
-            cm[i][j] = _y[(_y_hat == 1) == 1].sum() / _y_hat.sum()
-        elif normalize == "true":
-            cm[i][j] = _y[(_y_hat == 1) == 1].sum() / _y.sum()
-        elif normalize == "all":
-            cm[i][j] = _y[(_y_hat == 1) == 1].sum() / y.shape[0]
-    
+        # filling the index of the true class i and the predicted
+        # class j with its occurrencies
+        cm[i, j] = _y[(_y_hat == 1) == 1].sum()
+
     if normalize == None:
         cm = cm.astype(int)
-    
+    else:
+        if normalize == "pred":
+            # divide the counts by the sum of each column
+            for j in range(cm.shape[1]):
+                cm[:, j] /= cm[:, j].sum()
+        elif normalize == "true":
+            # divide the counts by the sum of each row
+            for i in range(cm.shape[0]):
+                cm[i, :] /= cm[i, :].sum()
+        elif normalize == "all":
+            # divide the counts by the sum of the entire matrix
+            cm /= cm.sum()
+
     return cm
