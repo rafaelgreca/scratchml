@@ -1,6 +1,8 @@
 import numpy as np
 from scratchml.metrics import mean_squared_error, r_squared
 from scratchml.utils import convert_array_numpy
+from scratchml.regularizations import l1, l2
+from typing import Union
     
 class LinearRegression(object):
 
@@ -10,6 +12,7 @@ class LinearRegression(object):
         tol: float,
         max_iters: int = -1,
         loss_function: str = "mse",
+        regularization: Union[None, str] = None,
         n_jobs: int = None
     ) -> None:
         """
@@ -24,6 +27,9 @@ class LinearRegression(object):
                 iterations is used. Defaults to -1.
             loss_function (str, optional): the loss function to be used.
                 Defaults to "mse".
+            regularization (str | None, optional): the regularization function
+                that will be used in the model training. None means that
+                no regularization function will be used. Defaults to None.
             n_jobs (int, optional): the number of jobs to be used.
                 -1 means that all CPUs are used to train the model. Defaults to None.
         """
@@ -35,9 +41,11 @@ class LinearRegression(object):
         self.tol = tol
         self.max_iters = max_iters
         self.loss_function = loss_function
+        self.regularization = regularization
         self._valid_loss_functions = ["mse"]
         self._valid_metrics = ["r_squared"]
-    
+        self._valid_regularizations = ["l1", "l2", None]
+
     def fit(
         self,
         X: np.ndarray,
@@ -95,6 +103,19 @@ class LinearRegression(object):
                 derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
                 derivative_intercept = (np.sum(loss)) / y.shape[0]
 
+            # applying the regularization to the loss function
+            if self.regularization != None:
+                if self.regularization == "l1":
+                    reg_coef = l1(self.coef_, derivative=True)
+                    reg_intercept = l1(self.intercept_, derivative=True)
+
+                elif self.regularization == "l2":
+                    reg_coef = l2(self.coef_, derivative=True)
+                    reg_intercept = l2(self.intercept_, derivative=True)
+                
+                derivative_coef += reg_coef
+                derivative_intercept += reg_intercept
+            
             # updating the coefficients
             self.coef_ = self.coef_ - (self.lr * derivative_coef)
             self.intercept_ = self.intercept_ - (self.lr * derivative_intercept)

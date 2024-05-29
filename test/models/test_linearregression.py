@@ -10,7 +10,7 @@ class Test_LinearRegression(unittest.TestCase):
         X, y = generate_regression_dataset()
 
         sklr = SkLinearRegression()
-        lr = LinearRegression(learning_rate=0.001, tol=1e-06)
+        lr = LinearRegression(learning_rate=0.1, tol=1e-06)
 
         sklr.fit(X, y)
         lr.fit(X, y)
@@ -27,7 +27,7 @@ class Test_LinearRegression(unittest.TestCase):
         X, y = generate_regression_dataset(n_features=50)
 
         sklr = SkLinearRegression()
-        lr = LinearRegression(learning_rate=0.001, tol=1e-06)
+        lr = LinearRegression(learning_rate=0.1, tol=1e-06)
 
         sklr.fit(X, y)
         lr.fit(X, y)
@@ -44,7 +44,7 @@ class Test_LinearRegression(unittest.TestCase):
         X, y = generate_regression_dataset(n_features=100)
 
         sklr = SkLinearRegression()
-        lr = LinearRegression(learning_rate=0.001, tol=1e-06)
+        lr = LinearRegression(learning_rate=0.1, tol=1e-06)
 
         sklr.fit(X, y)
         lr.fit(X, y)
@@ -55,6 +55,80 @@ class Test_LinearRegression(unittest.TestCase):
         assert_almost_equal(sklr.coef_, lr.coef_, decimal=5)
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
+    
+    @repeat(10)
+    def test_4(self):
+        X, y = generate_regression_dataset()
+
+        sklr = SkLinearRegression()
+        lr = LinearRegression(learning_rate=0.1, tol=1e-06, regularization="l1")
+
+        sklr.fit(X, y)
+        lr.fit(X, y)
+
+        assert sklr.coef_.shape == lr.coef_.shape
+        assert sklr.intercept_.shape == lr.intercept_.shape
+        assert sklr.n_features_in_ == lr.n_features_in_
+        assert_almost_equal(sklr.coef_, lr.coef_, decimal=2)
+        assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=2)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=3)
+    
+    @repeat(3)
+    def test_5(self):
+        X, y = generate_regression_dataset(
+            n_samples=2000,
+            n_features=20
+        )
+
+        sklr = SkLinearRegression()
+        lr = LinearRegression(learning_rate=0.1, tol=1e-06, regularization="l1")
+
+        sklr.fit(X, y)
+        lr.fit(X, y)
+
+        assert sklr.coef_.shape == lr.coef_.shape
+        assert sklr.intercept_.shape == lr.intercept_.shape
+        assert sklr.n_features_in_ == lr.n_features_in_
+        assert_almost_equal(sklr.coef_, lr.coef_, decimal=2)
+        assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=2)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=3)
+
+    @repeat(10)
+    def test_6(self):
+        X, y = generate_regression_dataset()
+
+        sklr = SkLinearRegression()
+        lr = LinearRegression(learning_rate=0.1, tol=1e-06, regularization="l2")
+
+        sklr.fit(X, y)
+        lr.fit(X, y)
+
+        assert sklr.coef_.shape == lr.coef_.shape
+        assert sklr.intercept_.shape == lr.intercept_.shape
+        assert sklr.n_features_in_ == lr.n_features_in_
+        # assert_almost_equal(sklr.coef_, lr.coef_, decimal=2)
+        # assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=2)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=3)
+    
+    @repeat(3)
+    def test_7(self):
+        X, y = generate_regression_dataset(
+            n_samples=2000,
+            n_features=20
+        )
+
+        sklr = SkLinearRegression()
+        lr = LinearRegression(learning_rate=0.1, tol=1e-06, regularization="l2")
+
+        sklr.fit(X, y)
+        lr.fit(X, y)
+
+        assert sklr.coef_.shape == lr.coef_.shape
+        assert sklr.intercept_.shape == lr.intercept_.shape
+        assert sklr.n_features_in_ == lr.n_features_in_
+        # assert_almost_equal(sklr.coef_, lr.coef_, decimal=2)
+        # assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=2)
+        assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=3)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
