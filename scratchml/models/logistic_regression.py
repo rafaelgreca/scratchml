@@ -3,6 +3,8 @@ from scratchml.losses import binary_cross_entropy
 from scratchml.utils import convert_array_numpy
 from scratchml.activations import sigmoid
 from scratchml.metrics import accuracy
+from scratchml.regularizations import l1, l2
+from typing import Union
 
 class LogisticRegression(object):
 
@@ -12,7 +14,8 @@ class LogisticRegression(object):
         tol: float,
         n_jobs: int = None,
         max_iters: int = -1,
-        loss_function: str = "bce"
+        loss_function: str = "bce",
+        regularization: Union[None, str] = None
     ) -> None:
         """
         Creates a Logistic Regression instance.
@@ -26,6 +29,9 @@ class LogisticRegression(object):
                 iterations is used. Defaults to -1.
             loss_function (str, optional): the loss function to be used.
                 Defaults to "mse".
+            regularization (str | None, optional): the regularization function
+                that will be used in the model training. None means that
+                no regularization function will be used. Defaults to None.
             n_jobs (int, optional): the number of jobs to be used.
                 -1 means that all CPUs are used to train the model. Defaults to None.
         """
@@ -38,8 +44,10 @@ class LogisticRegression(object):
         self.tol = tol
         self.max_iters = max_iters
         self.loss_function = loss_function
+        self.regularization = regularization
         self._valid_loss_functions = ["bce"]
         self._valid_metrics = ["accuracy"]
+        self._valid_regularizations = ["l1", "l2", None]
     
     def fit(
         self,
@@ -63,6 +71,14 @@ class LogisticRegression(object):
             raise ValueError(
                 f"Invalid value for 'loss_function'. Must be {self._valid_loss_functions}.\n"
             )
+
+        # validating the regularization function value
+        try:
+            assert self.regularization in self._valid_regularizations
+        except AssertionError:
+            return ValueError(
+                f"Invalid value for 'regularization'. Must be {self._valid_regularizations}.\n"
+            )
         
         self.intercept_ = np.zeros((1, ), dtype=np.float64)
         self.coef_ = np.zeros((1, X.shape[1]), dtype=np.float64)
@@ -84,6 +100,19 @@ class LogisticRegression(object):
                 loss = binary_cross_entropy(y, y_hat, derivative=True)
                 derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
                 derivative_intercept = (np.sum(loss)) / y.shape[0]
+
+            # applying the regularization to the loss function
+            if self.regularization != None:
+                if self.regularization == "l1":
+                    reg_coef = l1(self.coef_, derivative=True)
+                    reg_intercept = l1(self.intercept_, derivative=True)
+
+                elif self.regularization == "l2":
+                    reg_coef = l2(self.coef_, derivative=True)
+                    reg_intercept = l2(self.intercept_, derivative=True)
+                
+                derivative_coef += reg_coef
+                derivative_intercept += reg_intercept
 
             # updating the coefficients
             self.coef_ -= (self.lr * derivative_coef)
