@@ -1,5 +1,14 @@
 import numpy as np
-from scratchml.metrics import mean_squared_error, r_squared
+from scratchml.metrics import (
+    mean_squared_error,
+    root_mean_squared_error,
+    r_squared,
+    mean_absolute_error,
+    median_absolute_error,
+    mean_absolute_percentage_error,
+    mean_squared_logarithmic_error,
+    max_error
+)
 from scratchml.utils import convert_array_numpy
 from scratchml.regularizations import l1, l2
 from typing import Union
@@ -42,8 +51,17 @@ class LinearRegression(object):
         self.max_iters = max_iters
         self.loss_function = loss_function
         self.regularization = regularization
-        self._valid_loss_functions = ["mse"]
-        self._valid_metrics = ["r_squared"]
+        self._valid_loss_functions = ["mse", "mae"]
+        self._valid_metrics = [
+            "r_squared",
+            "mse",
+            "mae",
+            "rmse",
+            "medae",
+            "mape",
+            "msle",
+            "max_error"
+        ]
         self._valid_regularizations = ["l1", "l2", None]
 
     def fit(
@@ -100,8 +118,11 @@ class LinearRegression(object):
             # loss function
             if self.loss_function == "mse":
                 loss = mean_squared_error(y, y_hat, derivative=True)
-                derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
-                derivative_intercept = (np.sum(loss)) / y.shape[0]
+            elif self.loss_function == "mae":
+                loss = mean_absolute_error(y, y_hat, derivative=True)
+            
+            derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
+            derivative_intercept = (np.sum(loss)) / y.shape[0]
 
             # applying the regularization to the loss function
             if self.regularization != None:
@@ -175,3 +196,17 @@ class LinearRegression(object):
 
         if metric == "r_squared":
             return r_squared(y, y_hat)
+        elif metric == "mse":
+            return mean_squared_error(y, y_hat)
+        elif metric == "mae":
+            return mean_absolute_error(y, y_hat)
+        elif metric == "rmse":
+            return root_mean_squared_error(y, y_hat)
+        elif metric == "medae":
+            return median_absolute_error(y, y_hat)
+        elif metric == "mape":
+            return mean_absolute_percentage_error(y, y_hat)
+        elif metric == "msle":
+            return mean_squared_logarithmic_error(y, y_hat)
+        elif metric == "max_error":
+            return max_error(y, y_hat)

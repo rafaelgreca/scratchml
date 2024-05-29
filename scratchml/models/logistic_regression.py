@@ -2,9 +2,15 @@ import numpy as np
 from scratchml.losses import binary_cross_entropy
 from scratchml.utils import convert_array_numpy
 from scratchml.activations import sigmoid
-from scratchml.metrics import accuracy
+from scratchml.metrics import (
+    accuracy,
+    recall,
+    precision,
+    f1_score,
+    confusion_matrix
+)
 from scratchml.regularizations import l1, l2
-from typing import Union
+from typing import Union, List
 
 class LogisticRegression(object):
 
@@ -46,7 +52,13 @@ class LogisticRegression(object):
         self.loss_function = loss_function
         self.regularization = regularization
         self._valid_loss_functions = ["bce"]
-        self._valid_metrics = ["accuracy"]
+        self._valid_metrics = [
+            "accuracy",
+            "recall",
+            "precision",
+            "f1_score",
+            "confusion_matrix"
+        ]
         self._valid_regularizations = ["l1", "l2", None]
     
     def fit(
@@ -172,8 +184,10 @@ class LogisticRegression(object):
         X: np.ndarray,
         y: np.ndarray,
         threshold: float = 0.5,
-        metric: str = "accuracy"
-    ) -> np.float32:
+        metric: str = "accuracy",
+        labels_cm: List = None,
+        normalize_cm: bool = False
+    ) -> Union[np.float32, np.ndarray]:
         """
         Calculates the score of the model on a given set for a
         determined metric.
@@ -183,6 +197,12 @@ class LogisticRegression(object):
             y (np.ndarray): the targets of the features.
             threshold (float): the threshold of the prediction. Defaults to 0.5.
             metric (str, optional): which metric to use. Defaults to "r_squared".
+            labels_cm (str, optional): which labels should be used to calculate
+                the confusion matrix. If other metric is selected, then this
+                parameter will be ignore. Defaults to None.
+            normalize_cm (bool, optional): whether the confusion matrix should be
+                normalized ('all', 'pred', 'true') or not. If other metric is selected,
+                then this parameter will be ignore. Defaults to False.
 
         Returns:
             np.float32: the score achieved by the model.
@@ -198,3 +218,16 @@ class LogisticRegression(object):
 
         if metric == "accuracy":
             return accuracy(y, y_hat)
+        elif metric == "precision":
+            return precision(y, y_hat)
+        elif metric == "recall":
+            return recall(y, y_hat)
+        elif metric == "f1_score":
+            return f1_score(y, y_hat)
+        elif metric == "confusion_matrix":
+            return confusion_matrix(
+                y,
+                y_hat,
+                labels_cm,
+                normalize_cm
+            )
