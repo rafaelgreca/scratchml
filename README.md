@@ -42,7 +42,7 @@ Implementations:
     - [X] One-hot encoding
     - [X] Label encoding
 - [ ] Splitters
-    - [ ] KFold
+    - [X] KFold
     - [ ] Stratify KFold
     - [X] Simple data split
 - [ ] Models

@@ -1,5 +1,84 @@
 import numpy as np
-from typing import Any, Union, Tuple
+from typing import Any, Union, Tuple, List
+
+def KFold(
+    X: np.ndarray,
+    shuffle: bool = True,
+    n_splits: int = 2
+) -> List:
+    """
+    Splits the data into training and test set using the KFold technique.
+
+    Args:
+        X (np.ndarray): the feature array.
+        shuffle (bool, optional): whether to shuffle the data or not. Defaults to True.
+        n_splits (int, optional): the number of folds that the data will
+            be split into. Defaults to 2.
+
+    Returns:
+        List: a list containing the training and test set for each fold.
+    """
+    X = convert_array_numpy(X)
+
+    # validating the number of splits
+    try:
+        assert n_splits >= 2
+    except AssertionError:
+        raise ValueError("N splits value should be equal or larget than 2.\n")
+    
+    indices = np.arange(X.shape[0])
+
+    # shuffling the array
+    if shuffle:
+        np.random.shuffle(indices)
+    
+    division_mod = X.shape[0] % n_splits
+    fold_size = X.shape[0] // n_splits
+
+    # amount of indexes per fold
+    indexes = np.zeros(n_splits, dtype=int) + fold_size
+
+    # creating a mapping array that will be used to add
+    # extra samples to the folds
+    # e.g.: number of samples = 101 and number of splits = 3
+    # 101 % 3 = 2, so we have 2 left overs (which will be added
+    # to the first two folds) => [34 34 33]
+    extra_sample = np.zeros(n_splits, dtype=int)
+    folds_indexes = []
+
+    # if there are left over samples, we need to add thoses
+    # indexes into the respective folds
+    if division_mod != 0:
+        extra_sample[:division_mod] = 1
+        indexes = np.add(indexes, extra_sample)
+    
+    # splitting the indexes into folds
+    for i in indexes:
+        folds_indexes.append(indices[:i])
+        indices = indices[i:]
+
+    # organizing the folds into training and test
+    test_fold = np.arange(n_splits)
+    folds = []
+
+    for tf in test_fold:
+        # merging the indexes that are different from the
+        # test folder index together to form the training indexes set
+        training_indexes = [
+            folds_indexes[i]
+            for i in range(len(folds_indexes))
+            if i != tf
+        ]
+        test_indexes = folds_indexes[tf]
+
+        # converting the indexes lists to numpy array
+        training_indexes = convert_array_numpy(training_indexes)
+        training_indexes = training_indexes.reshape(-1)
+        test_indexes = convert_array_numpy(test_indexes)
+
+        folds.append((training_indexes, test_indexes))
+
+    return folds
 
 def train_test_split(
     X: np.ndarray,
@@ -9,7 +88,8 @@ def train_test_split(
     shuffle: bool = True,
     stratify: bool = False
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """_summary_
+    """
+    Splits the dataset into one training set and one validation set.
 
     Args:
         X (np.ndarray): the features array.

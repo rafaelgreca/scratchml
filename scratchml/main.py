@@ -1,9 +1,9 @@
 import numpy as np
 from sklearn.datasets import make_classification
-from scratchml.utils import train_test_split
+from scratchml.utils import train_test_split, KFold
 
 if __name__ == "__main__":
-    X, y = make_classification(n_samples=10000, n_features=10, n_classes=2, n_clusters_per_class=2)
+    X, y = make_classification(n_samples=102, n_features=10, n_classes=2, n_clusters_per_class=2)
 
     X_train, X_test, y_train, y_test = train_test_split(
         X=X,
@@ -23,3 +23,9 @@ if __name__ == "__main__":
     unique, counts = np.unique(y_test, return_counts=True)
     counts = np.asarray((unique, counts)).T
     print(counts)
+    print()
+
+    folds = KFold(X, True, 3)
+
+    for (training, test) in folds:
+        print(training.shape, test.shape)
