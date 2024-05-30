@@ -41,9 +41,9 @@ Implementations:
 - [X] Encoders
     - [X] One-hot encoding
     - [X] Label encoding
-- [ ] Splitters
+- [X] Splitters
     - [X] KFold
-    - [ ] Stratify KFold
+    - [X] Stratify KFold
     - [X] Simple data split
 - [ ] Models
     - [x] Linear Regression
