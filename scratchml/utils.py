@@ -3,6 +3,8 @@ from typing import Any, Union, Tuple, List
 
 def KFold(
     X: np.ndarray,
+    y: np.ndarray = None,
+    stratify: bool = False,
     shuffle: bool = True,
     n_splits: int = 2
 ) -> List:
@@ -11,6 +13,11 @@ def KFold(
 
     Args:
         X (np.ndarray): the feature array.
+        y (np.ndarray, optional): the labels array. Will be ignored with
+            stratify is False. Defaults to None.
+        stratify (bool, optional): whether to stratify the set based on
+            the labels (in other words, split the data while mantaining the classes
+            distribution )or not. Defaults to False.
         shuffle (bool, optional): whether to shuffle the data or not. Defaults to True.
         n_splits (int, optional): the number of folds that the data will
             be split into. Defaults to 2.
@@ -19,6 +26,7 @@ def KFold(
         List: a list containing the training and test set for each fold.
     """
     X = convert_array_numpy(X)
+    y = convert_array_numpy(y)
 
     # validating the number of splits
     try:
@@ -26,6 +34,13 @@ def KFold(
     except AssertionError:
         raise ValueError("N splits value should be equal or larget than 2.\n")
     
+    # validating if the y is not None when stratify is True
+    if stratify:
+        try:
+            assert y != None
+        except AssertionError:
+            raise ValueError("Y can not be None when stratify is True.\n")
+
     indices = np.arange(X.shape[0])
 
     # shuffling the array
@@ -53,9 +68,36 @@ def KFold(
         indexes = np.add(indexes, extra_sample)
     
     # splitting the indexes into folds
-    for i in indexes:
-        folds_indexes.append(indices[:i])
-        indices = indices[i:]
+    if stratify:
+        # analysing the classes distribution
+        unique, counts = np.unique(y, return_counts=True)
+        counts = np.asarray((unique, counts)).T
+        classes_distribution = [
+            (u, c)
+            for u, c in counts
+        ]
+
+        # getting the indexes of each class considering how many
+        # times each one occurred on the sample and splitting it
+        # using the train test ratio
+        # e.g.: [[0 100], [1 200]] => classes distribuition: 66%
+        # class 1 and 33% class 0. If we want the train set to be
+        # composed of 80% of the data, so we will have 158 (0.8 * 0.6 * 300)
+        # samples for class 1 and 79 (0.8 * 0.33 * 300) for class 0
+        for i in indexes:
+            _temp_indexes = []
+
+            for c, d in classes_distribution:
+                _y = np.argwhere(y == c).reshape(-1)
+                _size = int(d * i)
+                _temp_indexes.extend(_y[:_size])
+                indices = np.delete(indices, _y[:_size], axis=0)
+            
+            folds_indexes.append(_temp_indexes)
+    else:
+        for i in indexes:
+            folds_indexes.append(indices[:i])
+            indices = indices[i:]
 
     # organizing the folds into training and test
     test_fold = np.arange(n_splits)
@@ -74,8 +116,11 @@ def KFold(
         # converting the indexes lists to numpy array
         training_indexes = convert_array_numpy(training_indexes)
         training_indexes = training_indexes.reshape(-1)
-        test_indexes = convert_array_numpy(test_indexes)
+        training_indexes = training_indexes.astype(int)
 
+        test_indexes = convert_array_numpy(test_indexes)
+        test_indexes = test_indexes.astype(int)
+        
         folds.append((training_indexes, test_indexes))
 
     return folds

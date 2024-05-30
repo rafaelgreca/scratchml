@@ -25,7 +25,21 @@ if __name__ == "__main__":
     print(counts)
     print()
 
-    folds = KFold(X, True, 3)
+    folds = KFold(X, y, False, True, 3)
 
     for (training, test) in folds:
-        print(training.shape, test.shape)
+        _X_train = X[training]
+        _y_train = y[training]
+
+        _X_test = X[test]
+        _y_test = y[test]
+
+        unique, counts = np.unique(_y_train, return_counts=True)
+        counts = np.asarray((unique, counts)).T
+
+        print(counts)
+
+        unique, counts = np.unique(_y_test, return_counts=True)
+        counts = np.asarray((unique, counts)).T
+
+        print(counts)
