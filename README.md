@@ -44,7 +44,7 @@ Implementations:
 - [ ] Splitters
     - [ ] KFold
     - [ ] Stratify KFold
-    - [ ] Simple data split
+    - [X] Simple data split
 - [ ] Models
     - [x] Linear Regression
     - [x] Logistic Regression

@@ -1,22 +1,25 @@
+import numpy as np
 from sklearn.datasets import make_classification
-from sklearn.linear_model import LogisticRegression as SkLogisticRegression
-from scratchml.models.logistic_regression import LogisticRegression
+from scratchml.utils import train_test_split
 
 if __name__ == "__main__":
-    X, y = make_classification(n_samples=15000, n_features=10, n_classes=2, n_clusters_per_class=2)
+    X, y = make_classification(n_samples=10000, n_features=10, n_classes=2, n_clusters_per_class=2)
 
-    lr = LogisticRegression(learning_rate=0.1, tol=1e-4)
-    lr.fit(X, y)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X=X,
+        y=y,
+        test_size=0.2,
+        shuffle=True,
+        stratify=False
+    )
 
-    print(lr.coef_)
-    print(lr.intercept_)
-    print(lr.score(X, y))
-    print(lr.classes_)
+    print(X_train.shape, y_train.shape)
+    print(X_test.shape, y_test.shape)
 
-    sklr = SkLogisticRegression(penalty='none', fit_intercept=True, max_iter=1000000, tol=1e-4)
-    sklr.fit(X, y)
+    unique, counts = np.unique(y_train, return_counts=True)
+    counts = np.asarray((unique, counts)).T
+    print(counts)
 
-    print(sklr.coef_)
-    print(sklr.intercept_)
-    print(sklr.score(X, y))
-    print(sklr.classes_)
+    unique, counts = np.unique(y_test, return_counts=True)
+    counts = np.asarray((unique, counts)).T
+    print(counts)
