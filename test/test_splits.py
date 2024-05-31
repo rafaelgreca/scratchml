@@ -272,3 +272,6 @@ class Test_DataSplits(unittest.TestCase):
 
             assert np.max(train_ddiff) < 0.01
             assert np.max(test_ddiff) < 0.01
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

@@ -242,6 +242,11 @@ def train_test_split(
             for u, c in counts
         ]
 
+        check_max_ocurrencies = max([v for (c, v) in classes_distribution])
+
+        if (check_max_ocurrencies < 2):
+            raise RuntimeError("Stratify should not be used for a regression task.\n")
+
         train_indexes = []
         test_indexes = []
 
@@ -255,7 +260,6 @@ def train_test_split(
         for c, d in classes_distribution:
             _y = np.argwhere(y == c).reshape(-1)
             _size = int(np.round(d * train_split_ratio))
-
             train_indexes.extend(_y[:_size])
             test_indexes.extend(_y[_size:])
 
