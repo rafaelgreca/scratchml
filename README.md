@@ -61,6 +61,7 @@ Features:
 - [X] Create examples folder
 - [X] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Improving testing
-- [ ] Add verbose mode for Linear Regression and Logistic Regression
+- [X] Add verbose mode for Linear Regression and Logistic Regression
 - [ ] Fix Logistic Regression
 - [ ] Update README
+- [ ] Add visualization plots

@@ -22,7 +22,8 @@ class LinearRegression(object):
         max_iters: int = -1,
         loss_function: str = "mse",
         regularization: Union[None, str] = None,
-        n_jobs: int = None
+        n_jobs: int = None,
+        verbose: int = 2
     ) -> None:
         """
         Creates a Linear Regression instance.
@@ -41,6 +42,8 @@ class LinearRegression(object):
                 no regularization function will be used. Defaults to None.
             n_jobs (int, optional): the number of jobs to be used.
                 -1 means that all CPUs are used to train the model. Defaults to None.
+            verbose (int, optional): how much information should be printed.
+                Should be 0, 1, or 2. Defaults to 2.
         """
         self.n_jobs = n_jobs
         self.coef_ = None
@@ -51,6 +54,7 @@ class LinearRegression(object):
         self.max_iters = max_iters
         self.loss_function = loss_function
         self.regularization = regularization
+        self.verbose = verbose
         self._valid_loss_functions = ["mse", "mae"]
         self._valid_metrics = [
             "r_squared",
@@ -99,15 +103,19 @@ class LinearRegression(object):
             return ValueError(
                 f"Invalid value for 'regularization'. Must be {self._valid_regularizations}.\n"
             )
+
+        # validating the verbose value
+        try:
+            assert self.verbose in [0, 1, 2]
+        except AssertionError:
+            return ValueError(
+                f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
+            )
         
         self.intercept_ = 0.0
         self.coef_ = np.zeros(X.shape[1])
         last_losses = np.zeros(X.shape[1]) + np.inf
-
-        if self.max_iters == -1:
-            count = -99
-        else:
-            count = 1
+        epoch = 1
 
         # training loop
         while True:
@@ -141,15 +149,31 @@ class LinearRegression(object):
             self.coef_ = self.coef_ - (self.lr * derivative_coef)
             self.intercept_ = self.intercept_ - (self.lr * derivative_intercept)
 
-            # stopping criteria 
-            if (np.max(np.abs(last_losses)) < self.tol) or \
-                (count >= self.max_iters):
+            if self.verbose != 0:
+                loss_msg = f"Loss ({self.loss_function}): {loss}"
+                metric_msg = f"Metric (R²): {self.score(X, y)}"
+
+                if self.max_iters != -1:
+                    epoch_msg = f"Epoch: {epoch}/{self.max_iters}"
+                else:
+                    epoch_msg = f"Epoch: {epoch}"
+                                    
+                if self.verbose == 1:
+                    if epoch % 20 == 0:
+                        print(f"{epoch_msg}\t\t{loss_msg}\t\t{metric_msg}\n")
+                elif self.verbose == 2:
+                    print(f"{epoch_msg}\t\t{loss_msg}\t\t{metric_msg}\n")
+
+            # stopping criterias
+            if np.max(np.abs(last_losses)) < self.tol:
                 break
             
-            last_losses = derivative_coef
-
             if self.max_iters != -1:
-                count += 1
+                if (epoch >= self.max_iters):
+                    break
+
+            last_losses = derivative_coef
+            epoch += 1
     
     def predict(
         self,
