@@ -1,16 +1,22 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.0.1" 
-DESCRIPTION = "My first Python package"
-LONG_DESCRIPTION = "My first Python package with a slightly longer description"
+VERSION = "1.0.0" 
+DESCRIPTION = """
+A Python library called ScratchML was created to build the most fundamental Machine Learning models from scratch, emphasizing producing user-friendly, straightforward, and easy-to-use implementations for novices and enthusiasts.
+"""
 
 setup(
-    name="scratchml", 
+    name="ScratchML", 
     version=VERSION,
     author="Rafael Greca Vieira",
     author_email="rgvieira97@gmail.com",
     description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
     packages=find_packages(),
-    keywords=["python", "scratch", "machine learning"]
+    keywords=[
+        "python",
+        "scratch",
+        "machine learning",
+        "linear regression",
+        "logistic regression"
+    ]
 )

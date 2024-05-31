@@ -58,7 +58,9 @@ Features:
 
 - [X] Extend classification metrics to multi-class output
 - [ ] Run models on GPU and/or multiple CPUs
-- [ ] Create examples folder
-- [ ] Upgrade Linear and Regression models to use more than one loss function and metric
-- [ ] Make a type and shape verification on the Label Encoder and One Hot Encoder
+- [X] Create examples folder
+- [X] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Improving testing
+- [ ] Add verbose mode for Linear Regression and Logistic Regression
+- [ ] Fix Logistic Regression
+- [ ] Update README
