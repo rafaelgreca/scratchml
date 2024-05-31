@@ -62,6 +62,6 @@ Features:
 - [X] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Improving testing
 - [X] Add verbose mode for Linear Regression and Logistic Regression
-- [ ] Fix Logistic Regression
+- [X] Fix Logistic Regression
 - [ ] Update README
 - [ ] Add visualization plots

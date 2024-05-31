@@ -86,7 +86,7 @@ class LinearRegression(object):
         
         # validating the max_iters value
         if self.max_iters < -1 or self.max_iters == 0:
-            return ValueError("Invalid value for 'max_iters'. Must be -1 or >= 1.\n")
+            raise ValueError("Invalid value for 'max_iters'. Must be -1 or >= 1.\n")
         
         # validating the loss_function value
         try:
@@ -100,7 +100,7 @@ class LinearRegression(object):
         try:
             assert self.regularization in self._valid_regularizations
         except AssertionError:
-            return ValueError(
+            raise ValueError(
                 f"Invalid value for 'regularization'. Must be {self._valid_regularizations}.\n"
             )
 
@@ -108,13 +108,13 @@ class LinearRegression(object):
         try:
             assert self.verbose in [0, 1, 2]
         except AssertionError:
-            return ValueError(
+            raise ValueError(
                 f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
             )
         
         self.intercept_ = 0.0
         self.coef_ = np.zeros(X.shape[1])
-        last_losses = np.zeros(X.shape[1]) + np.inf
+        last_losses = np.zeros((1, X.shape[1])) + np.inf
         epoch = 1
 
         # training loop
@@ -146,8 +146,8 @@ class LinearRegression(object):
                 derivative_intercept += reg_intercept
             
             # updating the coefficients
-            self.coef_ = self.coef_ - (self.lr * derivative_coef)
-            self.intercept_ = self.intercept_ - (self.lr * derivative_intercept)
+            self.coef_ -= (self.lr * derivative_coef)
+            self.intercept_ -= (self.lr * derivative_intercept)
 
             if self.verbose != 0:
                 loss_msg = f"Loss ({self.loss_function}): {loss}"
@@ -165,7 +165,7 @@ class LinearRegression(object):
                     print(f"{epoch_msg}\t\t{loss_msg}\t\t{metric_msg}\n")
 
             # stopping criterias
-            if np.max(np.abs(last_losses)) < self.tol:
+            if np.max(np.abs(last_losses - derivative_coef)) < self.tol:
                 break
             
             if self.max_iters != -1:

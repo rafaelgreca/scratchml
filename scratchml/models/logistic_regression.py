@@ -1,7 +1,7 @@
 import numpy as np
 from scratchml.losses import binary_cross_entropy
 from scratchml.utils import convert_array_numpy
-from scratchml.activations import sigmoid
+from scratchml.activations import sigmoid, softmax
 from scratchml.metrics import (
     accuracy,
     recall,
@@ -10,7 +10,7 @@ from scratchml.metrics import (
     confusion_matrix
 )
 from scratchml.regularizations import l1, l2
-from typing import Union, List
+from typing import Union, List, Tuple
 
 class LogisticRegression(object):
 
@@ -18,6 +18,7 @@ class LogisticRegression(object):
         self,
         learning_rate: float,
         tol: float,
+        fit_intercept: bool = True,
         n_jobs: int = None,
         max_iters: int = -1,
         loss_function: str = "bce",
@@ -31,6 +32,8 @@ class LogisticRegression(object):
             learning_rate (float): the learning rate used to train the model.
             tol (float): the tolerance of the difference between two sequential
                 lossed, which is used as a stopping criteria.
+            fit_intercept (bool, optional): whether the intercept/bias should 
+                be fitted or not. Defaults to True.
             max_iters (int, optional): the maximum number of iterations
                 during the model training. -1 means that no maximum
                 iterations is used. Defaults to -1.
@@ -45,6 +48,7 @@ class LogisticRegression(object):
                 Should be 0, 1, or 2. Defaults to 2.
         """
         self.n_jobs = n_jobs
+        self.fit_intercept = fit_intercept
         self.coef_ = None
         self.intercept_ = None
         self.n_features_in_ = None
@@ -70,6 +74,13 @@ class LogisticRegression(object):
         X: np.ndarray,
         y: np.ndarray
     ) -> None:
+        """
+        Function responsible for fitting the linear model.
+
+        Args:
+            X (np.ndarray): the features array.
+            y (np.ndarray): the labels array.
+        """
         self.n_features_in_ = X.shape[1]
         self.classes_ = np.unique(y)
 
@@ -92,7 +103,7 @@ class LogisticRegression(object):
         try:
             assert self.regularization in self._valid_regularizations
         except AssertionError:
-            return ValueError(
+            raise ValueError(
                 f"Invalid value for 'regularization'. Must be {self._valid_regularizations}.\n"
             )
         
@@ -100,47 +111,108 @@ class LogisticRegression(object):
         try:
             assert self.verbose in [0, 1, 2]
         except AssertionError:
-            return ValueError(
+            raise ValueError(
                 f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
             )
         
-        self.intercept_ = np.zeros((1, ), dtype=np.float64)
-        self.coef_ = np.zeros((1, X.shape[1]), dtype=np.float64)
-        last_losses = np.zeros(X.shape[1]) + np.inf
+        # validating the number of unique classes
+        try:
+            assert len(self.classes_) >= 2
+        except AssertionError:
+            raise RuntimeError("Only one unique class was found.\n")
+
+        if len(self.classes_) == 2:
+            self.intercept_ = np.zeros((1,), dtype=np.float64)
+            self.coef_ = np.zeros((1, X.shape[1]), dtype=np.float64)
+            self.coef_, self.intercept_ = self._fitting_model(
+                X,
+                y,
+                self.coef_,
+                self.intercept_
+            )
+        else:
+            self.intercept_ = np.zeros(len(self.classes_), dtype=np.float64)
+            self.coef_ = np.zeros((len(self.classes_), X.shape[1]), dtype=np.float64)
+
+            for i, c in enumerate(self.classes_):
+                _y = (y == c).astype(int)
+                self.coef_[i], self.intercept_[i] = self._fitting_model(
+                    X,
+                    _y,
+                    self.coef_[i],
+                    self.intercept_[i]
+                )
+
+    def _fitting_model(
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+        coefs: np.ndarray,
+        intercept: np.ndarray
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Auxiliary function that is used to fit the model.
+
+        Args:
+            X (np.ndarray): the features array.
+            y (np.ndarray): the labels array.
+            coefs (np.ndarray): the coefficients array.
+            intercept (np.ndarray): the intercept array.
+        
+        Returns:
+            coefs, intercept (np.ndarray, np.ndarray): the
+                new coefficient and intercept arrays, respectively.
+        """
         epoch = 1
+        last_losses = np.zeros((1, X.shape[1])) + np.inf
 
         while True:
             # making the prediction
-            y_hat = np.matmul(X, self.coef_.T) + self.intercept_        
+            y_hat = np.matmul(X, coefs.T) + intercept
             y_hat = np.squeeze(sigmoid(y_hat))
-            
+                        
             # calculating the loss according to the chosen
             # loss function
             if self.loss_function == "bce":
                 loss = binary_cross_entropy(y, y_hat, derivative=True)
                 derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
-                derivative_intercept = (np.sum(loss)) / y.shape[0]
+
+                if self.fit_intercept:
+                    derivative_intercept = (np.sum(loss)) / y.shape[0]
 
             # applying the regularization to the loss function
             if self.regularization != None:
                 if self.regularization == "l1":
-                    reg_coef = l1(self.coef_, derivative=True)
-                    reg_intercept = l1(self.intercept_, derivative=True)
+                    reg_coef = l1(coefs, derivative=True)
+
+                    if self.fit_intercept:
+                        reg_intercept = l1(intercept, derivative=True)
 
                 elif self.regularization == "l2":
-                    reg_coef = l2(self.coef_, derivative=True)
-                    reg_intercept = l2(self.intercept_, derivative=True)
+                    reg_coef = l2(coefs, derivative=True)
+
+                    if self.fit_intercept:
+                        reg_intercept = l2(intercept, derivative=True)
                 
+                reg_coef = np.squeeze(reg_coef)
+
+                if self.fit_intercept:
+                    reg_intercept = np.squeeze(reg_intercept)
+
                 derivative_coef += reg_coef
-                derivative_intercept += reg_intercept
+
+                if self.fit_intercept:
+                    derivative_intercept += reg_intercept
 
             # updating the coefficients
-            self.coef_ -= (self.lr * derivative_coef)
-            self.intercept_ -= (self.lr * derivative_intercept)
+            coefs -= (self.lr * derivative_coef)
+
+            if self.fit_intercept:
+                intercept -= (self.lr * derivative_intercept)
 
             if self.verbose != 0:
                 loss_msg = f"Loss ({self.loss_function}): {loss}"
-                metric_msg = f"Metric (R²): {self.score(X, y)}"
+                metric_msg = f"Metric (Accuracy): {self.score(X, y)}"
 
                 if self.max_iters != -1:
                     epoch_msg = f"Epoch: {epoch}/{self.max_iters}"
@@ -154,7 +226,7 @@ class LogisticRegression(object):
                     print(f"{epoch_msg}\t\t{loss_msg}\t\t{metric_msg}\n")
 
             # stopping criteria
-            if (np.max(np.abs(last_losses)) < self.tol):
+            if (np.max(np.abs(last_losses - derivative_coef)) < self.tol):
                 break
             
             if self.max_iters != -1:
@@ -163,11 +235,13 @@ class LogisticRegression(object):
 
             last_losses = derivative_coef
             epoch += 1
+
+        return coefs, intercept
     
     def predict(
         self,
         X: np.ndarray,
-        threshold: float = 0.5
+        threshold: float = None
     ) -> np.ndarray:
         """
         Uses the trained model to predict the classes of a given
@@ -175,14 +249,22 @@ class LogisticRegression(object):
 
         Args:
             X (np.ndarray): the features.
-            threshold (float): the threshold of the prediction. Defaults to 0.5.
+            threshold (float, optional): the threshold of the prediction.
+                Defaults to None.
 
         Returns:
             np.ndarray: the predicted classes.
         """
         y_hat = np.matmul(X, self.coef_.T) + self.intercept_
         y_hat = np.squeeze(sigmoid(y_hat))
-        y_hat = (y_hat > threshold).astype(int)
+
+        if threshold != None:
+            y_hat = (y_hat > threshold).astype(int)
+        
+        if len(self.classes_) > 2:
+            y_hat = softmax(y_hat)
+            y_hat = np.argmax(y_hat, axis=1)
+
         return y_hat
 
     def predict_proba(

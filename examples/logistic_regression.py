@@ -22,7 +22,8 @@ if __name__ == "__main__":
         n_jobs=-1,
         max_iters=-1,
         loss_function="bce",
-        regularization=None
+        regularization=None,
+        verbose=1
     )
 
     # splitting the data into training and testing using KFold
