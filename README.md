@@ -23,8 +23,6 @@
         <img src="https://img.shields.io/badge/license-MIT-blue?color=greeb&style=for-the-badge" /></a>
 
 </p>
-[![MIT License][license-shield]][https://img.shields.io/badge/license-MIT-blue]
-
 
 # ScratchML
 
