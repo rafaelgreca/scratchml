@@ -1,4 +1,79 @@
+
+## Badges
+
+[![Version][version-shield]][https://img.shields.io/badge/version-1.0-orange.svg?color=greeb&style=for-the-badge]
+[![Contributors][contributors-shield]][https://img.shields.io/github/contributors/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
+[![Forks][forks-shield]][https://img.shields.io/github/forks/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
+[![Stars][stars-shield]][https://img.shields.io/github/stars/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
+[![Issues][issues-shield]][https://img.shields.io/github/issues/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
+[![MIT License][license-shield]][https://img.shields.io/badge/license-MIT-blue]
+
+
 # ScratchML
+
+A Python library called ScratchML was created to build the most fundamental Machine Learning models from scratch (using only Numpy), emphasizing producing user-friendly, straightforward, and easy-to-use implementations for novices and enthusiasts.
+
+Disclaimer: This library is not intended to surpass those that already exist and which are better, more optimized and with more diversity of implemented algorithms (such as scikit-learn, PyTorch, Keras and Tensorflow), but rather to provide code that is easier to understand, simple and friendly for beginners and enthusiasts in the field of artificial intelligence who wish to gain a deeper understanding of how algorithms work.
+## Installation
+
+To install this package, first clone the repository to the directory of your choice using the following command:
+
+```bash
+git clone https://github.com/rafaelgreca/scratchml.git
+```
+
+### Using Virtual Environment
+
+Create a virtual environment (ideally using conda) and install the requirements with the following command:
+
+```bash
+conda create --name scratchml python=3.11.9
+conda activate scratchml
+pip install -r requirements/requirements.txt
+```
+
+### Using Docker
+
+Build the Docker image using the following command:
+
+```bash
+sudo docker build -f Dockerfile -t scratchml . --no-cache
+```
+
+Run the Docker container using the following command:
+
+```bash
+sudo docker run -d -p 8000:5000 --name scratchml scratchml
+```
+    
+## Usage/Examples
+
+See the `examples` folder to see some use cases.
+
+
+## Running Tests
+
+### Locally
+
+Run the following command on the root folder:
+
+```bash
+python3 -m unittest discover
+```
+
+### Using Docker
+
+Build the Docker image using the following command:
+
+```bash
+sudo docker build -f test.Dockerfile -t test_scratchml . --no-cache
+```
+
+Run the Docker container using the following command:
+
+```bash
+sudo docker run -d -p 8001:5000 --name test_scratchml test_scratchml
+```
 
 ## Roadmap
 
@@ -15,7 +90,7 @@ Implementations:
     - [x] Sigmoid
     - [ ] ReLU
     - [ ] Linear
-    - [ ] Softmax
+    - [X] Softmax
     - [ ] TanH
     - [ ] Elu
     - [ ] Leaky ReLU
@@ -31,25 +106,26 @@ Implementations:
         - [x] Mean Squared Logarithmic Error (MSLE)
         - [x] Max Error (ME)
         - [x] R Squared (R2)
-    - [ ] Classification Metrics
+    - [x] Classification Metrics
         - [x] Accuracy
         - [x] Precision
         - [x] Recall
         - [x] F1-Score
         - [X] Confusion Matrix
-        - [ ] AUC Score
-- [X] Encoders
-    - [X] One-hot encoding
-    - [X] Label encoding
-- [X] Splitters
-    - [X] KFold
-    - [X] Stratify KFold
-    - [X] Simple data split
+- [x] Encoders
+    - [x] One-hot encoding
+    - [x] Label encoding
+- [x] Splitters
+    - [x] KFold
+    - [x] Stratify KFold
+    - [x] Simple data split
 - [ ] Models
     - [x] Linear Regression
     - [x] Logistic Regression
     - [ ] SVM
     - [ ] KNN
+    - [ ] Naive Bayes
+    - [ ] Random Forest
     - [ ] Decision Tree
     - [ ] Perceptron
     - [ ] MLP
@@ -57,7 +133,7 @@ Implementations:
 Features:
 
 - [X] Extend classification metrics to multi-class output
-- [ ] Run models on GPU and/or multiple CPUs
+- [ ] Run Linear Regression and Logistic models on multiple CPUs using joblib
 - [X] Create examples folder
 - [X] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Improving testing
@@ -65,3 +141,35 @@ Features:
 - [X] Fix Logistic Regression
 - [ ] Update README
 - [ ] Add visualization plots
+
+Issues:
+
+- [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
+
+
+## Feedback
+
+If you have any feedback, please feel free to create an issue pointing out whatever you want or reach out to me at rgvieira97@gmail.com
+
+
+## Contributing
+
+Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. See LICENSE for more information.
+
+
+## Authors
+
+- [@rafaelgreca](https://www.github.com/rafaelgreca)
+
