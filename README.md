@@ -1,11 +1,28 @@
 
 ## Badges
 
-[![Version][version-shield]][https://img.shields.io/badge/version-1.0-orange.svg?color=greeb&style=for-the-badge]
-[![Contributors][contributors-shield]][https://img.shields.io/github/contributors/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
-[![Forks][forks-shield]][https://img.shields.io/github/forks/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
-[![Stars][stars-shield]][https://img.shields.io/github/stars/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
-[![Issues][issues-shield]][https://img.shields.io/github/issues/rafaelgreca/scratchml?color=greeb&style=for-the-badge]
+<p align="center">
+    <a href="https://github.com/rafaelgreca/scratchml/contributors" alt="Contributors">
+        <img src="https://img.shields.io/github/contributors/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
+    <a href="https://github.com/rafaelgreca/scratchml/forks" alt="Forks">
+        <img src="https://img.shields.io/github/forks/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
+    <a href="https://github.com/rafaelgreca/scratchml/stars" alt="Stars">
+        <img src="https://img.shields.io/github/stars/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
+    <a href="https://github.com/rafaelgreca/scratchml/issues" alt="Issues">
+        <img src="https://img.shields.io/github/issues/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
+    <a href="https://github.com/rafaelgreca/scratchml/pulse" alt="Activity">
+        <img src="https://img.shields.io/github/commit-activity/m/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
+    <a href="https://circleci.com/gh/rafaelgreca/scratchml/tree/master">
+        <img src="https://img.shields.io/circleci/project/github/rafaelgreca/scratchml/main?color=greeb&style=for-the-badge" alt="build status"></a>
+    <a href="https://coveralls.io/github/rafaelgreca/scratchml">
+        <img src="https://img.shields.io/coveralls/github/rafaelgreca/scratchml?color=greeb&style=for-the-badge"
+            alt="coverage"></a>
+    <a alt="Version">
+        <img src="https://img.shields.io/badge/version-1.0.1-orange.svg?color=greeb&style=for-the-badge" /></a>
+    <a href="https://github.com/rafaelgreca/scratchml/blob/main/LICENSE" alt="License">
+        <img src="https://img.shields.io/badge/license-MIT-blue?color=greeb&style=for-the-badge" /></a>
+
+</p>
 [![MIT License][license-shield]][https://img.shields.io/badge/license-MIT-blue]
 
 
