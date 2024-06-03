@@ -127,6 +127,11 @@ Implementations:
         - [x] Recall
         - [x] F1-Score
         - [X] Confusion Matrix
+- [x] Distances
+    - [x] Euclidean
+    - [x] Manhattan
+    - [x] Chebyshev
+    - [x] Minkowski
 - [x] Encoders
     - [x] One-hot encoding
     - [x] Label encoding
@@ -148,7 +153,7 @@ Implementations:
 Features:
 
 - [X] Extend classification metrics to multi-class output
-- [ ] Run Linear Regression and Logistic models on multiple CPUs using joblib
+- [ ] Run Linear Regression, Logistic Regression, and KNN on multiple CPUs using joblib
 - [X] Create examples folder
 - [X] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Improving testing
@@ -160,6 +165,7 @@ Features:
 Issues:
 
 - [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
+- [ ] Optimize distances functions and KNN looping functions
 
 
 ## Feedback
