@@ -18,7 +18,7 @@
         <img src="https://img.shields.io/coveralls/github/rafaelgreca/scratchml?color=greeb&style=for-the-badge"
             alt="coverage"></a>
     <a alt="Version">
-        <img src="https://img.shields.io/badge/version-1.0.1-orange.svg?color=greeb&style=for-the-badge" /></a>
+        <img src="https://img.shields.io/badge/version-2.0.0-orange.svg?color=greeb&style=for-the-badge" /></a>
     <a href="https://github.com/rafaelgreca/scratchml/blob/main/LICENSE" alt="License">
         <img src="https://img.shields.io/badge/license-MIT-blue?color=greeb&style=for-the-badge" /></a>
 
@@ -105,7 +105,7 @@ Implementations:
     - [x] Sigmoid
     - [ ] ReLU
     - [ ] Linear
-    - [X] Softmax
+    - [x] Softmax
     - [ ] TanH
     - [ ] Elu
     - [ ] Leaky ReLU
@@ -126,7 +126,13 @@ Implementations:
         - [x] Precision
         - [x] Recall
         - [x] F1-Score
-        - [X] Confusion Matrix
+        - [x] Confusion Matrix
+        - [ ] ROC AUC Score
+- [x] Distances
+    - [x] Euclidean
+    - [x] Manhattan
+    - [x] Chebyshev
+    - [x] Minkowski
 - [x] Encoders
     - [x] One-hot encoding
     - [x] Label encoding
@@ -138,7 +144,7 @@ Implementations:
     - [x] Linear Regression
     - [x] Logistic Regression
     - [ ] SVM
-    - [ ] KNN
+    - [x] KNN
     - [ ] Naive Bayes
     - [ ] Random Forest
     - [ ] Decision Tree
@@ -147,19 +153,20 @@ Implementations:
 
 Features:
 
-- [X] Extend classification metrics to multi-class output
-- [ ] Run Linear Regression and Logistic models on multiple CPUs using joblib
-- [X] Create examples folder
-- [X] Upgrade Linear and Regression models to use more than one loss function and metric
+- [x] Extend classification metrics to multi-class output
+- [ ] Run Linear Regression, Logistic Regression, and KNN on multiple CPUs using joblib
+- [x] Create examples folder
+- [x] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Improving testing
-- [X] Add verbose mode for Linear Regression and Logistic Regression
-- [X] Fix Logistic Regression
+- [x] Add verbose mode for Linear Regression and Logistic Regression
+- [x] Fix Logistic Regression
 - [ ] Update README
 - [ ] Add visualization plots
 
 Issues:
 
 - [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
+- [ ] Optimize distance metrics and KNN looping functions
 
 
 ## Feedback
