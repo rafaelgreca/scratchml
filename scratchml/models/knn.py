@@ -99,6 +99,7 @@ class BaseKNN(ABC):
         n_neighbors: int = None,
         return_distance: bool = True
     ) -> Union[Tuple[np.ndarray, np.ndarray], np.ndarray]:
+        # TODO: Optimize and improve this function
         """
         Gets the K-neighbors of a data point.
 
@@ -249,6 +250,20 @@ class KNNClassifier(BaseKNN):
         metric: str = "minkowski",
         n_jobs: int = None
     ) -> None:
+        """
+        Creats a K-Nearest Neighbors (KNN) Classifier instance.
+
+        Args:
+            n_neighbors (int, optional): the value for k. Defaults to 5.
+            weights (str, optional): how the weights for each
+                data point should be initialized. Defaults to "uniform".
+            p (float, optional): the power parameter of the Minkowski metric.
+                It's only used when the chosen metric is "minkowski". Defaults to 2.
+            metric (str, optional): which metric distance should
+                be used. Defaults to "minkowski".
+            n_jobs (int, optional): the number of jobs to be used.
+                -1 means that all CPUs are used to train the model. Defaults to None.
+        """
         super().__init__(n_neighbors, weights, p, metric, n_jobs)
         self._valid_score_metrics = [
             "accuracy",
@@ -375,6 +390,20 @@ class KNNRegressor(BaseKNN):
         metric: str = "minkowski",
         n_jobs: int = None
     ) -> None:
+        """
+        Creats a K-Nearest Neighbors (KNN) Regressor instance.
+
+        Args:
+            n_neighbors (int, optional): the value for k. Defaults to 5.
+            weights (str, optional): how the weights for each
+                data point should be initialized. Defaults to "uniform".
+            p (float, optional): the power parameter of the Minkowski metric.
+                It's only used when the chosen metric is "minkowski". Defaults to 2.
+            metric (str, optional): which metric distance should
+                be used. Defaults to "minkowski".
+            n_jobs (int, optional): the number of jobs to be used.
+                -1 means that all CPUs are used to train the model. Defaults to None.
+        """
         super().__init__(n_neighbors, weights, p, metric, n_jobs)
         self._valid_score_metrics = [
             "r_squared",
@@ -405,10 +434,10 @@ class KNNRegressor(BaseKNN):
         prediction = []
 
         # getting the k closest neighbors
-        distances, indexes = self.kneighbors(
+        indexes = self.kneighbors(
             X=X,
             n_neighbors=self.n_neighbors,
-            return_distance=True
+            return_distance=False
         )
 
         indexes = indexes.astype(np.int32)
