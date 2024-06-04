@@ -12,7 +12,15 @@ from scratchml.metrics import (
     recall,
     precision,
     f1_score,
-    confusion_matrix
+    confusion_matrix,
+    mean_squared_error,
+    root_mean_squared_error,
+    r_squared,
+    mean_absolute_error,
+    median_absolute_error,
+    mean_absolute_percentage_error,
+    mean_squared_logarithmic_error,
+    max_error
 )
 from typing import Tuple, Union, List
 
@@ -196,7 +204,7 @@ class BaseKNN(ABC):
         try:
             assert self.n_neighbors > 0
         except AssertionError:
-            raise ValueError("The number of neighbors must be bigger than zero.\n")
+            raise ValueError("The 'n_neighbors' must be bigger than zero.\n")
         
         # validating the n_jobs value
         if self.n_jobs != None:
@@ -206,25 +214,25 @@ class BaseKNN(ABC):
                 else:
                     assert self.n_jobs > 0
             except AssertionError:
-                raise ValueError("If not None, n_jobs must be equal to -1 or higher than 0.\n")
+                raise ValueError("If not None, 'n_jobs' must be equal to -1 or higher than 0.\n")
         
         # validating the p value
         try:
             assert self.p > 0
         except AssertionError:
-            raise ValueError("The value for p must be a positive number.\n")
+            raise ValueError("The value for 'p' must be a positive number.\n")
         
         # validating the metric value
         try:
             assert self.effective_metric_ in self._valid_metrics
         except AssertionError:
-            raise ValueError(f"Metric should be {self._valid_metrics}, got {self.effective_metric_} instead.\n")
+            raise ValueError(f"'Metric' should be {self._valid_metrics}, got {self.effective_metric_} instead.\n")
         
         # validating the weights value
         try:
             assert self.weights in self._valid_weights
         except AssertionError:
-            raise ValueError(f"Weights should be {self._valid_weights}, got {self.weights} instead.\n")
+            raise ValueError(f"'Weights' should be {self._valid_weights}, got {self.weights} instead.\n")
 
         if self.p == 2 and self.effective_metric_ == "minkowski":
             self.effective_metric_ = "euclidean"
@@ -321,7 +329,7 @@ class KNNClassifier(BaseKNN):
             X (np.ndarray): the features array.
             y (np.ndarray): the labels array.
             metric (string): which metric should be used to assess
-                the model's performance.
+                the model's performance. Defaults to Accuracy.
             labels_cm (str, optional): which labels should be used to calculate
                 the confusion matrix. If other metric is selected, then this
                 parameter will be ignore. Defaults to None.
@@ -357,3 +365,117 @@ class KNNClassifier(BaseKNN):
                 labels_cm,
                 normalize_cm
             )
+
+class KNNRegressor(BaseKNN):
+    def __init__(
+        self,
+        n_neighbors: int = 5,
+        weights: str = "uniform",
+        p: float = 2,
+        metric: str = "minkowski",
+        n_jobs: int = None
+    ) -> None:
+        super().__init__(n_neighbors, weights, p, metric, n_jobs)
+        self._valid_score_metrics = [
+            "r_squared",
+            "mse",
+            "mae",
+            "rmse",
+            "medae",
+            "mape",
+            "msle",
+            "max_error"
+        ]
+    
+    def predict(
+        self,
+        X: np.ndarray
+    ) -> np.ndarray:
+        """
+        Uses the trained model to predict the classes of a given
+        data points (also called features).
+
+        Args:
+            X (np.ndarray): the features.
+
+        Returns:
+            np.ndarray: the predicted classes.
+        """
+        X = convert_array_numpy(X)
+        prediction = []
+
+        # getting the k closest neighbors
+        distances, indexes = self.kneighbors(
+            X=X,
+            n_neighbors=self.n_neighbors,
+            return_distance=True
+        )
+
+        indexes = indexes.astype(np.int32)
+        _weights = np.arange(1, self.n_neighbors + 1)[::-1]
+        
+        for index in indexes:
+            _y = self.y_[index]
+
+            # getting the mean target value for the k neighbors
+            if self.weights == "uniform":
+                _mean = np.mean(_y)
+            elif self.weights == "distance":
+                # assigning a weight (from a range between n_neighbors value
+                # and 1), where the closest neighbor will get the highest weight
+                # (n_neighbors) and the farthest will receive the lowest (1)
+                # the prediction will be the mean of the product between the weights
+                # and the targets
+                _mean = np.dot(_weights, _y) / sum(_weights)
+                
+            prediction.append(_mean)
+        
+        prediction = convert_array_numpy(prediction)
+        prediction = prediction.astype(np.float64)
+
+        return prediction
+
+    def score(
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+        metric: str = "r_squared"
+    ) -> np.float64:
+        """
+        Uses the trained model to predict the classes of a given
+        data points (also called features).
+
+        Args:
+            X (np.ndarray): the features array.
+            y (np.ndarray): the labels array.
+            metric (string): which metric should be used to assess
+                the model's performance. Defaults to R Squared.
+
+        Returns:
+            np.float32: the score achieved by the model.
+        """
+        try:
+            assert metric in self._valid_score_metrics
+        except AssertionError:
+            raise ValueError(
+                f"Invalid value for 'metric'. Must be {self._valid_score_metrics}.\n"
+            )
+        
+        y_hat = self.predict(X)
+
+        if metric == "r_squared":
+            return r_squared(y, y_hat)
+        elif metric == "mse":
+            return mean_squared_error(y, y_hat)
+        elif metric == "mae":
+            return mean_absolute_error(y, y_hat)
+        elif metric == "rmse":
+            return root_mean_squared_error(y, y_hat)
+        elif metric == "medae":
+            return median_absolute_error(y, y_hat)
+        elif metric == "mape":
+            return mean_absolute_percentage_error(y, y_hat)
+        elif metric == "msle":
+            return mean_squared_logarithmic_error(y, y_hat)
+        elif metric == "max_error":
+            return max_error(y, y_hat)
