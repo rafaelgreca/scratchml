@@ -2,10 +2,8 @@ import numpy as np
 
 # TODO: Optimize and improve these distance metrics
 
-def euclidean(
-    x: np.ndarray,
-    y: np.ndarray
-) -> np.ndarray:
+
+def euclidean(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     """
     Calculates the Euclidean Distance between two points.
 
@@ -24,10 +22,8 @@ def euclidean(
 
     return distances
 
-def manhattan(
-    x: np.ndarray,
-    y: np.ndarray
-) -> np.ndarray:
+
+def manhattan(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     """
     Calculates the Manhattan Distance (MD) between two points.
 
@@ -43,13 +39,11 @@ def manhattan(
     for i in range(x.shape[0]):
         for j in range(y.shape[0]):
             distances[i, j] = np.sum(np.abs(x[i] - y[j]))
-            
+
     return distances
 
-def chebyshev(
-    x: np.ndarray,
-    y: np.ndarray
-) -> np.ndarray:
+
+def chebyshev(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     """
     Calculates the Chebyshev Distance (CD) between two points.
 
@@ -68,11 +62,8 @@ def chebyshev(
 
     return distances
 
-def minkowski(
-    x: np.ndarray,
-    y: np.ndarray,
-    p: float
-) -> np.ndarray:
+
+def minkowski(x: np.ndarray, y: np.ndarray, p: float) -> np.ndarray:
     """
     Calculates the Minkowski Distance (MiD) between two points.
 
@@ -88,6 +79,6 @@ def minkowski(
 
     for i in range(x.shape[0]):
         for j in range(y.shape[0]):
-            distances[i, j] = np.sum(np.abs(x[i] - y[j]) ** p) ** (1/p)
+            distances[i, j] = np.sum(np.abs(x[i] - y[j]) ** p) ** (1 / p)
 
     return distances

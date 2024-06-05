@@ -3,10 +3,9 @@ from scratchml.utils import convert_array_numpy
 from scratchml.encoders import OneHotEncoder
 from typing import Union
 
+
 def mean_squared_error(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    derivative: bool = False
+    y: np.ndarray, y_hat: np.ndarray, derivative: bool = False
 ) -> Union[np.ndarray, np.float32]:
     """
     Calculates the Mean Squared Error (MSE).
@@ -22,14 +21,13 @@ def mean_squared_error(
             or the value of the MSE, respectively.
     """
     if derivative:
-        return (y_hat - y)
+        return y_hat - y
     else:
         return np.sum((y_hat - y) ** 2) / y.shape[0]
 
+
 def root_mean_squared_error(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    derivative: bool = False
+    y: np.ndarray, y_hat: np.ndarray, derivative: bool = False
 ) -> Union[np.ndarray, np.float32]:
     """
     Calculates the Root Mean Squared Error (RMSE).
@@ -48,11 +46,10 @@ def root_mean_squared_error(
         raise NotImplementedError
     else:
         return np.sqrt(np.sum((y_hat - y) ** 2) / y.shape[0])
-    
+
+
 def mean_absolute_error(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    derivative: bool = False
+    y: np.ndarray, y_hat: np.ndarray, derivative: bool = False
 ) -> Union[np.ndarray, np.float32]:
     """
     Calculates the Mean Absolute Error (MAE).
@@ -68,14 +65,13 @@ def mean_absolute_error(
             or the value of the MAE, respectively.
     """
     if derivative:
-        return (np.where(y_hat > y, 1, -1) / y.shape[0])
+        return np.where(y_hat > y, 1, -1) / y.shape[0]
     else:
         return np.sum(np.abs(y - y_hat)) / (y.shape[0])
-    
+
+
 def median_absolute_error(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    derivative: bool = False
+    y: np.ndarray, y_hat: np.ndarray, derivative: bool = False
 ) -> Union[np.ndarray, np.float32]:
     """
     Calculates the Median Absolute Error (MedAE).
@@ -95,11 +91,12 @@ def median_absolute_error(
     else:
         return np.median(np.abs(y - y_hat))
 
+
 def mean_absolute_percentage_error(
     y: np.ndarray,
     y_hat: np.ndarray,
     derivative: bool = False,
-    epsilon: np.float32 = 1e-9
+    epsilon: np.float32 = 1e-9,
 ) -> Union[np.ndarray, np.float32]:
     """
     Calculates the Mean Absolute Percentage Error (MAPE).
@@ -120,17 +117,19 @@ def mean_absolute_percentage_error(
         raise NotImplementedError
     else:
         score = np.sum(
-            [np.abs(y[i] - y_hat[i])/ np.maximum(epsilon, np.abs(y[i]))
-             for i in range(y.shape[0])
+            [
+                np.abs(y[i] - y_hat[i]) / np.maximum(epsilon, np.abs(y[i]))
+                for i in range(y.shape[0])
             ]
         )
-        return  score / (y.shape[0])
+        return score / (y.shape[0])
+
 
 def mean_squared_logarithmic_error(
     y: np.ndarray,
     y_hat: np.ndarray,
     derivative: bool = False,
-    epsilon: np.float32 = 1e-9
+    epsilon: np.float32 = 1e-9,
 ) -> Union[np.ndarray, np.float32]:
     """
     Calculates the Mean Squared Logarithmic Error (MSLE).
@@ -152,6 +151,7 @@ def mean_squared_logarithmic_error(
     else:
         score = np.sum((np.log(1 + y + epsilon) - np.log(1 + y_hat + epsilon)) ** 2)
         return score / y.shape[0]
+
 
 def max_error(
     y: np.ndarray,
@@ -175,11 +175,9 @@ def max_error(
         raise NotImplementedError
     else:
         return np.max(np.abs(y - y_hat))
-    
-def r_squared(
-    y: np.ndarray,
-    y_hat: np.ndarray
-) -> np.float32:
+
+
+def r_squared(y: np.ndarray, y_hat: np.ndarray) -> np.float32:
     """
     Calculates the R Squared (R2).
 
@@ -191,17 +189,15 @@ def r_squared(
         np.float32: the value of the R2 error.
     """
     # sum of the squared residuals
-    u = ((y - y_hat)** 2).sum()
+    u = ((y - y_hat) ** 2).sum()
 
     # total sum of squares
     v = ((y - y_hat.mean()) ** 2).sum()
 
-    return (1 - (u/v))
+    return 1 - (u / v)
 
-def accuracy(
-    y: np.ndarray,
-    y_hat: np.ndarray
-) -> np.float32:
+
+def accuracy(y: np.ndarray, y_hat: np.ndarray) -> np.float32:
     """
     Calculates the Accuracy score.
 
@@ -215,11 +211,8 @@ def accuracy(
     score = (y == np.squeeze(y_hat)).astype(int)
     return np.sum(score) / y.shape[0]
 
-def precision(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    average: str = "binary"
-) -> np.float32:
+
+def precision(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.float32:
     """
     Calculates the Precision score.
 
@@ -238,10 +231,8 @@ def precision(
     try:
         assert average in _valid_averages
     except AssertionError:
-        raise ValueError(
-            f"Average should be {_valid_averages}, got {average}.\n"
-        )
-    
+        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
+
     if average == "binary":
         tp = np.sum((y == 1) & (y_hat == 1))
         fp = np.sum((y == 0) & (y_hat == 1))
@@ -266,18 +257,15 @@ def precision(
             _fp = np.sum((_y == 0) & (_y_hat == 1))
             _precision = _tp / (_tp + _fp)
             precisions.append(_precision)
-            weights.append(_y.shape[0]/y.shape[0])
-        
+            weights.append(_y.shape[0] / y.shape[0])
+
         if average == "macro":
-            return sum(precisions)/len(precisions)
+            return sum(precisions) / len(precisions)
         elif average == "weighted":
-            return np.dot(precisions, weights)/len(precisions)
-        
-def recall(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    average: str = "binary"
-) -> np.float32:
+            return np.dot(precisions, weights) / len(precisions)
+
+
+def recall(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.float32:
     """
     Calculates the Recall score.
 
@@ -296,10 +284,8 @@ def recall(
     try:
         assert average in _valid_averages
     except AssertionError:
-        raise ValueError(
-            f"Average should be {_valid_averages}, got {average}.\n"
-        )
-    
+        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
+
     if average == "binary":
         tp = np.sum((y == 1) & (y_hat == 1))
         fn = np.sum((y == 1) & (y_hat == 0))
@@ -324,18 +310,15 @@ def recall(
             _fn = np.sum((_y == 1) & (_y_hat == 0))
             _recall = _tp / (_tp + _fn)
             recalls.append(_recall)
-            weights.append(_y.shape[0]/y.shape[0])
-        
+            weights.append(_y.shape[0] / y.shape[0])
+
         if average == "macro":
-            return sum(recalls)/len(recalls)
+            return sum(recalls) / len(recalls)
         elif average == "weighted":
-            return np.dot(recalls, weights)/len(recalls)
-        
-def f1_score(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    average: str = "binary"
-) -> np.float32:
+            return np.dot(recalls, weights) / len(recalls)
+
+
+def f1_score(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.float32:
     """
     Calculates the F1-Score (F1).
 
@@ -354,32 +337,28 @@ def f1_score(
     try:
         assert average in _valid_averages
     except AssertionError:
-        raise ValueError(
-            f"Average should be {_valid_averages}, got {average}.\n"
-        )
-    
+        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
+
     if average == "binary":
-        op = (precision(y, y_hat) * recall(y, y_hat))
-        div = (precision(y, y_hat) + recall(y, y_hat))
+        op = precision(y, y_hat) * recall(y, y_hat)
+        div = precision(y, y_hat) + recall(y, y_hat)
         return 2 * (op / div)
     elif average == "micro":
-        op = (precision(y, y_hat, "micro") * recall(y, y_hat, "micro"))
-        div = (precision(y, y_hat, "micro") + recall(y, y_hat, "micro"))
+        op = precision(y, y_hat, "micro") * recall(y, y_hat, "micro")
+        div = precision(y, y_hat, "micro") + recall(y, y_hat, "micro")
         return 2 * (op / div)
     elif average == "macro":
-        op = (precision(y, y_hat, "macro") * recall(y, y_hat, "macro"))
-        div = (precision(y, y_hat, "macro") + recall(y, y_hat, "macro"))
+        op = precision(y, y_hat, "macro") * recall(y, y_hat, "macro")
+        div = precision(y, y_hat, "macro") + recall(y, y_hat, "macro")
         return 2 * (op / div)
     elif average == "weighted":
-        op = (precision(y, y_hat, "weighted") * recall(y, y_hat, "weighted"))
-        div = (precision(y, y_hat, "weighted") + recall(y, y_hat, "weighted"))
+        op = precision(y, y_hat, "weighted") * recall(y, y_hat, "weighted")
+        div = precision(y, y_hat, "weighted") + recall(y, y_hat, "weighted")
         return 2 * (op / div)
 
+
 def confusion_matrix(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    labels: list = None,
-    normalize: bool = None
+    y: np.ndarray, y_hat: np.ndarray, labels: list = None, normalize: bool = None
 ) -> Union[np.int16, np.float32]:
     """
     Calculates the Confusion Matrix.
@@ -397,12 +376,12 @@ def confusion_matrix(
         cm (np.int16, np.float32): the confusion matrix.
     """
     _valid_normalizations = ["true", "pred", "all"]
-    
+
     if labels != None:
-        _labels = convert_array_numpy(labels).reshape(-1)      
+        _labels = convert_array_numpy(labels).reshape(-1)
     else:
         _labels = np.sort(np.unique(y)).reshape(-1)
-    
+
     # validating the normalize value
     if normalize != None:
         try:
@@ -419,9 +398,9 @@ def confusion_matrix(
     # e.g.: labels = [0, 1, 2] => combination = [[0, 0], [0, 1], [0, 2], [1, 0], ..., [2, 2]]
     # and then we calculate the metrics for the true class 0 and prediction 1, true class 0
     # and prediction 1, and so on...
-    labels_combinations = np.array(np.meshgrid(_labels, _labels)).T.reshape(-1, 2) 
+    labels_combinations = np.array(np.meshgrid(_labels, _labels)).T.reshape(-1, 2)
 
-    for (i, j) in labels_combinations:
+    for i, j in labels_combinations:
         _y = np.where(y == i, 1, 0)
         _y_hat = np.where(y_hat == j, 1, 0)
 
@@ -446,10 +425,8 @@ def confusion_matrix(
 
     return cm
 
-def true_positive_rate(
-    y: np.ndarray,
-    y_hat: np.ndarray
-) -> np.float32:
+
+def true_positive_rate(y: np.ndarray, y_hat: np.ndarray) -> np.float32:
     """
     Calculates the True Positive Rate (TPR).
 
@@ -464,10 +441,8 @@ def true_positive_rate(
     fn = np.sum((y == 1) & (y_hat == 0))
     return tp / (tp + fn)
 
-def false_positive_rate(
-    y: np.ndarray,
-    y_hat: np.ndarray
-) -> np.float32:
+
+def false_positive_rate(y: np.ndarray, y_hat: np.ndarray) -> np.float32:
     """
     Calculates the False Positive Rate (FPR).
 
@@ -482,11 +457,9 @@ def false_positive_rate(
     tn = np.sum((y == 0) & (y_hat == 0))
     return fp / (fp + tn)
 
+
 def roc_auc_score(
-    y: np.ndarray,
-    y_hat: np.ndarray,
-    max_fpr: float = None,
-    average: str = "micro"
+    y: np.ndarray, y_hat: np.ndarray, max_fpr: float = None, average: str = "micro"
 ) -> np.float32:
     """
     Calculates the False Positive Rate (FPR).
@@ -506,18 +479,14 @@ def roc_auc_score(
     try:
         assert average in _valid_averages
     except AssertionError:
-        raise ValueError(
-            f"Average should be {_valid_averages}, got {average}.\n"
-        )
+        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
 
     if max_fpr is not None:
         # validating the average value
         try:
             assert 0 < max_fpr <= 1
         except AssertionError:
-            raise ValueError(
-                f"Max_fpr should be between 0 and 1 (included).\n"
-            )
+            raise ValueError(f"Max_fpr should be between 0 and 1 (included).\n")
 
     tprs = []
     fprs = []
@@ -529,7 +498,7 @@ def roc_auc_score(
         ordered_indexes = np.argsort(y_hat)[::-1]
         y_hat = y_hat[ordered_indexes]
         y = y[ordered_indexes]
-        
+
         tpr, fpr = [], []
 
         unique_y_hat = np.unique(y_hat)[::-1]
@@ -550,7 +519,7 @@ def roc_auc_score(
         # transforming the classes array into one hot encoder
         ohe = OneHotEncoder(sparse_output=False)
         one_hot_y = ohe.fit_transform(y.reshape(-1, 1))
-        
+
         # iterating over the classes (applying the One vs Rest approach)
         for i in range(n_classes):
             _tpr, _fpr = [], []
@@ -571,29 +540,29 @@ def roc_auc_score(
 
             tprs.append(_tpr)
             fprs.append(_fpr)
-    
+
     aucs = []
 
     # iterating over the tprs and fprs for each class
-    for (tpr, fpr) in zip(tprs, fprs):
+    for tpr, fpr in zip(tprs, fprs):
         auc = 0
 
         # calculating the area under the curve using the trapezodial rule
         for j in range(1, len(tpr)):
             auc += ((fpr[j] - fpr[j - 1]) * (tpr[j] + tpr[j - 1])) / 2
-        
+
         aucs.append(auc)
-    
+
     if n_classes == 2:
         return np.mean(aucs)
-        
+
     # multiplying the auc of each class for its weights (the number of
     # occurrences in data) and then dividing by the size of the data
     if average == "weighted":
         for i in range(n_classes):
             class_occurrences = np.where(y == i, 1, 0).sum()
-            aucs[i] = (class_occurrences/y.shape[0]) * aucs[i]
-    
+            aucs[i] = (class_occurrences / y.shape[0]) * aucs[i]
+
         return np.sum(aucs)
-    
+
     return np.mean(aucs)

@@ -3,10 +3,12 @@ from typing import Tuple, Union, List
 from abc import ABC
 from scratchml.utils import convert_array_numpy
 
+
 class BaseScaler(ABC):
     """
     Scalers base class.
     """
+
     def __init__(self) -> None:
         pass
 
@@ -22,12 +24,13 @@ class BaseScaler(ABC):
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         pass
 
+
 class MinMaxScaler(BaseScaler):
     def __init__(
         self,
         feature_range: Tuple[float, float] = (0, 1),
         copy: bool = True,
-        clip: bool = False
+        clip: bool = False,
     ) -> None:
         """
         Creates a MinMaxScaler's instance.
@@ -52,11 +55,7 @@ class MinMaxScaler(BaseScaler):
         self.n_samples_seen_ = None
         self.feature_names_in_ = None
 
-    def fit(
-        self,
-        X: Union[np.ndarray, List],
-        y: np.array = None
-    ) -> None:
+    def fit(self, X: Union[np.ndarray, List], y: np.array = None) -> None:
         """
         Fits the MinMaxScaler.
 
@@ -70,14 +69,13 @@ class MinMaxScaler(BaseScaler):
         self.n_features_in_ = X.shape[1]
         self.data_max_ = X.max(axis=0)
         self.data_min_ = X.min(axis=0)
-        self.scale_ = (self.feature_range[1] - self.feature_range[0]) / (self.data_max_ - self.data_min_)
+        self.scale_ = (self.feature_range[1] - self.feature_range[0]) / (
+            self.data_max_ - self.data_min_
+        )
         self.min_ = self.feature_range[0] - self.data_min_ * self.scale_
         self.data_range_ = self.data_max_ - self.data_min_
 
-    def transform(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+    def transform(self, X: np.ndarray) -> np.ndarray:
         """
         Using the fitted MinMaxScaler to transform a given set of features.
 
@@ -89,14 +87,15 @@ class MinMaxScaler(BaseScaler):
         """
         # transforming the features set
         X_std = (X - self.data_min_) / (self.data_max_ - self.data_min_)
-        X_scaled = X_std * (self.feature_range[1] - self.feature_range[0]) + self.feature_range[0]
+        X_scaled = (
+            X_std * (self.feature_range[1] - self.feature_range[0])
+            + self.feature_range[0]
+        )
 
         # clipping the scaler's output
         if self.clip:
             X_scaled = np.clip(
-                a=X_scaled,
-                a_min=self.feature_range[0],
-                a_max=self.feature_range[1]
+                a=X_scaled, a_min=self.feature_range[0], a_max=self.feature_range[1]
             )
 
         if self.copy:
@@ -104,11 +103,8 @@ class MinMaxScaler(BaseScaler):
             return X
         else:
             return X_scaled
-    
-    def inverse_transform(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+
+    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         """
         Applies the inverse transformation (converts a transformed
         set of features to its original values).
@@ -120,17 +116,15 @@ class MinMaxScaler(BaseScaler):
             Xt (np.ndarray): the original features array.
         """
         X = convert_array_numpy(X)
-        
-        Xt = ((X - self.feature_range[0]) / (self.feature_range[1] - self.feature_range[0]))
-        Xt *= (self.data_max_ - self.data_min_)
+
+        Xt = (X - self.feature_range[0]) / (
+            self.feature_range[1] - self.feature_range[0]
+        )
+        Xt *= self.data_max_ - self.data_min_
         Xt += self.data_min_
         return Xt
 
-    def fit_transform(
-        self,
-        X: np.ndarray,
-        y: np.array = None
-    ) -> np.ndarray:
+    def fit_transform(self, X: np.ndarray, y: np.array = None) -> np.ndarray:
         """
         Fits the MinMaxScaler and then transforms the given set of features in sequence.
 
@@ -143,13 +137,11 @@ class MinMaxScaler(BaseScaler):
         """
         self.fit(X=X, y=y)
         return self.transform(X=X)
-    
+
+
 class StandardScaler(BaseScaler):
     def __init__(
-        self,
-        copy: bool = True,
-        with_mean: bool = True,
-        with_std: bool = True
+        self, copy: bool = True, with_mean: bool = True, with_std: bool = True
     ) -> None:
         """
         Creates a StandardScaler's instance.
@@ -171,11 +163,7 @@ class StandardScaler(BaseScaler):
         self.n_features_in_ = None
         self.n_samples_seen_ = None
 
-    def fit(
-        self,
-        X: Union[np.ndarray, List],
-        y: np.array = None
-    ) -> None:
+    def fit(self, X: Union[np.ndarray, List], y: np.array = None) -> None:
         """
         Fits the StandardScaler.
 
@@ -197,7 +185,7 @@ class StandardScaler(BaseScaler):
             # the given features
             self.var_ = X.var(axis=0)
             self.mean_ = X.mean(axis=0)
-        
+
         # calculating the mean of the given features
         if not self.with_mean:
             self.mean_ = None
@@ -214,10 +202,7 @@ class StandardScaler(BaseScaler):
             self.var_[self.var_ == 0] = 1
             self.scale_ = np.sqrt(self.var_)
 
-    def transform(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+    def transform(self, X: np.ndarray) -> np.ndarray:
         """
         Using the fitted StandardScaler to transform a given set of features.
 
@@ -242,11 +227,8 @@ class StandardScaler(BaseScaler):
         else:
             X = X_.copy()
             return X
-    
-    def inverse_transform(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+
+    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         """
         Applies the inverse transformation (converts a transformed
         set of features to its original values).
@@ -263,17 +245,13 @@ class StandardScaler(BaseScaler):
             self.std = 1
 
         if not self.with_mean:
-            Xt = (X * self.std)
+            Xt = X * self.std
         else:
             Xt = (X * self.std) + self.mean_
 
         return Xt
 
-    def fit_transform(
-        self,
-        X: np.ndarray,
-        y: np.array = None
-    ) -> np.ndarray:
+    def fit_transform(self, X: np.ndarray, y: np.array = None) -> np.ndarray:
         """
         Fits the StandardScaler and then transforms the given set of features in sequence.
 

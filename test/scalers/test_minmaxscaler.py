@@ -4,6 +4,7 @@ from sklearn.preprocessing import MinMaxScaler as SkMinMaxScaler
 from scratchml.scalers import MinMaxScaler
 from test.utils import generate_regression_dataset, repeat
 
+
 class Test_MinMaxScaler(unittest.TestCase):
     @repeat(10)
     def test_1(self):
@@ -33,7 +34,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -76,7 +77,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -119,7 +120,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -162,7 +163,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -205,7 +206,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -248,7 +249,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -291,7 +292,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -334,7 +335,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -377,7 +378,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_trans_X.shape, trans_X.shape
         assert_almost_equal(sk_trans_X, trans_X)
-        
+
         # fit transforming the data
         sk_trans_X = skscaler.fit_transform(X)
         trans_X = scaler.fit_transform(X)
@@ -391,6 +392,7 @@ class Test_MinMaxScaler(unittest.TestCase):
 
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

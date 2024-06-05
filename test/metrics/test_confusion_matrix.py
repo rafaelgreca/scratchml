@@ -6,24 +6,20 @@ from sklearn.metrics import confusion_matrix as SkCM
 from scratchml.metrics import confusion_matrix
 from test.utils import generate_classification_dataset, repeat
 
+
 class Test_Precision(unittest.TestCase):
     @repeat(10)
     def test_1(self):
         X, y = generate_classification_dataset(
-            n_features=10,
-            n_samples=10000,
-            n_classes=2
+            n_features=10, n_samples=10000, n_classes=2
         )
 
         sklr = SkLogisticRegression(
-            penalty=None,
-            fit_intercept=True,
-            max_iter=1000000,
-            tol=1e-4
+            penalty=None, fit_intercept=True, max_iter=1000000, tol=1e-4
         )
 
         sklr.fit(X, y)
-        
+
         sklr_prediction = sklr.predict(X)
         sklr_score = SkCM(y, sklr_prediction)
         score = confusion_matrix(y, sklr_prediction)
@@ -56,20 +52,15 @@ class Test_Precision(unittest.TestCase):
     @repeat(10)
     def test_2(self):
         X, y = generate_classification_dataset(
-            n_features=10,
-            n_samples=10000,
-            n_classes=10
+            n_features=10, n_samples=10000, n_classes=10
         )
 
         sklr = SkLogisticRegression(
-            penalty=None,
-            fit_intercept=True,
-            max_iter=1000000,
-            tol=1e-4
+            penalty=None, fit_intercept=True, max_iter=1000000, tol=1e-4
         )
 
         sklr.fit(X, y)
-        
+
         sklr_prediction = sklr.predict(X)
         sklr_score = SkCM(y, sklr_prediction)
         score = confusion_matrix(y, sklr_prediction)
@@ -102,22 +93,17 @@ class Test_Precision(unittest.TestCase):
     @repeat(10)
     def test_3(self):
         X, y = generate_classification_dataset(
-            n_features=10,
-            n_samples=10000,
-            n_classes=10
+            n_features=10, n_samples=10000, n_classes=10
         )
 
         sklr = SkLogisticRegression(
-            penalty=None,
-            fit_intercept=True,
-            max_iter=1000000,
-            tol=1e-4
+            penalty=None, fit_intercept=True, max_iter=1000000, tol=1e-4
         )
 
         sklr.fit(X, y)
 
         labels = [0, 1, 2, 3, 4]
-        
+
         sklr_prediction = sklr.predict(X)
         sklr_score = SkCM(y, sklr_prediction, labels=labels)
         score = confusion_matrix(y, sklr_prediction, labels=labels)
@@ -146,6 +132,7 @@ class Test_Precision(unittest.TestCase):
         assert_equal(sklr_score, score)
         assert_equal(sklr_score.shape, score.shape)
         assert_equal(type(sklr_score), type(score))
-        
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

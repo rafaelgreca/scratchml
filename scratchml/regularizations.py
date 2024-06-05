@@ -1,9 +1,8 @@
 import numpy as np
 
+
 def l1(
-    weights: np.array,
-    reg_lambda: float = 1e-02,
-    derivative: bool = False
+    weights: np.array, reg_lambda: float = 1e-02, derivative: bool = False
 ) -> np.ndarray:
     """
     Applies the L1 Regularization technique (also called Lasso Regression)
@@ -24,10 +23,9 @@ def l1(
     else:
         return reg_lambda * np.sum(np.abs(weights))
 
+
 def l2(
-    weights: np.array,
-    reg_lambda: float = 1e-02,
-    derivative: bool = False
+    weights: np.array, reg_lambda: float = 1e-02, derivative: bool = False
 ) -> np.ndarray:
     """
     Applies the L2 Regularization technique (also called Ridge Regression)
@@ -46,4 +44,4 @@ def l2(
     if derivative:
         return 2 * reg_lambda * weights
     else:
-        return reg_lambda * np.sum(weights ** 2)
+        return reg_lambda * np.sum(weights**2)

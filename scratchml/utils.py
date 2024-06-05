@@ -1,12 +1,13 @@
 import numpy as np
 from typing import Any, Union, Tuple, List
 
+
 def KFold(
     X: np.ndarray,
     y: np.ndarray = None,
     stratify: bool = False,
     shuffle: bool = True,
-    n_splits: int = 2
+    n_splits: int = 2,
 ) -> List:
     """
     Splits the data into training and test set using the KFold technique.
@@ -33,7 +34,7 @@ def KFold(
         assert n_splits >= 2
     except AssertionError:
         raise ValueError("N splits value should be equal or larget than 2.\n")
-    
+
     # validating if the y is not None when stratify is True
     if stratify:
         try:
@@ -46,7 +47,7 @@ def KFold(
     # shuffling the array
     if shuffle:
         np.random.shuffle(indices)
-    
+
     division_mod = X.shape[0] % n_splits
     fold_size = X.shape[0] // n_splits
 
@@ -66,7 +67,7 @@ def KFold(
     if division_mod != 0:
         extra_sample[:division_mod] = 1
         indexes = np.add(indexes, extra_sample)
-    
+
     # splitting the indexes into folds
     if stratify:
         # analysing the classes distribution
@@ -79,11 +80,11 @@ def KFold(
         # e.g.: [[0 100], [1 200]] => classes distribuition: 66%
         # class 1 and 33% class 0. If we want the train set to be
         # composed of 80% of the data, so we will have 158 (0.8 * 0.6 * 300)
-        # samples for class 1 and 79 (0.8 * 0.33 * 300) for class 0        
+        # samples for class 1 and 79 (0.8 * 0.33 * 300) for class 0
         for i in indexes:
             classes_distribution = []
             _total_sum = 0
-            
+
             # transforming the percentage of each class into raw int values
             for u, c in counts:
                 _c = int(np.round((i / y.shape[0]) * c))
@@ -92,20 +93,19 @@ def KFold(
 
             # making sure that the sum of the classes is equal to the
             # amount of indexes that must be selected for this fold
-            # TODO: think in a better way, optimized way to do this   
+            # TODO: think in a better way, optimized way to do this
             if _total_sum != i:
                 diff = _total_sum - i
                 extra_sample = np.zeros(len(classes_distribution), dtype=int)
-                random_indexes = np.random.choice(extra_sample.shape[0], np.abs(diff), replace=False)
+                random_indexes = np.random.choice(
+                    extra_sample.shape[0], np.abs(diff), replace=False
+                )
                 extra_sample[random_indexes] = 1
                 classes_distribution = [
-                    (c, d + extra_sample[i])
-                    if diff < 0
-                    else
-                    (c, d - extra_sample[i])
+                    (c, d + extra_sample[i]) if diff < 0 else (c, d - extra_sample[i])
                     for i, (c, d) in enumerate(classes_distribution)
                 ]
-    
+
             _temp_indexes = []
 
             # selecting the indexes for each class
@@ -128,9 +128,7 @@ def KFold(
         # merging the indexes that are different from the
         # test folder index together to form the training indexes set
         training_indexes = [
-            folds_indexes[i]
-            for i in range(len(folds_indexes))
-            if i != tf
+            folds_indexes[i] for i in range(len(folds_indexes)) if i != tf
         ]
         test_indexes = folds_indexes[tf]
 
@@ -141,10 +139,11 @@ def KFold(
 
         test_indexes = convert_array_numpy(test_indexes)
         test_indexes = test_indexes.astype(np.int16)
-        
+
         folds.append((training_indexes, test_indexes))
 
     return folds
+
 
 def train_test_split(
     X: np.ndarray,
@@ -152,7 +151,7 @@ def train_test_split(
     test_size: Union[float, int] = None,
     train_size: Union[float, int] = None,
     shuffle: bool = True,
-    stratify: bool = False
+    stratify: bool = False,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Splits the dataset into one training set and one validation set.
@@ -175,12 +174,13 @@ def train_test_split(
     """
     X = convert_array_numpy(X)
     y = convert_array_numpy(y)
-    
+
     # validating the train_size and test_size parameters
     # as just one of them should be used
     try:
-        assert not ((train_size == None) and (test_size == None)) or\
-                ((train_size != None) and (test_size != None))
+        assert not ((train_size == None) and (test_size == None)) or (
+            (train_size != None) and (test_size != None)
+        )
     except AssertionError:
         raise RuntimeError(
             f"You should pass train_size or test_size, not both or neither.\n"
@@ -192,7 +192,7 @@ def train_test_split(
             try:
                 assert 0 < test_size < 1
                 test_split_ratio = test_size
-                
+
             except AssertionError:
                 raise ValueError("Test size value should be between 0 and 1.\n")
         elif isinstance(test_size, int):
@@ -203,7 +203,7 @@ def train_test_split(
                 raise ValueError(
                     f"Test size value should be between 0 and {X.shape[0]}.\n"
                 )
-    
+
     # validating the train size parameter
     if train_size != None:
         if isinstance(train_size, float):
@@ -220,7 +220,7 @@ def train_test_split(
                 raise ValueError(
                     f"Train size value should be between 0 and {X.shape[0]}.\n"
                 )
-    
+
     # defining the split ratio of the train set
     if train_size == None:
         train_split_ratio = 1 - test_split_ratio
@@ -232,19 +232,16 @@ def train_test_split(
 
         X = X[shuffled_indices]
         y = y[shuffled_indices]
-    
+
     if stratify:
         # analysing the classes distribution
         unique, counts = np.unique(y, return_counts=True)
         counts = np.asarray((unique, counts)).T
-        classes_distribution = [
-            (u, c)
-            for u, c in counts
-        ]
+        classes_distribution = [(u, c) for u, c in counts]
 
         check_max_ocurrencies = max([v for (c, v) in classes_distribution])
 
-        if (check_max_ocurrencies < 2):
+        if check_max_ocurrencies < 2:
             raise RuntimeError("Stratify should not be used for a regression task.\n")
 
         train_indexes = []
@@ -284,12 +281,11 @@ def train_test_split(
     X_test = convert_array_numpy(X_test)
     y_train = convert_array_numpy(y_train)
     y_test = convert_array_numpy(y_test)
-    
+
     return X_train, X_test, y_train, y_test
 
-def convert_array_numpy(
-    array: Any
-) -> np.ndarray:
+
+def convert_array_numpy(array: Any) -> np.ndarray:
     """
     Auxiliary function that converts an array to numpy array.
 

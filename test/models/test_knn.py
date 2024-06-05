@@ -7,13 +7,11 @@ from numpy.testing import assert_almost_equal, assert_equal, assert_allclose
 from scratchml.models.knn import KNNClassifier, KNNRegressor
 from test.utils import repeat, generate_blob_dataset, generate_regression_dataset
 
+
 class Test_KNN(unittest.TestCase):
     @repeat(5)
     def test_1(self):
-        X, y = generate_blob_dataset(
-            n_samples=2000,
-            n_features=2
-        )
+        X, y = generate_blob_dataset(n_samples=2000, n_features=2)
 
         sk_knn = SkKNNC(n_neighbors=5, metric="manhattan")
         sk_knn.fit(X, y)
@@ -40,13 +38,10 @@ class Test_KNN(unittest.TestCase):
         assert_almost_equal(sk_neighbors, neighbors, decimal=6)
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
-    
+
     @repeat(5)
     def test_2(self):
-        X, y = generate_blob_dataset(
-            n_samples=2000,
-            n_features=2
-        )
+        X, y = generate_blob_dataset(n_samples=2000, n_features=2)
 
         sk_knn = SkKNNC(n_neighbors=3, metric="euclidean", weights="distance")
         sk_knn.fit(X, y)
@@ -76,10 +71,7 @@ class Test_KNN(unittest.TestCase):
 
     @repeat(5)
     def test_3(self):
-        X, y = generate_blob_dataset(
-            n_samples=1000,
-            n_features=5
-        )
+        X, y = generate_blob_dataset(n_samples=1000, n_features=5)
 
         sk_knn = SkKNNC(n_neighbors=5)
         sk_knn.fit(X, y)
@@ -106,13 +98,10 @@ class Test_KNN(unittest.TestCase):
         assert_almost_equal(sk_neighbors, neighbors, decimal=6)
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
-    
+
     @repeat(5)
     def test_4(self):
-        X, y = generate_regression_dataset(
-            n_samples=2000,
-            n_features=3
-        )
+        X, y = generate_regression_dataset(n_samples=2000, n_features=3)
 
         sk_knn = SkKNNR(n_neighbors=5)
         sk_knn.fit(X, y)
@@ -141,10 +130,7 @@ class Test_KNN(unittest.TestCase):
 
     @repeat(5)
     def test_5(self):
-        X, y = generate_regression_dataset(
-            n_samples=2000,
-            n_features=5
-        )
+        X, y = generate_regression_dataset(n_samples=2000, n_features=5)
 
         sk_knn = SkKNNR(n_neighbors=5, weights="distance", metric="chebyshev")
         sk_knn.fit(X, y)
@@ -170,6 +156,7 @@ class Test_KNN(unittest.TestCase):
         assert_almost_equal(sk_neighbors, neighbors, decimal=6)
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

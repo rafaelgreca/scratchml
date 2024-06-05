@@ -1,25 +1,20 @@
 import unittest
-import numpy as np
 from numpy.testing import assert_almost_equal
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import roc_auc_score as SkRAC
 from scratchml.metrics import roc_auc_score
 from test.utils import generate_classification_dataset, repeat
 
+
 class Test_Precision(unittest.TestCase):
     @repeat(10)
     def test_1(self):
         X, y = generate_classification_dataset(
-            n_features=10,
-            n_samples=10000,
-            n_classes=2
+            n_features=10, n_samples=10000, n_classes=2
         )
 
         sklr = SkLogisticRegression(
-            penalty=None,
-            fit_intercept=True,
-            max_iter=1000000,
-            tol=1e-4
+            penalty=None, fit_intercept=True, max_iter=1000000, tol=1e-4
         )
 
         sklr.fit(X, y)
@@ -39,20 +34,15 @@ class Test_Precision(unittest.TestCase):
         acc_score = roc_auc_score(y, sklr_prediction, average="weighted")
 
         assert_almost_equal(sklr_score, acc_score)
-    
+
     @repeat(10)
     def test_2(self):
         X, y = generate_classification_dataset(
-            n_features=10,
-            n_samples=10000,
-            n_classes=6
+            n_features=10, n_samples=10000, n_classes=6
         )
 
         sklr = SkLogisticRegression(
-            penalty=None,
-            fit_intercept=True,
-            max_iter=1000000,
-            tol=1e-4
+            penalty=None, fit_intercept=True, max_iter=1000000, tol=1e-4
         )
 
         sklr.fit(X, y)
@@ -72,6 +62,7 @@ class Test_Precision(unittest.TestCase):
         acc_score = roc_auc_score(y, sklr_prediction, average="weighted")
 
         assert_almost_equal(sklr_score, acc_score, decimal=2)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -12,7 +12,7 @@ if __name__ == "__main__":
         n_informative=2,
         n_redundant=1,
         n_repeated=0,
-        shuffle=True
+        shuffle=True,
     )
 
     # creating a logistic regression model
@@ -23,17 +23,11 @@ if __name__ == "__main__":
         max_iters=-1,
         loss_function="bce",
         regularization=None,
-        verbose=1
+        verbose=1,
     )
 
     # splitting the data into training and testing using KFold
-    folds = KFold(
-        X,
-        y,
-        stratify=True,
-        shuffle=True,
-        n_splits=5
-    )
+    folds = KFold(X, y, stratify=True, shuffle=True, n_splits=5)
 
     for train_indexes, test_indexes in folds:
         # getting the training and test sets
@@ -47,10 +41,6 @@ if __name__ == "__main__":
         lr.fit(X=X_train, y=y_train)
 
         # assessing the model's performance
-        score = lr.score(
-            X=X_test,
-            y=y_test,
-            metric="accuracy"
-        )
+        score = lr.score(X=X_test, y=y_test, metric="accuracy")
 
         print(score)

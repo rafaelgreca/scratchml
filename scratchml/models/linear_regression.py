@@ -7,12 +7,13 @@ from scratchml.metrics import (
     median_absolute_error,
     mean_absolute_percentage_error,
     mean_squared_logarithmic_error,
-    max_error
+    max_error,
 )
 from scratchml.utils import convert_array_numpy
 from scratchml.regularizations import l1, l2
 from typing import Union
-    
+
+
 class LinearRegression(object):
 
     def __init__(
@@ -23,7 +24,7 @@ class LinearRegression(object):
         loss_function: str = "mse",
         regularization: Union[None, str] = None,
         n_jobs: int = None,
-        verbose: int = 2
+        verbose: int = 2,
     ) -> None:
         """
         Creates a Linear Regression instance.
@@ -64,15 +65,11 @@ class LinearRegression(object):
             "medae",
             "mape",
             "msle",
-            "max_error"
+            "max_error",
         ]
         self._valid_regularizations = ["l1", "l2", None]
 
-    def fit(
-        self,
-        X: np.ndarray,
-        y: np.ndarray
-    ) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Function responsible for training the Linear Regression model.
 
@@ -83,11 +80,11 @@ class LinearRegression(object):
         self.n_features_in_ = X.shape[1]
         X = convert_array_numpy(X)
         y = convert_array_numpy(y)
-        
+
         # validating the max_iters value
         if self.max_iters < -1 or self.max_iters == 0:
             raise ValueError("Invalid value for 'max_iters'. Must be -1 or >= 1.\n")
-        
+
         # validating the loss_function value
         try:
             assert self.loss_function in self._valid_loss_functions
@@ -108,10 +105,8 @@ class LinearRegression(object):
         try:
             assert self.verbose in [0, 1, 2]
         except AssertionError:
-            raise ValueError(
-                f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
-            )
-        
+            raise ValueError(f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n")
+
         self.intercept_ = 0.0
         self.coef_ = np.zeros(X.shape[1])
         last_losses = np.zeros((1, X.shape[1])) + np.inf
@@ -128,7 +123,7 @@ class LinearRegression(object):
                 loss = mean_squared_error(y, y_hat, derivative=True)
             elif self.loss_function == "mae":
                 loss = mean_absolute_error(y, y_hat, derivative=True)
-            
+
             derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
             derivative_intercept = (np.sum(loss)) / y.shape[0]
 
@@ -141,13 +136,13 @@ class LinearRegression(object):
                 elif self.regularization == "l2":
                     reg_coef = l2(self.coef_, derivative=True)
                     reg_intercept = l2(self.intercept_, derivative=True)
-                
+
                 derivative_coef += reg_coef
                 derivative_intercept += reg_intercept
-            
+
             # updating the coefficients
-            self.coef_ -= (self.lr * derivative_coef)
-            self.intercept_ -= (self.lr * derivative_intercept)
+            self.coef_ -= self.lr * derivative_coef
+            self.intercept_ -= self.lr * derivative_intercept
 
             if self.verbose != 0:
                 loss_msg = f"Loss ({self.loss_function}): {loss}"
@@ -157,7 +152,7 @@ class LinearRegression(object):
                     epoch_msg = f"Epoch: {epoch}/{self.max_iters}"
                 else:
                     epoch_msg = f"Epoch: {epoch}"
-                                    
+
                 if self.verbose == 1:
                     if epoch % 20 == 0:
                         print(f"{epoch_msg}\t\t{loss_msg}\t\t{metric_msg}\n")
@@ -167,18 +162,15 @@ class LinearRegression(object):
             # stopping criterias
             if np.max(np.abs(last_losses - derivative_coef)) < self.tol:
                 break
-            
+
             if self.max_iters != -1:
-                if (epoch >= self.max_iters):
+                if epoch >= self.max_iters:
                     break
 
             last_losses = derivative_coef
             epoch += 1
-    
-    def predict(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
         """
         Uses the trained model to predict the targets of a given
         set (also called features).
@@ -190,12 +182,9 @@ class LinearRegression(object):
             np.ndarray: the predicted targets.
         """
         return np.matmul(X, self.coef_) + self.intercept_
-    
+
     def score(
-        self,
-        X: np.ndarray,
-        y: np.ndarray,
-        metric: str = "r_squared"
+        self, X: np.ndarray, y: np.ndarray, metric: str = "r_squared"
     ) -> np.float32:
         """
         Calculates the score of the model on a given set for a
@@ -215,7 +204,7 @@ class LinearRegression(object):
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
             )
-        
+
         y_hat = self.predict(X)
 
         if metric == "r_squared":

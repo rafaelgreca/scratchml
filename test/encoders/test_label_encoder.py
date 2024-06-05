@@ -4,6 +4,7 @@ from numpy.testing import assert_equal
 from sklearn.preprocessing import LabelEncoder as SkLabelEncoder
 from scratchml.encoders import LabelEncoder
 
+
 class Test_LabelEncoder(unittest.TestCase):
     def test_1(self):
         le = LabelEncoder()

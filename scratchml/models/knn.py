@@ -1,12 +1,7 @@
 import numpy as np
 from abc import ABC
 from scratchml.utils import convert_array_numpy
-from scratchml.distances import (
-    euclidean,
-    minkowski,
-    chebyshev,
-    manhattan
-)
+from scratchml.distances import euclidean, minkowski, chebyshev, manhattan
 from scratchml.metrics import (
     accuracy,
     recall,
@@ -20,9 +15,10 @@ from scratchml.metrics import (
     median_absolute_error,
     mean_absolute_percentage_error,
     mean_squared_logarithmic_error,
-    max_error
+    max_error,
 )
 from typing import Tuple, Union, List
+
 
 class BaseKNN(ABC):
     def __init__(
@@ -31,7 +27,7 @@ class BaseKNN(ABC):
         weights: str = "uniform",
         p: float = 2,
         metric: str = "minkowski",
-        n_jobs: int = None
+        n_jobs: int = None,
     ) -> None:
         """
         Creats a K-Nearest Neighbors (KNN) base.
@@ -57,22 +53,10 @@ class BaseKNN(ABC):
         self.n_samples_fit_ = None
         self.X_ = None
         self.y_ = None
-        self._valid_metrics = [
-            "euclidean",
-            "chebyshev",
-            "manhattan",
-            "minkowski"
-        ]
-        self._valid_weights = [
-            "uniform",
-            "distance"
-        ]
-    
-    def fit(
-        self,
-        X: np.ndarray,
-        y: np.ndarray
-    ) -> None:
+        self._valid_metrics = ["euclidean", "chebyshev", "manhattan", "minkowski"]
+        self._valid_weights = ["uniform", "distance"]
+
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Function responsible for fitting the KNN model. Since this model
         does not requires any fitting, the major calculation will be done
@@ -92,19 +76,19 @@ class BaseKNN(ABC):
         self.n_samples_fit_ = X.shape[0]
         self.X_ = X.copy()
         self.y_ = y.copy()
-    
+
     def kneighbors(
         self,
         X: np.ndarray = None,
         n_neighbors: int = None,
-        return_distance: bool = True
+        return_distance: bool = True,
     ) -> Union[Tuple[np.ndarray, np.ndarray], np.ndarray]:
         # TODO: Optimize and improve this function
         """
         Gets the K-neighbors of a data point.
 
         Args:
-            X (np.ndarray, optional): the features array. 
+            X (np.ndarray, optional): the features array.
                 If None, utilizes the data used to fit the model. Defaults to None.
             n_neighbors (int, optional): the number of neighbors.
                 If None, utilizes the number of neighbors used in the
@@ -121,7 +105,7 @@ class BaseKNN(ABC):
             X = convert_array_numpy(X)
         else:
             X = self.X_
-        
+
         # validating the n_neighbors value
         if n_neighbors != None:
             try:
@@ -130,7 +114,7 @@ class BaseKNN(ABC):
                 raise ValueError("The number of neighbors must be bigger than zero.\n")
         else:
             n_neighbors = self.n_neighbors
-        
+
         distances = []
         indexes = []
 
@@ -149,7 +133,7 @@ class BaseKNN(ABC):
             n_indexes = dist[i].argsort()[:n_neighbors]
             indexes.append(n_indexes)
             distances.append(dist[i][n_indexes])
-        
+
         indexes = convert_array_numpy(indexes)
         distances = convert_array_numpy(distances)
 
@@ -158,10 +142,7 @@ class BaseKNN(ABC):
         else:
             return indexes
 
-    def predict(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+    def predict(self, X: np.ndarray) -> np.ndarray:
         """
         Uses the trained model to predict the classes of a given
         data points (also called features).
@@ -175,10 +156,7 @@ class BaseKNN(ABC):
         pass
 
     def score(
-        self,
-        X: np.ndarray,
-        y: np.ndarray,
-        metric: str = "accuracy"
+        self, X: np.ndarray, y: np.ndarray, metric: str = "accuracy"
     ) -> np.ndarray:
         """
         Uses the trained model to predict the classes of a given
@@ -206,7 +184,7 @@ class BaseKNN(ABC):
             assert self.n_neighbors > 0
         except AssertionError:
             raise ValueError("The 'n_neighbors' must be bigger than zero.\n")
-        
+
         # validating the n_jobs value
         if self.n_jobs != None:
             try:
@@ -215,31 +193,38 @@ class BaseKNN(ABC):
                 else:
                     assert self.n_jobs > 0
             except AssertionError:
-                raise ValueError("If not None, 'n_jobs' must be equal to -1 or higher than 0.\n")
-        
+                raise ValueError(
+                    "If not None, 'n_jobs' must be equal to -1 or higher than 0.\n"
+                )
+
         # validating the p value
         try:
             assert self.p > 0
         except AssertionError:
             raise ValueError("The value for 'p' must be a positive number.\n")
-        
+
         # validating the metric value
         try:
             assert self.effective_metric_ in self._valid_metrics
         except AssertionError:
-            raise ValueError(f"'Metric' should be {self._valid_metrics}, got {self.effective_metric_} instead.\n")
-        
+            raise ValueError(
+                f"'Metric' should be {self._valid_metrics}, got {self.effective_metric_} instead.\n"
+            )
+
         # validating the weights value
         try:
             assert self.weights in self._valid_weights
         except AssertionError:
-            raise ValueError(f"'Weights' should be {self._valid_weights}, got {self.weights} instead.\n")
+            raise ValueError(
+                f"'Weights' should be {self._valid_weights}, got {self.weights} instead.\n"
+            )
 
         if self.p == 2 and self.effective_metric_ == "minkowski":
             self.effective_metric_ = "euclidean"
-        
+
         if self.p == 1 and self.effective_metric_ == "minkowski":
             self.effective_metric_ = "manhattan"
+
 
 class KNNClassifier(BaseKNN):
     def __init__(
@@ -248,7 +233,7 @@ class KNNClassifier(BaseKNN):
         weights: str = "uniform",
         p: float = 2,
         metric: str = "minkowski",
-        n_jobs: int = None
+        n_jobs: int = None,
     ) -> None:
         """
         Creats a K-Nearest Neighbors (KNN) Classifier instance.
@@ -270,13 +255,10 @@ class KNNClassifier(BaseKNN):
             "recall",
             "precision",
             "f1_score",
-            "confusion_matrix"
+            "confusion_matrix",
         ]
-    
-    def predict(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
         """
         Uses the trained model to predict the classes of a given
         data points (also called features).
@@ -292,9 +274,7 @@ class KNNClassifier(BaseKNN):
 
         # getting the k closest neighbors
         distances, indexes = self.kneighbors(
-            X=X,
-            n_neighbors=self.n_neighbors,
-            return_distance=True
+            X=X, n_neighbors=self.n_neighbors, return_distance=True
         )
 
         indexes = indexes.astype(np.int32)
@@ -320,9 +300,9 @@ class KNNClassifier(BaseKNN):
                 # with the highest sum
                 for label, weight in zip(_y, _dist):
                     _classes[label] += weight
-                
+
                 prediction.append(np.argmax(_classes))
-        
+
         prediction = convert_array_numpy(prediction)
         prediction = prediction.astype(int)
 
@@ -334,7 +314,7 @@ class KNNClassifier(BaseKNN):
         y: np.ndarray,
         metric: str = "accuracy",
         labels_cm: List = None,
-        normalize_cm: bool = False
+        normalize_cm: bool = False,
     ) -> Union[np.float64, np.ndarray]:
         """
         Uses the trained model to predict the classes of a given
@@ -362,7 +342,7 @@ class KNNClassifier(BaseKNN):
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_score_metrics}.\n"
             )
-        
+
         y_hat = self.predict(X)
 
         if metric == "accuracy":
@@ -374,12 +354,8 @@ class KNNClassifier(BaseKNN):
         elif metric == "f1_score":
             return f1_score(y, y_hat)
         elif metric == "confusion_matrix":
-            return confusion_matrix(
-                y,
-                y_hat,
-                labels_cm,
-                normalize_cm
-            )
+            return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
+
 
 class KNNRegressor(BaseKNN):
     def __init__(
@@ -388,7 +364,7 @@ class KNNRegressor(BaseKNN):
         weights: str = "uniform",
         p: float = 2,
         metric: str = "minkowski",
-        n_jobs: int = None
+        n_jobs: int = None,
     ) -> None:
         """
         Creats a K-Nearest Neighbors (KNN) Regressor instance.
@@ -413,13 +389,10 @@ class KNNRegressor(BaseKNN):
             "medae",
             "mape",
             "msle",
-            "max_error"
+            "max_error",
         ]
-    
-    def predict(
-        self,
-        X: np.ndarray
-    ) -> np.ndarray:
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
         """
         Uses the trained model to predict the classes of a given
         data points (also called features).
@@ -435,14 +408,12 @@ class KNNRegressor(BaseKNN):
 
         # getting the k closest neighbors
         indexes = self.kneighbors(
-            X=X,
-            n_neighbors=self.n_neighbors,
-            return_distance=False
+            X=X, n_neighbors=self.n_neighbors, return_distance=False
         )
 
         indexes = indexes.astype(np.int32)
         _weights = np.arange(1, self.n_neighbors + 1)[::-1]
-        
+
         for index in indexes:
             _y = self.y_[index]
 
@@ -456,19 +427,16 @@ class KNNRegressor(BaseKNN):
                 # the prediction will be the mean of the product between the weights
                 # and the targets
                 _mean = np.dot(_weights, _y) / sum(_weights)
-                
+
             prediction.append(_mean)
-        
+
         prediction = convert_array_numpy(prediction)
         prediction = prediction.astype(np.float64)
 
         return prediction
 
     def score(
-        self,
-        X: np.ndarray,
-        y: np.ndarray,
-        metric: str = "r_squared"
+        self, X: np.ndarray, y: np.ndarray, metric: str = "r_squared"
     ) -> np.float64:
         """
         Uses the trained model to predict the classes of a given
@@ -489,7 +457,7 @@ class KNNRegressor(BaseKNN):
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_score_metrics}.\n"
             )
-        
+
         y_hat = self.predict(X)
 
         if metric == "r_squared":
