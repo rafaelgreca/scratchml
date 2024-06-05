@@ -433,7 +433,7 @@ class OneHotEncoder(BaseEncoder):
                         _X = np.array([self.categories_map_[i][v]])
                         encoded_features.append(np.eye(n_values)[_X])
                     except KeyError as e:
-                        raise str(e) + "\n"
+                        raise KeyError()
             
             new_X.append(np.vstack(encoded_features))
 
@@ -529,7 +529,7 @@ class OneHotEncoder(BaseEncoder):
         Returns:
             np.ndarray: the encoded classes array.
         """
-        X = convert_array_numpy(X)
+        y = convert_array_numpy(y)
 
         self.fit(y)
         return self.transform(y)

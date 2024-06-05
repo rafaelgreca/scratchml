@@ -1,5 +1,6 @@
 import numpy as np
 from scratchml.utils import convert_array_numpy
+from scratchml.encoders import OneHotEncoder
 from typing import Union
 
 def mean_squared_error(
@@ -242,13 +243,13 @@ def precision(
         )
     
     if average == "binary":
-        tp = y_hat[(y == 1) == 1].sum()
-        fp = y[(y_hat == 1) == 0].sum()
+        tp = np.sum((y == 1) & (y_hat == 1))
+        fp = np.sum((y == 0) & (y_hat == 1))
         return tp / (tp + fp)
     elif average == "micro":
         # calculate globally by counting the total true positives and false positives
-        tp = y_hat[(y_hat == y)].sum()
-        fp = y[(y_hat != y)].sum()
+        tp = np.sum((y == 1) & (y_hat == 1))
+        fp = np.sum((y == 0) & (y_hat == 1))
         return tp / (tp + fp)
     else:
         # if macro, calculate for each label, and find their unweighted mean
@@ -261,8 +262,8 @@ def precision(
         for c in unique_classes:
             _y = np.where(y == c, 1, 0)
             _y_hat = np.where(y_hat == c, 1, 0)
-            _tp = _y_hat[(_y == 1) == 1].sum()
-            _fp = _y[(_y_hat == 1) == 0].sum()
+            _tp = np.sum((_y == 1) & (_y_hat == 1))
+            _fp = np.sum((_y == 0) & (_y_hat == 1))
             _precision = _tp / (_tp + _fp)
             precisions.append(_precision)
             weights.append(_y.shape[0]/y.shape[0])
@@ -300,13 +301,13 @@ def recall(
         )
     
     if average == "binary":
-        tp = y_hat[(y == 1) == 1].sum()
-        fn = y[(y_hat == 0) == 1].sum()
+        tp = np.sum((y == 1) & (y_hat == 1))
+        fn = np.sum((y == 1) & (y_hat == 0))
         return tp / (tp + fn)
     elif average == "micro":
         # calculate globally by counting the total true positives and false positives
-        tp = y_hat[(y_hat == y)].sum()
-        fn = y_hat[(y_hat != y)].sum()
+        tp = np.sum((y == 1) & (y_hat == 1))
+        fn = np.sum((y == 1) & (y_hat == 0))
         return tp / (tp + fn)
     else:
         # if macro, calculate for each label, and find their unweighted mean
@@ -319,8 +320,8 @@ def recall(
         for c in unique_classes:
             _y = np.where(y == c, 1, 0)
             _y_hat = np.where(y_hat == c, 1, 0)
-            _tp = _y_hat[(_y == 1) == 1].sum()
-            _fn = _y[(_y_hat == 0) == 1].sum()
+            _tp = np.sum((_y == 1) & (_y_hat == 1))
+            _fn = np.sum((_y == 1) & (_y_hat == 0))
             _recall = _tp / (_tp + _fn)
             recalls.append(_recall)
             weights.append(_y.shape[0]/y.shape[0])
@@ -444,3 +445,155 @@ def confusion_matrix(
             cm /= cm.sum()
 
     return cm
+
+def true_positive_rate(
+    y: np.ndarray,
+    y_hat: np.ndarray
+) -> np.float32:
+    """
+    Calculates the True Positive Rate (TPR).
+
+    Args:
+        y (np.ndarray): the true value for y.
+        y_hat (np.ndarray): the predicted value for y.
+
+    Returns:
+        np.float32: the value of the TPR.
+    """
+    tp = np.sum((y == 1) & (y_hat == 1))
+    fn = np.sum((y == 1) & (y_hat == 0))
+    return tp / (tp + fn)
+
+def false_positive_rate(
+    y: np.ndarray,
+    y_hat: np.ndarray
+) -> np.float32:
+    """
+    Calculates the False Positive Rate (FPR).
+
+    Args:
+        y (np.ndarray): the true value for y.
+        y_hat (np.ndarray): the predicted value for y.
+
+    Returns:
+        np.float32: the value of the FPR.
+    """
+    fp = np.sum((y == 0) & (y_hat == 1))
+    tn = np.sum((y == 0) & (y_hat == 0))
+    return fp / (fp + tn)
+
+def roc_auc_score(
+    y: np.ndarray,
+    y_hat: np.ndarray,
+    max_fpr: float = None,
+    average: str = "micro"
+) -> np.float32:
+    """
+    Calculates the False Positive Rate (FPR).
+
+    Args:
+        y (np.ndarray): the true value for y.
+        y_hat (np.ndarray): the predicted value for y.
+        average (str): how the metric will be calculated.
+            Defaults to binary.
+
+    Returns:
+        np.float32: the value of the FPR.
+    """
+    _valid_averages = ["micro", "macro", "weighted"]
+
+    # validating the average value
+    try:
+        assert average in _valid_averages
+    except AssertionError:
+        raise ValueError(
+            f"Average should be {_valid_averages}, got {average}.\n"
+        )
+
+    if max_fpr is not None:
+        # validating the average value
+        try:
+            assert 0 < max_fpr <= 1
+        except AssertionError:
+            raise ValueError(
+                f"Max_fpr should be between 0 and 1 (included).\n"
+            )
+
+    tprs = []
+    fprs = []
+    n_classes = len(np.unique(y))
+
+    # checking whether its a binary classification or not
+    if n_classes == 2:
+        # ordering the prediction (y_hat) and the true y
+        ordered_indexes = np.argsort(y_hat)[::-1]
+        y_hat = y_hat[ordered_indexes]
+        y = y[ordered_indexes]
+        
+        tpr, fpr = [], []
+
+        unique_y_hat = np.unique(y_hat)[::-1]
+        thresholds = [np.inf]
+        thresholds.extend(unique_y_hat)
+
+        for threshold in thresholds:
+            prediction = (y_hat >= threshold).astype(int)
+            _tpr = true_positive_rate(y=y, y_hat=prediction)
+            _fpr = false_positive_rate(y=y, y_hat=prediction)
+
+            tpr.append(_tpr)
+            fpr.append(_fpr)
+
+        tprs.append(tpr)
+        fprs.append(fpr)
+    else:
+        # transforming the classes array into one hot encoder
+        ohe = OneHotEncoder(sparse_output=False)
+        one_hot_y = ohe.fit_transform(y.reshape(-1, 1))
+        
+        # iterating over the classes (applying the One vs Rest approach)
+        for i in range(n_classes):
+            _tpr, _fpr = [], []
+
+            # ordering the prediction (y_hat) and the true y
+            ordered_indexes = np.argsort(y_hat[:, i])[::-1]
+            _y_hat = y_hat[:, i][ordered_indexes]
+            _y = one_hot_y[:, i][ordered_indexes]
+
+            unique_y_hat = np.unique(y_hat[:, i])[::-1]
+            thresholds = [np.inf]
+            thresholds.extend(unique_y_hat)
+
+            for threshold in thresholds:
+                _prediction = (_y_hat >= threshold).astype(int)
+                _tpr.append(true_positive_rate(y=_y, y_hat=_prediction))
+                _fpr.append(false_positive_rate(y=_y, y_hat=_prediction))
+
+            tprs.append(_tpr)
+            fprs.append(_fpr)
+    
+    aucs = []
+
+    # iterating over the tprs and fprs for each class
+    for (tpr, fpr) in zip(tprs, fprs):
+        auc = 0
+
+        # calculating the area under the curve using the trapezodial rule
+        for j in range(1, len(tpr)):
+            auc += ((fpr[j] - fpr[j - 1]) * (tpr[j] + tpr[j - 1])) / 2
+        
+        aucs.append(auc)
+    
+    if n_classes == 2:
+        return np.mean(aucs)
+        
+    # multiplying the auc of each class for its weights (the number of
+    # occurrences in data) and then dividing by the size of the data
+    if average == "weighted":
+        for i in range(n_classes):
+            class_occurrences = np.where(y == i, 1, 0).sum()
+            aucs[i] = (class_occurrences/y.shape[0]) * aucs[i]
+    
+        return np.sum(aucs)
+    
+    return np.mean(aucs)

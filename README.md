@@ -127,7 +127,7 @@ Implementations:
         - [x] Recall
         - [x] F1-Score
         - [x] Confusion Matrix
-        - [ ] ROC AUC Score
+        - [x] ROC AUC Score
 - [x] Distances
     - [x] Euclidean
     - [x] Manhattan
