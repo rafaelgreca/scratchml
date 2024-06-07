@@ -18,7 +18,7 @@
         <img src="https://img.shields.io/coveralls/github/rafaelgreca/scratchml?color=greeb&style=for-the-badge"
             alt="coverage"></a>
     <a alt="Version">
-        <img src="https://img.shields.io/badge/version-2.1.0-orange.svg?color=greeb&style=for-the-badge" /></a>
+        <img src="https://img.shields.io/badge/version-3.0.0-orange.svg?color=greeb&style=for-the-badge" /></a>
     <a href="https://github.com/rafaelgreca/scratchml/blob/main/LICENSE" alt="License">
         <img src="https://img.shields.io/badge/license-MIT-blue?color=greeb&style=for-the-badge" /></a>
 
@@ -111,7 +111,7 @@ Implementations:
     - [ ] Leaky ReLU
 - [ ] Loss functions
     - [x] Binary Cross Entropy
-- [ ] Metrics
+- [x] Metrics
     - [x] Regression Metrics
         - [x] Mean Squared Error (MSE)
         - [x] Root Mean Squared Error (RMSE)
@@ -145,7 +145,7 @@ Implementations:
     - [x] Logistic Regression
     - [ ] SVM
     - [x] KNN
-    - [ ] Naive Bayes
+    - [x] Naive Bayes
     - [ ] Random Forest
     - [ ] Decision Tree
     - [ ] Perceptron
