@@ -1,4 +1,5 @@
 import numpy as np
+from scratchml.scalers import MinMaxScaler
 from scratchml.utils import convert_array_numpy
 from scratchml.encoders import OneHotEncoder
 from typing import Union
@@ -459,7 +460,7 @@ def false_positive_rate(y: np.ndarray, y_hat: np.ndarray) -> np.float32:
 
 
 def roc_auc_score(
-    y: np.ndarray, y_hat: np.ndarray, max_fpr: float = None, average: str = "micro"
+    y: np.ndarray, y_hat: np.ndarray, average: str = "micro"
 ) -> np.float32:
     """
     Calculates the False Positive Rate (FPR).
@@ -480,13 +481,6 @@ def roc_auc_score(
         assert average in _valid_averages
     except AssertionError:
         raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
-
-    if max_fpr is not None:
-        # validating the average value
-        try:
-            assert 0 < max_fpr <= 1
-        except AssertionError:
-            raise ValueError(f"Max_fpr should be between 0 and 1 (included).\n")
 
     tprs = []
     fprs = []

@@ -6,7 +6,7 @@ from scratchml.metrics import roc_auc_score
 from test.utils import generate_classification_dataset, repeat
 
 
-class Test_Precision(unittest.TestCase):
+class Test_RocAucScore(unittest.TestCase):
     @repeat(10)
     def test_1(self):
         X, y = generate_classification_dataset(
