@@ -154,7 +154,7 @@ Implementations:
 Features:
 
 - [x] Extend classification metrics to multi-class output
-- [ ] Run Linear Regression, Logistic Regression, and KNN on multiple CPUs using joblib
+- [ ] Run Linear Regression, Logistic Regression, KNN, and Gaussian Naive Bayes on multiple CPUs using joblib
 - [x] Create examples folder
 - [x] Upgrade Linear and Regression models to use more than one loss function and metric
 - [ ] Improving testing
@@ -167,12 +167,11 @@ Issues:
 
 - [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
 - [ ] Optimize distance metrics and KNN looping functions
-
+- [ ] Fix pylint issues
 
 ## Feedback
 
 If you have any feedback, please feel free to create an issue pointing out whatever you want or reach out to me at rgvieira97@gmail.com
-
 
 ## Contributing
 
@@ -189,7 +188,6 @@ If you have a suggestion that would make this better, please fork the repo and c
 ## License
 
 Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. See LICENSE for more information.
-
 
 ## Authors
 

@@ -10,9 +10,7 @@ class Test_NaiveBayes(unittest.TestCase):
     @repeat(10)
     def test_1(self):
         X, y = generate_classification_dataset(
-            n_samples=10000,
-            n_classes=2,
-            n_features=5
+            n_samples=10000, n_classes=2, n_features=5
         )
 
         gnb = GaussianNB()
@@ -60,9 +58,7 @@ class Test_NaiveBayes(unittest.TestCase):
     @repeat(10)
     def test_2(self):
         X, y = generate_classification_dataset(
-            n_samples=10000,
-            n_classes=8,
-            n_features=10
+            n_samples=10000, n_classes=8, n_features=10
         )
 
         gnb = GaussianNB()
@@ -110,9 +106,7 @@ class Test_NaiveBayes(unittest.TestCase):
     @repeat(10)
     def test_3(self):
         X, y = generate_classification_dataset(
-            n_samples=10000,
-            n_classes=2,
-            n_features=5
+            n_samples=10000, n_classes=2, n_features=5
         )
 
         gnb = GaussianNB(var_smoothing=1e-05)
@@ -160,9 +154,7 @@ class Test_NaiveBayes(unittest.TestCase):
     @repeat(10)
     def test_4(self):
         X, y = generate_classification_dataset(
-            n_samples=10000,
-            n_classes=5,
-            n_features=5
+            n_samples=10000, n_classes=5, n_features=5
         )
 
         _, counts = np.unique(y, return_counts=True)
@@ -217,6 +209,7 @@ class Test_NaiveBayes(unittest.TestCase):
         assert_equal(pred_log_proba_gnb.shape, pred_log_proba_sk_gnb.shape)
         assert_equal(type(pred_log_proba_gnb), type(pred_log_proba_sk_gnb))
         assert np.max(np.abs(pred_log_proba_gnb - pred_log_proba_sk_gnb)) < 1
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

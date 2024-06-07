@@ -2,7 +2,11 @@ from scratchml.models.naive_bayes import GaussianNB
 from scratchml.utils import train_test_split
 from sklearn.datasets import make_classification
 
-if __name__ == "__main__":
+
+def example_gaussian_naive_bayes() -> None:
+    """
+    Practical example of how to use the Gaussian Naive Bayes model.
+    """
     # generating a dataset for the classfication task
     X, y = make_classification(
         n_samples=10000,
@@ -12,14 +16,11 @@ if __name__ == "__main__":
         n_informative=7,
         n_redundant=2,
         n_repeated=0,
-        shuffle=True
+        shuffle=True,
     )
 
     # creating a Gaussian Naive Bayes model
-    gnb = GaussianNB(
-        priors=None,
-        var_smoothing=1e-09
-    )
+    gnb = GaussianNB(priors=None, var_smoothing=1e-09)
 
     # splitting the data into training and test
     X_train, X_test, y_train, y_test = train_test_split(
@@ -33,3 +34,7 @@ if __name__ == "__main__":
     score = gnb.score(X=X_test, y=y_test, metric="accuracy")
 
     print(score)
+
+
+if __name__ == "__main__":
+    example_gaussian_naive_bayes()

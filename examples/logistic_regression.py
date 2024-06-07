@@ -2,7 +2,11 @@ from scratchml.models.logistic_regression import LogisticRegression
 from scratchml.utils import KFold
 from sklearn.datasets import make_classification
 
-if __name__ == "__main__":
+
+def example_logistic_regression() -> None:
+    """
+    Practical example of how to use the Logistic Regression model.
+    """
     # generating a dataset for the classfication set
     X, y = make_classification(
         n_samples=10000,
@@ -44,3 +48,7 @@ if __name__ == "__main__":
         score = lr.score(X=X_test, y=y_test, metric="accuracy")
 
         print(score)
+
+
+if __name__ == "__main__":
+    example_logistic_regression()

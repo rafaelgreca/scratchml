@@ -3,12 +3,9 @@ from scratchml.metrics import accuracy, recall, precision, f1_score, confusion_m
 from scratchml.utils import convert_array_numpy
 from typing import Union, List
 
+
 class GaussianNB(object):
-    def __init__(
-        self,
-        priors: np.ndarray = None,
-        var_smoothing: float = 1e-09
-    ) -> None:
+    def __init__(self, priors: np.ndarray = None, var_smoothing: float = 1e-09) -> None:
         """
         Creates an instance of the Gaussian Naive Bayes model.
 
@@ -32,12 +29,8 @@ class GaussianNB(object):
             "f1_score",
             "confusion_matrix",
         ]
-    
-    def fit(
-        self,
-        X: np.ndarray,
-        y: np.ndarray
-    ) -> None:
+
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Function responsible for fitting the Gaussian Naive Bayes.
 
@@ -67,7 +60,7 @@ class GaussianNB(object):
                 assert np.sum(self.class_prior_) == 1
             except AssertionError:
                 raise ValueError("The sum of the priors should be 1.\n")
-            
+
             self.class_prior_ = convert_array_numpy(self.class_prior_)
         else:
             self.class_prior_ = np.ndarray(n_classes)
@@ -83,20 +76,16 @@ class GaussianNB(object):
             self.theta_[c, :] = _X.mean(axis=0)
             self.var_[c, :] = _X.var(axis=0)
             self.class_count_.append(indexes.shape[0])
-        
+
         self.class_count_ = convert_array_numpy(self.class_count_)
-    
-    def predict(
-        self,
-        X: np.ndarray,
-        output_format: str = "class"
-    ) -> np.ndarray:
+
+    def predict(self, X: np.ndarray, output_format: str = "class") -> np.ndarray:
         """
         Uses the model to predict the classes of a given set (also called features).
 
         Args:
             X (np.ndarray): the features array.
-            output_format (str): how the output should be return ("class", "log", 
+            output_format (str): how the output should be return ("class", "log",
                 "proba"). "Class" will return the class with the highest likelihood,
                 "log" will return the log of the likelihood, and "proba" will return
                 the classes probabilities based on the likelihood. Defaults to "class".
@@ -129,14 +118,14 @@ class GaussianNB(object):
                 predictions.append(self.classes_[np.argmax(_posteriors)])
             elif output_format == "log":
                 # gets the logs of the likelihoods
-                predictions.append(np.log(_posteriors/np.sum(_posteriors)))
+                predictions.append(np.log(_posteriors / np.sum(_posteriors)))
             elif output_format == "proba":
                 # gets the classes probabilities
-                predictions.append(_posteriors/np.sum(_posteriors))
-        
+                predictions.append(_posteriors / np.sum(_posteriors))
+
         predictions = convert_array_numpy(predictions)
         return predictions
-    
+
     def predict_proba(
         self,
         X: np.ndarray,
@@ -154,7 +143,7 @@ class GaussianNB(object):
         X = convert_array_numpy(X)
         predictions = self.predict(X, "proba")
         return predictions
-    
+
     def predict_log_proba(
         self,
         X: np.ndarray,
@@ -172,7 +161,7 @@ class GaussianNB(object):
         X = convert_array_numpy(X)
         predictions = self.predict(X, "log")
         return predictions
-    
+
     def score(
         self,
         X: np.ndarray,
@@ -219,12 +208,8 @@ class GaussianNB(object):
             return f1_score(y, y_hat)
         elif metric == "confusion_matrix":
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
-        
-    def _gaussian(
-        self,
-        X: np.ndarray,
-        index_class: int
-    ) -> np.ndarray:
+
+    def _gaussian(self, X: np.ndarray, index_class: int) -> np.ndarray:
         """
         Applies the Guassian distribution formula (likelihood).
 
@@ -235,10 +220,10 @@ class GaussianNB(object):
         Returns:
             np.ndarray: the likelihood for this feature for the given class.
         """
-        _theta = self.theta_[index_class, :].copy() # mean
-        _var = self.var_[index_class, :].copy() # variance
+        _theta = self.theta_[index_class, :].copy()  # mean
+        _var = self.var_[index_class, :].copy()  # variance
 
         # likelihood/gaussian distribution equation
-        numerator = np.exp(- (np.square(X - _theta)/(2 * _var)) + self.epsilon_)
+        numerator = np.exp(-(np.square(X - _theta) / (2 * _var)) + self.epsilon_)
         denominator = np.sqrt(2 * np.pi * _var)
-        return numerator/denominator
+        return numerator / denominator
