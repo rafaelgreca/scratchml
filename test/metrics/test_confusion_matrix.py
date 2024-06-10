@@ -1,15 +1,22 @@
-import unittest
-import numpy as np
 from numpy.testing import assert_equal
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import confusion_matrix as SkCM
 from scratchml.metrics import confusion_matrix
 from test.utils import generate_classification_dataset, repeat
+import unittest
 
 
-class Test_Precision(unittest.TestCase):
+class Test_ConfusionMatrix(unittest.TestCase):
+    """
+    Unittest class created to test the Confusion Matrix metric implementation.
+    """
+
     @repeat(10)
     def test_1(self):
+        """
+        Test the confusion matrix metric on a binary dataset and then compares it to the
+        Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_features=10, n_samples=10000, n_classes=2
         )
@@ -51,6 +58,10 @@ class Test_Precision(unittest.TestCase):
 
     @repeat(10)
     def test_2(self):
+        """
+        Test the confusion matrix metric on a multi-class dataset and then compares
+        it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_features=10, n_samples=10000, n_classes=10
         )
@@ -92,6 +103,10 @@ class Test_Precision(unittest.TestCase):
 
     @repeat(10)
     def test_3(self):
+        """
+        Test the confusion matrix metric on a binary dataset using only a set of labels
+        and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_features=10, n_samples=10000, n_classes=10
         )

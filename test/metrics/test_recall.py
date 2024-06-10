@@ -1,14 +1,21 @@
-import unittest
-import numpy as np
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import recall_score
 from scratchml.metrics import recall
 from test.utils import generate_classification_dataset, repeat
+import unittest
+import numpy as np
 
 
-class Test_Precision(unittest.TestCase):
+class Test_Recall(unittest.TestCase):
+    """
+    Unittest class created to test the Recall metric implementation.
+    """
+
     @repeat(10)
     def test_1(self):
+        """
+        Test the Recall on a binary dataset and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_features=10, n_samples=10000, n_classes=2
         )
@@ -27,6 +34,10 @@ class Test_Precision(unittest.TestCase):
 
     @repeat(10)
     def test_2(self):
+        """
+        Test the Recall on a multi-class dataset and then compares it to the
+        Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_features=10, n_samples=10000, n_classes=5
         )

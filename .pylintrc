@@ -440,7 +440,10 @@ disable=raw-checker-failed,
         wrong-import-order,
         invalid-name,
         unbalanced-tuple-unpacking,
-        unrecognized-option
+        unrecognized-option,
+        too-many-arguments,
+        too-many-locals,
+        too-many-statements
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

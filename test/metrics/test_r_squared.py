@@ -1,14 +1,21 @@
-import unittest
-import numpy as np
 from sklearn.metrics import r2_score as SkR2
 from sklearn.linear_model import LinearRegression as SkLinearRegression
 from scratchml.metrics import r_squared
 from test.utils import generate_regression_dataset, repeat
+import unittest
+import numpy as np
 
 
 class Test_RSquared(unittest.TestCase):
+    """
+    Unittest class created to test the R Squared metric implementation.
+    """
+
     @repeat(10)
     def test_1(self):
+        """
+        Test the R Squared and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_regression_dataset(n_samples=10000, n_features=10, n_targets=1)
 
         sklr = SkLinearRegression()

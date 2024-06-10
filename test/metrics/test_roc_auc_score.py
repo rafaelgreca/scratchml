@@ -1,14 +1,22 @@
-import unittest
 from numpy.testing import assert_almost_equal
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import roc_auc_score as SkRAC
 from scratchml.metrics import roc_auc_score
 from test.utils import generate_classification_dataset, repeat
+import unittest
 
 
-class Test_RocAucScore(unittest.TestCase):
+class Test_ROCAUCScore(unittest.TestCase):
+    """
+    Unittest class created to test the ROC AUC Score metric implementation.
+    """
+
     @repeat(10)
     def test_1(self):
+        """
+        Test the ROC AUC Score on a binary dataset and then compares it to the Scikit-Learn
+        implementation.
+        """
         X, y = generate_classification_dataset(
             n_features=10, n_samples=10000, n_classes=2
         )
@@ -37,6 +45,9 @@ class Test_RocAucScore(unittest.TestCase):
 
     @repeat(10)
     def test_2(self):
+        """
+        Test the ROC AUC Score on a multi-class dataset and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_features=10, n_samples=10000, n_classes=6
         )

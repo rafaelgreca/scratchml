@@ -1,14 +1,22 @@
-import unittest
 from numpy.testing import assert_almost_equal, assert_equal
 from sklearn.preprocessing import MinMaxScaler as SkMinMaxScaler
 from scratchml.scalers import MinMaxScaler
 from test.utils import generate_regression_dataset, repeat
+import unittest
 
 
 class Test_MinMaxScaler(unittest.TestCase):
+    """
+    Unittest class created to test the MinMaxScaler implementation.
+    """
+
     @repeat(10)
     def test_1(self):
-        X, y = generate_regression_dataset()
+        """
+        Test the MinMaxScaler technique using the default values
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset()
 
         skscaler = SkMinMaxScaler()
         scaler = MinMaxScaler()
@@ -51,7 +59,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_2(self):
-        X, y = generate_regression_dataset()
+        """
+        Test the MinMaxScaler technique using clip
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset()
 
         skscaler = SkMinMaxScaler(clip=True)
         scaler = MinMaxScaler(clip=True)
@@ -94,7 +106,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_3(self):
-        X, y = generate_regression_dataset()
+        """
+        Test the MinMaxScaler technique using a different feature_range
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset()
 
         skscaler = SkMinMaxScaler(feature_range=(-1, 1))
         scaler = MinMaxScaler(feature_range=(-1, 1))
@@ -137,7 +153,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_4(self):
-        X, y = generate_regression_dataset(n_samples=100)
+        """
+        Test the MinMaxScaler technique using the default values on a higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_samples=100)
 
         skscaler = SkMinMaxScaler()
         scaler = MinMaxScaler()
@@ -180,7 +200,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_5(self):
-        X, y = generate_regression_dataset(n_features=100)
+        """
+        Test the MinMaxScaler technique using clip on a higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=100)
 
         skscaler = SkMinMaxScaler(clip=True)
         scaler = MinMaxScaler(clip=True)
@@ -223,7 +247,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_6(self):
-        X, y = generate_regression_dataset(n_features=100)
+        """
+        Test the MinMaxScaler technique using a different feature range on a higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=100)
 
         skscaler = SkMinMaxScaler(feature_range=(-1, 1))
         scaler = MinMaxScaler(feature_range=(-1, 1))
@@ -266,7 +294,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_7(self):
-        X, y = generate_regression_dataset(n_features=1000)
+        """
+        Test the MinMaxScaler technique using the default values on an even bigger dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=1000)
 
         skscaler = SkMinMaxScaler()
         scaler = MinMaxScaler()
@@ -309,7 +341,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_8(self):
-        X, y = generate_regression_dataset(n_features=1000)
+        """
+        Test the MinMaxScaler technique using clip on an even bigger dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=1000)
 
         skscaler = SkMinMaxScaler(clip=True)
         scaler = MinMaxScaler(clip=True)
@@ -352,7 +388,11 @@ class Test_MinMaxScaler(unittest.TestCase):
 
     @repeat(10)
     def test_9(self):
-        X, y = generate_regression_dataset(n_features=1000)
+        """
+        Test the MinMaxScaler technique using a different feature range on an even bigger dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=1000)
 
         skscaler = SkMinMaxScaler(feature_range=(-1, 1))
         scaler = MinMaxScaler(feature_range=(-1, 1))

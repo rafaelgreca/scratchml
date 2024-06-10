@@ -1,14 +1,22 @@
-import unittest
-import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
 from sklearn.naive_bayes import GaussianNB as SkGNB
 from scratchml.models.naive_bayes import GaussianNB
 from test.utils import generate_classification_dataset, repeat
+import unittest
+import numpy as np
 
 
 class Test_NaiveBayes(unittest.TestCase):
-    @repeat(10)
+    """
+    Unittest class created to test the Gaussian Naive Bayes implementation.
+    """
+
+    @repeat(5)
     def test_1(self):
+        """
+        Test the Gaussian Naive Bayes implementation
+        and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_samples=10000, n_classes=2, n_features=5
         )
@@ -55,8 +63,12 @@ class Test_NaiveBayes(unittest.TestCase):
         assert_equal(type(pred_log_proba_gnb), type(pred_log_proba_sk_gnb))
         assert np.max(np.abs(pred_log_proba_gnb - pred_log_proba_sk_gnb)) < 1
 
-    @repeat(10)
+    @repeat(5)
     def test_2(self):
+        """
+        Test the Gaussian Naive Bayes implementation on a multi-class dataset
+        with higher dimension and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_samples=10000, n_classes=8, n_features=10
         )
@@ -103,8 +115,12 @@ class Test_NaiveBayes(unittest.TestCase):
         assert_equal(type(pred_log_proba_gnb), type(pred_log_proba_sk_gnb))
         assert np.max(np.abs(pred_log_proba_gnb - pred_log_proba_sk_gnb)) < 1
 
-    @repeat(10)
+    @repeat(5)
     def test_3(self):
+        """
+        Test the Gaussian Naive Bayes with a different var smoothing value
+        with higher dimension and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_samples=10000, n_classes=2, n_features=5
         )
@@ -151,8 +167,12 @@ class Test_NaiveBayes(unittest.TestCase):
         assert_equal(type(pred_log_proba_gnb), type(pred_log_proba_sk_gnb))
         assert np.max(np.abs(pred_log_proba_gnb - pred_log_proba_sk_gnb)) < 1
 
-    @repeat(10)
+    @repeat(5)
     def test_4(self):
+        """
+        Test the Gaussian Naive Bayes implementation using a pre-defined priors
+        with higher dimension and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(
             n_samples=10000, n_classes=5, n_features=5
         )

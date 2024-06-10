@@ -1,14 +1,22 @@
-import unittest
 from numpy.testing import assert_almost_equal, assert_equal
 from sklearn.preprocessing import StandardScaler as SkStandardScaler
 from scratchml.scalers import StandardScaler
 from test.utils import generate_regression_dataset, repeat
+import unittest
 
 
 class Test_StandardScaler(unittest.TestCase):
+    """
+    Unittest class created to test the StandardScaler implementation.
+    """
+
     @repeat(10)
     def test_1(self):
-        X, y = generate_regression_dataset()
+        """
+        Test the StandarScaler technique using the default values
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset()
 
         skscaler = SkStandardScaler()
         scaler = StandardScaler()
@@ -49,7 +57,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_2(self):
-        X, y = generate_regression_dataset()
+        """
+        Test the StandarScaler technique without using the mean
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset()
 
         skscaler = SkStandardScaler(with_mean=False)
         scaler = StandardScaler(with_mean=False)
@@ -90,7 +102,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_3(self):
-        X, y = generate_regression_dataset()
+        """
+        Test the StandarScaler technique without using the standar deviation
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset()
 
         skscaler = SkStandardScaler(with_std=False)
         scaler = StandardScaler(with_std=False)
@@ -131,7 +147,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_4(self):
-        X, y = generate_regression_dataset()
+        """
+        Test the StandarScaler technique without using the mean and standard deviation
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset()
 
         skscaler = SkStandardScaler(with_std=False, with_mean=False)
         scaler = StandardScaler(with_std=False, with_mean=False)
@@ -172,7 +192,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_5(self):
-        X, y = generate_regression_dataset(n_features=100)
+        """
+        Test the StandarScaler technique using the default values on a higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=100)
 
         skscaler = SkStandardScaler()
         scaler = StandardScaler()
@@ -213,7 +237,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_6(self):
-        X, y = generate_regression_dataset(n_features=100)
+        """
+        Test the StandarScaler technique without using the mean on a higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=100)
 
         skscaler = SkStandardScaler(with_mean=False)
         scaler = StandardScaler(with_mean=False)
@@ -254,7 +282,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_7(self):
-        X, y = generate_regression_dataset(n_features=100)
+        """
+        Test the StandarScaler technique without using the standard deviation on a higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=100)
 
         skscaler = SkStandardScaler(with_std=False)
         scaler = StandardScaler(with_std=False)
@@ -295,7 +327,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_8(self):
-        X, y = generate_regression_dataset(n_features=100)
+        """
+        Test the StandarScaler technique without using the mean and standard deviation on a higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=100)
 
         skscaler = SkStandardScaler(with_std=False, with_mean=False)
         scaler = StandardScaler(with_std=False, with_mean=False)
@@ -336,7 +372,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_9(self):
-        X, y = generate_regression_dataset(n_features=1000)
+        """
+        Test the StandarScaler technique using the default values on an even higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=1000)
 
         skscaler = SkStandardScaler()
         scaler = StandardScaler()
@@ -377,7 +417,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_10(self):
-        X, y = generate_regression_dataset(n_features=1000)
+        """
+        Test the StandarScaler technique without using the mean on an even higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=1000)
 
         skscaler = SkStandardScaler(with_mean=False)
         scaler = StandardScaler(with_mean=False)
@@ -418,7 +462,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_11(self):
-        X, y = generate_regression_dataset(n_features=1000)
+        """
+        Test the StandarScaler technique without using the standard deviation on an even higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=1000)
 
         skscaler = SkStandardScaler(with_std=False)
         scaler = StandardScaler(with_std=False)
@@ -459,7 +507,11 @@ class Test_StandardScaler(unittest.TestCase):
 
     @repeat(10)
     def test_12(self):
-        X, y = generate_regression_dataset(n_features=1000)
+        """
+        Test the StandarScaler technique without using the mean and the standard deviation on an even higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
+        X, _ = generate_regression_dataset(n_features=1000)
 
         skscaler = SkStandardScaler(with_std=False, with_mean=False)
         scaler = StandardScaler(with_std=False, with_mean=False)

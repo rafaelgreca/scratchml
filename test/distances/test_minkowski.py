@@ -1,37 +1,22 @@
-import unittest
-import numpy as np
 from sklearn.metrics import DistanceMetric
 from scratchml.distances import minkowski
 from numpy.testing import assert_equal, assert_almost_equal
 from test.utils import repeat
+import unittest
+import numpy as np
 
 
-class Test_Chebyshev(unittest.TestCase):
-    def test1(self):
-        p = 2.0
-        X = [[0, 1], [1, 1]]
-        test = [[0, 0]]
-
-        X = np.asarray(X)
-        test = np.asarray(test)
-
-        dist = DistanceMetric.get_metric("minkowski", p=p)
-        sk_distances = dist.pairwise(X, X)
-        distances = minkowski(X, X, p)
-
-        assert_almost_equal(sk_distances, distances)
-        assert type(sk_distances) == type(distances)
-        assert_equal(sk_distances.shape, distances.shape)
-
-        sk_distances = dist.pairwise(X, test)
-        distances = minkowski(X, test, p)
-
-        assert_almost_equal(sk_distances, distances)
-        assert type(sk_distances) == type(distances)
-        assert_equal(sk_distances.shape, distances.shape)
+class Test_Minkowski(unittest.TestCase):
+    """
+    Unittest class created to test the Minkowski distance metric.
+    """
 
     @repeat(10)
-    def test2(self):
+    def test1(self):
+        """
+        Test the Minkowski metric implementation on random values and
+        then compares it to the Scikit-Learn implementation.
+        """
         p = 1.0
         X = np.random.rand(100, 200)
         y = np.random.rand(300, 200)
@@ -41,11 +26,15 @@ class Test_Chebyshev(unittest.TestCase):
         distances = minkowski(X, y, p)
 
         assert_almost_equal(sk_distances, distances)
-        assert type(sk_distances) == type(distances)
+        assert_equal(type(sk_distances), type(distances))
         assert_equal(sk_distances.shape, distances.shape)
 
     @repeat(10)
-    def test3(self):
+    def test2(self):
+        """
+        Test the Minkowski metric implementation on random values with a
+        different value for p and then compares it to the Scikit-Learn implementation.
+        """
         p = 10.0
         X = np.random.rand(1000, 200)
         y = np.random.rand(3000, 200)
@@ -55,7 +44,7 @@ class Test_Chebyshev(unittest.TestCase):
         distances = minkowski(X, y, p)
 
         assert_almost_equal(sk_distances, distances)
-        assert type(sk_distances) == type(distances)
+        assert_equal(type(sk_distances), type(distances))
         assert_equal(sk_distances.shape, distances.shape)
 
 

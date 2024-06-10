@@ -1,12 +1,20 @@
-import unittest
-import numpy as np
 from numpy.testing import assert_equal
 from sklearn.preprocessing import OneHotEncoder as SkOneHotEncoder
 from scratchml.encoders import OneHotEncoder
+import unittest
 
 
 class Test_OneHotEncoder(unittest.TestCase):
+    """
+    Unittest class created to test the One Hot Encoder technique.
+    """
+
     def test_1(self):
+        """
+        Test the One Hot Encoder implementation on a toy-problem using the
+        'infrequent_if_exist' with a custom max_categories value and
+        then compares it to the Scikit-Learn implementation.
+        """
         X = [
             ["Male", 1],
             ["Male", 1],
@@ -37,6 +45,10 @@ class Test_OneHotEncoder(unittest.TestCase):
         assert_equal(type(inv_trans_enc), type(inv_trans_ohe))
 
     def test_2(self):
+        """
+        Test the One Hot Encoder implementation on a toy-problem using the
+        'ignore' and then compares it to the Scikit-Learn implementation.
+        """
         X = [["Male", 1], ["Female", 3], ["Female", 2]]
         test = [["Female", 1], ["Male", 4]]
 
@@ -60,6 +72,11 @@ class Test_OneHotEncoder(unittest.TestCase):
         assert_equal(type(inv_trans_enc), type(inv_trans_ohe))
 
     def test_3(self):
+        """
+        Test the One Hot Encoder implementation on a toy-problem using the
+        'ignore' with 'if_binary' drop option and then compares it
+        to the Scikit-Learn implementation.
+        """
         X = [
             ["Male", 1],
             ["Male", 1],
@@ -90,6 +107,11 @@ class Test_OneHotEncoder(unittest.TestCase):
         assert_equal(type(inv_trans_enc), type(inv_trans_ohe))
 
     def test_4(self):
+        """
+        Test the One Hot Encoder implementation on a toy-problem using the
+        'ignore' with a custom drop option and then compares it
+        to the Scikit-Learn implementation.
+        """
         X = [
             ["Male", 1],
             ["Male", 1],
@@ -120,6 +142,11 @@ class Test_OneHotEncoder(unittest.TestCase):
         assert_equal(type(inv_trans_enc), type(inv_trans_ohe))
 
     def test_5(self):
+        """
+        Test the One Hot Encoder implementation on a toy-problem using the
+        'infrequent_if_exists' with a custom min frequency and then compares it
+        to the Scikit-Learn implementation.
+        """
         X = [
             ["Male", 1],
             ["Male", 1],
@@ -150,6 +177,11 @@ class Test_OneHotEncoder(unittest.TestCase):
         assert_equal(type(inv_trans_enc), type(inv_trans_ohe))
 
     def test_6(self):
+        """
+        Test the One Hot Encoder implementation on a toy-problem using the
+        'infrequent_if_exists', a custom min frequency and max categories
+        and then compares it to the Scikit-Learn implementation.
+        """
         X = [
             ["Male", 1],
             ["Male", 1],

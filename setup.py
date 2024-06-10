@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "1.0.0"
+VERSION = "3.0.0"
 DESCRIPTION = """
 A Python library called ScratchML was created to build the most fundamental Machine Learning models from scratch, emphasizing producing user-friendly, straightforward, and easy-to-use implementations for novices and enthusiasts.
 """

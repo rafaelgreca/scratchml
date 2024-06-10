@@ -1,6 +1,3 @@
-import unittest
-import random
-import numpy as np
 from sklearn.model_selection import train_test_split as SkTTS
 from sklearn.model_selection import KFold as SkKF
 from sklearn.model_selection import StratifiedKFold as SkSKF
@@ -12,11 +9,23 @@ from numpy.testing import (
     assert_array_equal,
 )
 from test.utils import repeat, generate_classification_dataset
+import unittest
+import random
+import numpy as np
 
 
 class Test_DataSplits(unittest.TestCase):
+    """
+    Unittest class created to test the data splits (train_test_split, KFold, and
+    StratifiedKFold) techniques.
+    """
+
     @repeat(10)
     def test_1(self):
+        """
+        Test the train_test_split technique and then compares it to the Scikit-Learn
+        implementation.
+        """
         test_size = random.uniform(0, 1)
 
         X, y = generate_classification_dataset(n_samples=50000, n_classes=10)
@@ -116,11 +125,17 @@ class Test_DataSplits(unittest.TestCase):
 
     @repeat(10)
     def test_2(self):
+        """
+        Test the KFold and StratifiedKFold techniques and then compares it
+        to the Scikit-Learn implementation.
+        """
         X, y = generate_classification_dataset(n_samples=50000, n_classes=10)
 
         folds = KFold(X=X, y=y, stratify=False, shuffle=True, n_splits=3)
 
         skf = SkKF(n_splits=3, shuffle=True)
+
+        # scikit-learn's output must be in the same format as our implementation
         skfolds = [
             [train_index, test_index] for (train_index, test_index) in skf.split(X)
         ]

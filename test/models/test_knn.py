@@ -1,16 +1,24 @@
-import unittest
-import math
-import numpy as np
 from sklearn.neighbors import KNeighborsClassifier as SkKNNC
 from sklearn.neighbors import KNeighborsRegressor as SkKNNR
 from numpy.testing import assert_almost_equal, assert_equal, assert_allclose
 from scratchml.models.knn import KNNClassifier, KNNRegressor
 from test.utils import repeat, generate_blob_dataset, generate_regression_dataset
+import unittest
+import math
+import numpy as np
 
 
 class Test_KNN(unittest.TestCase):
+    """
+    Unittest class created to test the KNN implementation.
+    """
+
     @repeat(5)
     def test_1(self):
+        """
+        Test the KNN implementation on a small dataset using the 'manhattan' metric
+        and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_blob_dataset(n_samples=2000, n_features=2)
 
         sk_knn = SkKNNC(n_neighbors=5, metric="manhattan")
@@ -41,6 +49,10 @@ class Test_KNN(unittest.TestCase):
 
     @repeat(5)
     def test_2(self):
+        """
+        Test the KNN implementation on a small dataset using the 'euclidean' metric
+        and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_blob_dataset(n_samples=2000, n_features=2)
 
         sk_knn = SkKNNC(n_neighbors=3, metric="euclidean", weights="distance")
@@ -71,6 +83,10 @@ class Test_KNN(unittest.TestCase):
 
     @repeat(5)
     def test_3(self):
+        """
+        Test the KNN implementation on a small dataset with higher dimension
+        and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_blob_dataset(n_samples=1000, n_features=5)
 
         sk_knn = SkKNNC(n_neighbors=5)
@@ -101,6 +117,10 @@ class Test_KNN(unittest.TestCase):
 
     @repeat(5)
     def test_4(self):
+        """
+        Test the KNN implementation on a small dataset with higher dimension with more neighbors
+        and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_regression_dataset(n_samples=2000, n_features=3)
 
         sk_knn = SkKNNR(n_neighbors=5)
@@ -130,6 +150,11 @@ class Test_KNN(unittest.TestCase):
 
     @repeat(5)
     def test_5(self):
+        """
+        Test the KNN implementation on a small dataset with higher dimension
+        using the 'chebyshev' metric and weights based on the neighbors distances
+        and then compares it to the Scikit-Learn implementation.
+        """
         X, y = generate_regression_dataset(n_samples=2000, n_features=5)
 
         sk_knn = SkKNNR(n_neighbors=5, weights="distance", metric="chebyshev")
