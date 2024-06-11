@@ -1,8 +1,7 @@
-import numpy as np
-from scratchml.scalers import MinMaxScaler
 from scratchml.utils import convert_array_numpy
 from scratchml.encoders import OneHotEncoder
 from typing import Union
+import numpy as np
 
 
 def mean_squared_error(
@@ -23,8 +22,8 @@ def mean_squared_error(
     """
     if derivative:
         return y_hat - y
-    else:
-        return np.sum((y_hat - y) ** 2) / y.shape[0]
+
+    return np.sum((y_hat - y) ** 2) / y.shape[0]
 
 
 def root_mean_squared_error(
@@ -45,8 +44,8 @@ def root_mean_squared_error(
     """
     if derivative:
         raise NotImplementedError
-    else:
-        return np.sqrt(np.sum((y_hat - y) ** 2) / y.shape[0])
+
+    return np.sqrt(np.sum((y_hat - y) ** 2) / y.shape[0])
 
 
 def mean_absolute_error(
@@ -67,8 +66,8 @@ def mean_absolute_error(
     """
     if derivative:
         return np.where(y_hat > y, 1, -1) / y.shape[0]
-    else:
-        return np.sum(np.abs(y - y_hat)) / (y.shape[0])
+
+    return np.sum(np.abs(y - y_hat)) / (y.shape[0])
 
 
 def median_absolute_error(
@@ -89,8 +88,8 @@ def median_absolute_error(
     """
     if derivative:
         raise NotImplementedError
-    else:
-        return np.median(np.abs(y - y_hat))
+
+    return np.median(np.abs(y - y_hat))
 
 
 def mean_absolute_percentage_error(
@@ -116,14 +115,14 @@ def mean_absolute_percentage_error(
     """
     if derivative:
         raise NotImplementedError
-    else:
-        score = np.sum(
-            [
-                np.abs(y[i] - y_hat[i]) / np.maximum(epsilon, np.abs(y[i]))
-                for i in range(y.shape[0])
-            ]
-        )
-        return score / (y.shape[0])
+
+    score = np.sum(
+        [
+            np.abs(y[i] - y_hat[i]) / np.maximum(epsilon, np.abs(y[i]))
+            for i in range(y.shape[0])
+        ]
+    )
+    return score / (y.shape[0])
 
 
 def mean_squared_logarithmic_error(
@@ -149,9 +148,9 @@ def mean_squared_logarithmic_error(
     """
     if derivative:
         raise NotImplementedError
-    else:
-        score = np.sum((np.log(1 + y + epsilon) - np.log(1 + y_hat + epsilon)) ** 2)
-        return score / y.shape[0]
+
+    score = np.sum((np.log(1 + y + epsilon) - np.log(1 + y_hat + epsilon)) ** 2)
+    return score / y.shape[0]
 
 
 def max_error(
@@ -174,8 +173,8 @@ def max_error(
     """
     if derivative:
         raise NotImplementedError
-    else:
-        return np.max(np.abs(y - y_hat))
+
+    return np.max(np.abs(y - y_hat))
 
 
 def r_squared(y: np.ndarray, y_hat: np.ndarray) -> np.float32:
@@ -231,8 +230,10 @@ def precision(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.f
     # validating the average value
     try:
         assert average in _valid_averages
-    except AssertionError:
-        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
+    except AssertionError as error:
+        raise ValueError(
+            f"Average should be {_valid_averages}, got {average}.\n"
+        ) from error
 
     if average == "binary":
         tp = np.sum((y == 1) & (y_hat == 1))
@@ -262,7 +263,8 @@ def precision(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.f
 
         if average == "macro":
             return sum(precisions) / len(precisions)
-        elif average == "weighted":
+
+        if average == "weighted":
             return np.dot(precisions, weights) / len(precisions)
 
 
@@ -284,8 +286,10 @@ def recall(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.floa
     # validating the average value
     try:
         assert average in _valid_averages
-    except AssertionError:
-        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
+    except AssertionError as error:
+        raise ValueError(
+            f"Average should be {_valid_averages}, got {average}.\n"
+        ) from error
 
     if average == "binary":
         tp = np.sum((y == 1) & (y_hat == 1))
@@ -315,7 +319,8 @@ def recall(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.floa
 
         if average == "macro":
             return sum(recalls) / len(recalls)
-        elif average == "weighted":
+
+        if average == "weighted":
             return np.dot(recalls, weights) / len(recalls)
 
 
@@ -337,22 +342,27 @@ def f1_score(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.fl
     # validating the average value
     try:
         assert average in _valid_averages
-    except AssertionError:
-        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
+    except AssertionError as error:
+        raise ValueError(
+            f"Average should be {_valid_averages}, got {average}.\n"
+        ) from error
 
     if average == "binary":
         op = precision(y, y_hat) * recall(y, y_hat)
         div = precision(y, y_hat) + recall(y, y_hat)
         return 2 * (op / div)
-    elif average == "micro":
+
+    if average == "micro":
         op = precision(y, y_hat, "micro") * recall(y, y_hat, "micro")
         div = precision(y, y_hat, "micro") + recall(y, y_hat, "micro")
         return 2 * (op / div)
-    elif average == "macro":
+
+    if average == "macro":
         op = precision(y, y_hat, "macro") * recall(y, y_hat, "macro")
         div = precision(y, y_hat, "macro") + recall(y, y_hat, "macro")
         return 2 * (op / div)
-    elif average == "weighted":
+
+    if average == "weighted":
         op = precision(y, y_hat, "weighted") * recall(y, y_hat, "weighted")
         div = precision(y, y_hat, "weighted") + recall(y, y_hat, "weighted")
         return 2 * (op / div)
@@ -378,19 +388,19 @@ def confusion_matrix(
     """
     _valid_normalizations = ["true", "pred", "all"]
 
-    if labels != None:
+    if labels is not None:
         _labels = convert_array_numpy(labels).reshape(-1)
     else:
         _labels = np.sort(np.unique(y)).reshape(-1)
 
     # validating the normalize value
-    if normalize != None:
+    if normalize is not None:
         try:
             assert normalize in _valid_normalizations
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Normalize value should be {_valid_normalizations}, got {normalize} instead.\n"
-            )
+            ) from error
 
     # creating the confusion matrix
     cm = np.zeros((_labels.shape[0], _labels.shape[0]))
@@ -409,7 +419,7 @@ def confusion_matrix(
         # class j with its occurrencies
         cm[i, j] = _y[(_y_hat == 1) == 1].sum()
 
-    if normalize == None:
+    if normalize is None:
         cm = cm.astype(int)
     else:
         if normalize == "pred":
@@ -479,8 +489,10 @@ def roc_auc_score(
     # validating the average value
     try:
         assert average in _valid_averages
-    except AssertionError:
-        raise ValueError(f"Average should be {_valid_averages}, got {average}.\n")
+    except AssertionError as error:
+        raise ValueError(
+            f"Average should be {_valid_averages}, got {average}.\n"
+        ) from error
 
     tprs = []
     fprs = []

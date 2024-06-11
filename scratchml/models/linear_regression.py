@@ -1,4 +1,3 @@
-import numpy as np
 from scratchml.metrics import (
     mean_squared_error,
     root_mean_squared_error,
@@ -12,9 +11,13 @@ from scratchml.metrics import (
 from scratchml.utils import convert_array_numpy
 from scratchml.regularizations import l1, l2
 from typing import Union
+import numpy as np
 
 
-class LinearRegression(object):
+class LinearRegression:
+    """
+    Creates a class for the Linear Regression model.
+    """
 
     def __init__(
         self,
@@ -49,7 +52,7 @@ class LinearRegression(object):
         self.n_jobs = n_jobs
         self.coef_ = None
         self.intercept_ = None
-        self.n_features_in = None
+        self.n_features_in_ = None
         self.lr = learning_rate
         self.tol = tol
         self.max_iters = max_iters
@@ -88,24 +91,26 @@ class LinearRegression(object):
         # validating the loss_function value
         try:
             assert self.loss_function in self._valid_loss_functions
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'loss_function'. Must be {self._valid_loss_functions}.\n"
-            )
+            ) from error
 
         # validating the regularization function value
         try:
             assert self.regularization in self._valid_regularizations
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'regularization'. Must be {self._valid_regularizations}.\n"
-            )
+            ) from error
 
         # validating the verbose value
         try:
             assert self.verbose in [0, 1, 2]
-        except AssertionError:
-            raise ValueError(f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n")
+        except AssertionError as error:
+            raise ValueError(
+                f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
+            ) from error
 
         self.intercept_ = 0.0
         self.coef_ = np.zeros(X.shape[1])
@@ -128,7 +133,7 @@ class LinearRegression(object):
             derivative_intercept = (np.sum(loss)) / y.shape[0]
 
             # applying the regularization to the loss function
-            if self.regularization != None:
+            if self.regularization is not None:
                 if self.regularization == "l1":
                     reg_coef = l1(self.coef_, derivative=True)
                     reg_intercept = l1(self.intercept_, derivative=True)
@@ -200,26 +205,33 @@ class LinearRegression(object):
         """
         try:
             assert metric in self._valid_metrics
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
-            )
+            ) from error
 
         y_hat = self.predict(X)
 
         if metric == "r_squared":
             return r_squared(y, y_hat)
-        elif metric == "mse":
+
+        if metric == "mse":
             return mean_squared_error(y, y_hat)
-        elif metric == "mae":
+
+        if metric == "mae":
             return mean_absolute_error(y, y_hat)
-        elif metric == "rmse":
+
+        if metric == "rmse":
             return root_mean_squared_error(y, y_hat)
-        elif metric == "medae":
+
+        if metric == "medae":
             return median_absolute_error(y, y_hat)
-        elif metric == "mape":
+
+        if metric == "mape":
             return mean_absolute_percentage_error(y, y_hat)
-        elif metric == "msle":
+
+        if metric == "msle":
             return mean_squared_logarithmic_error(y, y_hat)
-        elif metric == "max_error":
+
+        if metric == "max_error":
             return max_error(y, y_hat)

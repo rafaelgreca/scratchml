@@ -20,8 +20,8 @@ def l1(
     """
     if derivative:
         return reg_lambda * np.sign(weights)
-    else:
-        return reg_lambda * np.sum(np.abs(weights))
+
+    return reg_lambda * np.sum(np.abs(weights))
 
 
 def l2(
@@ -43,5 +43,5 @@ def l2(
     """
     if derivative:
         return 2 * reg_lambda * weights
-    else:
-        return reg_lambda * np.sum(weights**2)
+
+    return reg_lambda * np.sum(weights**2)

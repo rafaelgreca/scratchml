@@ -1,6 +1,6 @@
 import numpy as np
 
-# TODO: Optimize and improve these distance metrics
+# FIXME: Optimize and improve these distance metrics
 
 
 def euclidean(x: np.ndarray, y: np.ndarray) -> np.ndarray:

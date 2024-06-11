@@ -1,4 +1,3 @@
-import numpy as np
 from abc import ABC
 from scratchml.utils import convert_array_numpy
 from scratchml.distances import euclidean, minkowski, chebyshev, manhattan
@@ -18,9 +17,14 @@ from scratchml.metrics import (
     max_error,
 )
 from typing import Tuple, Union, List
+import numpy as np
 
 
 class BaseKNN(ABC):
+    """
+    Creates a class for the KNN base model.
+    """
+
     def __init__(
         self,
         n_neighbors: int = 5,
@@ -83,7 +87,7 @@ class BaseKNN(ABC):
         n_neighbors: int = None,
         return_distance: bool = True,
     ) -> Union[Tuple[np.ndarray, np.ndarray], np.ndarray]:
-        # TODO: Optimize and improve this function
+        # FIXME: Optimize and improve this function
         """
         Gets the K-neighbors of a data point.
 
@@ -107,11 +111,13 @@ class BaseKNN(ABC):
             X = self.X_
 
         # validating the n_neighbors value
-        if n_neighbors != None:
+        if n_neighbors is not None:
             try:
                 assert n_neighbors > 0
-            except AssertionError:
-                raise ValueError("The number of neighbors must be bigger than zero.\n")
+            except AssertionError as error:
+                raise ValueError(
+                    "The number of neighbors must be bigger than zero.\n"
+                ) from error
         else:
             n_neighbors = self.n_neighbors
 
@@ -129,7 +135,7 @@ class BaseKNN(ABC):
             dist = minkowski(X, self.X_, self.p)
 
         # getting the n neighbors for each calculated distance
-        for i in range(len(dist)):
+        for i, _ in enumerate(dist):
             n_indexes = dist[i].argsort()[:n_neighbors]
             indexes.append(n_indexes)
             distances.append(dist[i][n_indexes])
@@ -139,8 +145,8 @@ class BaseKNN(ABC):
 
         if return_distance:
             return distances, indexes
-        else:
-            return indexes
+
+        return indexes
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -153,7 +159,6 @@ class BaseKNN(ABC):
         Returns:
             np.ndarray: the predicted classes.
         """
-        pass
 
     def score(
         self, X: np.ndarray, y: np.ndarray, metric: str = "accuracy"
@@ -172,7 +177,6 @@ class BaseKNN(ABC):
         Returns:
             np.ndarray: the predicted classes.
         """
-        pass
 
     def _validate_parameters(self) -> None:
         """
@@ -182,42 +186,44 @@ class BaseKNN(ABC):
         # validating the n_neighbors value
         try:
             assert self.n_neighbors > 0
-        except AssertionError:
-            raise ValueError("The 'n_neighbors' must be bigger than zero.\n")
+        except AssertionError as error:
+            raise ValueError("The 'n_neighbors' must be bigger than zero.\n") from error
 
         # validating the n_jobs value
-        if self.n_jobs != None:
+        if self.n_jobs is not None:
             try:
                 if self.n_jobs < 0:
                     assert self.n_jobs == -1
                 else:
                     assert self.n_jobs > 0
-            except AssertionError:
+            except AssertionError as error:
                 raise ValueError(
                     "If not None, 'n_jobs' must be equal to -1 or higher than 0.\n"
-                )
+                ) from error
 
         # validating the p value
         try:
             assert self.p > 0
-        except AssertionError:
-            raise ValueError("The value for 'p' must be a positive number.\n")
+        except AssertionError as error:
+            raise ValueError(
+                "The value for 'p' must be a positive number.\n"
+            ) from error
 
         # validating the metric value
         try:
             assert self.effective_metric_ in self._valid_metrics
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"'Metric' should be {self._valid_metrics}, got {self.effective_metric_} instead.\n"
-            )
+            ) from error
 
         # validating the weights value
         try:
             assert self.weights in self._valid_weights
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"'Weights' should be {self._valid_weights}, got {self.weights} instead.\n"
-            )
+            ) from error
 
         if self.p == 2 and self.effective_metric_ == "minkowski":
             self.effective_metric_ = "euclidean"
@@ -227,6 +233,10 @@ class BaseKNN(ABC):
 
 
 class KNNClassifier(BaseKNN):
+    """
+    Creates a class (inherited from BaseKNN) for the KNNClassifier.
+    """
+
     def __init__(
         self,
         n_neighbors: int = 5,
@@ -338,26 +348,34 @@ class KNNClassifier(BaseKNN):
         """
         try:
             assert metric in self._valid_score_metrics
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_score_metrics}.\n"
-            )
+            ) from error
 
         y_hat = self.predict(X)
 
         if metric == "accuracy":
             return accuracy(y, y_hat)
-        elif metric == "precision":
+
+        if metric == "precision":
             return precision(y, y_hat)
-        elif metric == "recall":
+
+        if metric == "recall":
             return recall(y, y_hat)
-        elif metric == "f1_score":
+
+        if metric == "f1_score":
             return f1_score(y, y_hat)
-        elif metric == "confusion_matrix":
+
+        if metric == "confusion_matrix":
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
 
 
 class KNNRegressor(BaseKNN):
+    """
+    Creates a class (inherited from BaseKNN) for the KNNRegressor.
+    """
+
     def __init__(
         self,
         n_neighbors: int = 5,
@@ -432,7 +450,6 @@ class KNNRegressor(BaseKNN):
 
         prediction = convert_array_numpy(prediction)
         prediction = prediction.astype(np.float64)
-
         return prediction
 
     def score(
@@ -453,26 +470,33 @@ class KNNRegressor(BaseKNN):
         """
         try:
             assert metric in self._valid_score_metrics
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_score_metrics}.\n"
-            )
+            ) from error
 
         y_hat = self.predict(X)
 
         if metric == "r_squared":
             return r_squared(y, y_hat)
-        elif metric == "mse":
+
+        if metric == "mse":
             return mean_squared_error(y, y_hat)
-        elif metric == "mae":
+
+        if metric == "mae":
             return mean_absolute_error(y, y_hat)
-        elif metric == "rmse":
+
+        if metric == "rmse":
             return root_mean_squared_error(y, y_hat)
-        elif metric == "medae":
+
+        if metric == "medae":
             return median_absolute_error(y, y_hat)
-        elif metric == "mape":
+
+        if metric == "mape":
             return mean_absolute_percentage_error(y, y_hat)
-        elif metric == "msle":
+
+        if metric == "msle":
             return mean_squared_logarithmic_error(y, y_hat)
-        elif metric == "max_error":
+
+        if metric == "max_error":
             return max_error(y, y_hat)

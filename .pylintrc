@@ -443,7 +443,11 @@ disable=raw-checker-failed,
         unrecognized-option,
         too-many-arguments,
         too-many-locals,
-        too-many-statements
+        too-many-statements,
+        too-many-branches,
+        too-many-instance-attributes,
+        inconsistent-return-statements,
+        too-many-return-statements
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

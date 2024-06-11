@@ -1,13 +1,16 @@
-import numpy as np
 from scratchml.losses import binary_cross_entropy
 from scratchml.utils import convert_array_numpy
 from scratchml.activations import sigmoid, softmax
 from scratchml.metrics import accuracy, recall, precision, f1_score, confusion_matrix
 from scratchml.regularizations import l1, l2
 from typing import Union, List, Tuple
+import numpy as np
 
 
-class LogisticRegression(object):
+class LogisticRegression:
+    """
+    Creates a class for the Logistic Regression model.
+    """
 
     def __init__(
         self,
@@ -85,30 +88,32 @@ class LogisticRegression(object):
         # validating the loss_function value
         try:
             assert self.loss_function in self._valid_loss_functions
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'loss_function'. Must be {self._valid_loss_functions}.\n"
-            )
+            ) from error
 
         # validating the regularization function value
         try:
             assert self.regularization in self._valid_regularizations
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'regularization'. Must be {self._valid_regularizations}.\n"
-            )
+            ) from error
 
         # validating the verbose value
         try:
             assert self.verbose in [0, 1, 2]
-        except AssertionError:
-            raise ValueError(f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n")
+        except AssertionError as error:
+            raise ValueError(
+                f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
+            ) from error
 
         # validating the number of unique classes
         try:
             assert len(self.classes_) >= 2
-        except AssertionError:
-            raise RuntimeError("Only one unique class was found.\n")
+        except AssertionError as error:
+            raise RuntimeError("Only one unique class was found.\n") from error
 
         if len(self.classes_) == 2:
             self.intercept_ = np.zeros((1,), dtype=np.float64)
@@ -160,7 +165,7 @@ class LogisticRegression(object):
                     derivative_intercept = (np.sum(loss)) / y.shape[0]
 
             # applying the regularization to the loss function
-            if self.regularization != None:
+            if self.regularization is not None:
                 if self.regularization == "l1":
                     reg_coef = l1(coefs, derivative=True)
 
@@ -233,7 +238,7 @@ class LogisticRegression(object):
         y_hat = np.matmul(X, self.coef_.T) + self.intercept_
         y_hat = np.squeeze(sigmoid(y_hat))
 
-        if threshold != None:
+        if threshold is not None:
             y_hat = (y_hat > threshold).astype(int)
 
         if len(self.classes_) > 2:
@@ -287,20 +292,24 @@ class LogisticRegression(object):
         """
         try:
             assert metric in self._valid_metrics
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
-            )
+            ) from error
 
         y_hat = self.predict(X, threshold)
 
         if metric == "accuracy":
             return accuracy(y, y_hat)
-        elif metric == "precision":
+
+        if metric == "precision":
             return precision(y, y_hat)
-        elif metric == "recall":
+
+        if metric == "recall":
             return recall(y, y_hat)
-        elif metric == "f1_score":
+
+        if metric == "f1_score":
             return f1_score(y, y_hat)
-        elif metric == "confusion_matrix":
+
+        if metric == "confusion_matrix":
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)

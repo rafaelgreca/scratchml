@@ -1,5 +1,5 @@
-import numpy as np
 from typing import Any, Union, Tuple, List
+import numpy as np
 
 
 def KFold(
@@ -32,15 +32,17 @@ def KFold(
     # validating the number of splits
     try:
         assert n_splits >= 2
-    except AssertionError:
-        raise ValueError("N splits value should be equal or larget than 2.\n")
+    except AssertionError as error:
+        raise ValueError(
+            "N splits value should be equal or larget than 2.\n"
+        ) from error
 
     # validating if the y is not None when stratify is True
     if stratify:
         try:
             assert not y is None
-        except AssertionError:
-            raise ValueError("Y can not be None when stratify is True.\n")
+        except AssertionError as error:
+            raise ValueError("Y can not be None when stratify is True.\n") from error
 
     indices = np.arange(X.shape[0])
 
@@ -93,7 +95,7 @@ def KFold(
 
             # making sure that the sum of the classes is equal to the
             # amount of indexes that must be selected for this fold
-            # TODO: think in a better way, optimized way to do this
+            # FIXME: think in a better way, optimized way to do this
             if _total_sum != i:
                 diff = _total_sum - i
                 extra_sample = np.zeros(len(classes_distribution), dtype=int)
@@ -178,51 +180,55 @@ def train_test_split(
     # validating the train_size and test_size parameters
     # as just one of them should be used
     try:
-        assert not ((train_size == None) and (test_size == None)) or (
-            (train_size != None) and (test_size != None)
+        assert not ((train_size is None) and (test_size is None)) or (
+            (train_size is not None) and (test_size is not None)
         )
-    except AssertionError:
+    except AssertionError as error:
         raise RuntimeError(
-            f"You should pass train_size or test_size, not both or neither.\n"
-        )
+            "You should pass train_size or test_size, not both or neither.\n"
+        ) from error
 
     # validating the test size parameter
-    if test_size != None:
+    if test_size is not None:
         if isinstance(test_size, float):
             try:
                 assert 0 < test_size < 1
                 test_split_ratio = test_size
 
-            except AssertionError:
-                raise ValueError("Test size value should be between 0 and 1.\n")
+            except AssertionError as error:
+                raise ValueError(
+                    "Test size value should be between 0 and 1.\n"
+                ) from error
         elif isinstance(test_size, int):
             try:
                 assert 0 < test_size < X.shape[0]
                 test_split_ratio = test_size / X.shape[0]
-            except AssertionError:
+            except AssertionError as error:
                 raise ValueError(
                     f"Test size value should be between 0 and {X.shape[0]}.\n"
-                )
+                ) from error
 
     # validating the train size parameter
-    if train_size != None:
+    if train_size is not None:
         if isinstance(train_size, float):
             try:
                 assert 0 < train_size < 1
                 train_split_ratio = train_size
-            except AssertionError:
-                raise ValueError("Train size value should be between 0 and 1.\n")
+            except AssertionError as error:
+                raise ValueError(
+                    "Train size value should be between 0 and 1.\n"
+                ) from error
         elif isinstance(train_size, int):
             try:
                 assert 0 < train_size < X.shape[0]
                 train_split_ratio = train_size / X.shape[0]
-            except AssertionError:
+            except AssertionError as error:
                 raise ValueError(
                     f"Train size value should be between 0 and {X.shape[0]}.\n"
-                )
+                ) from error
 
     # defining the split ratio of the train set
-    if train_size == None:
+    if train_size is None:
         train_split_ratio = 1 - test_split_ratio
 
     # shuffling the arrays
@@ -298,7 +304,8 @@ def convert_array_numpy(array: Any) -> np.ndarray:
     if isinstance(array, list):
         array = np.asarray(array, dtype="O")
         return array
+
     if isinstance(array, np.ndarray):
         return array
-    else:
-        raise TypeError("Invalid type. Should be np.ndarray or list.\n")
+
+    raise TypeError("Invalid type. Should be np.ndarray or list.\n")

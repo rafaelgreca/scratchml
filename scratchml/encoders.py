@@ -1,10 +1,9 @@
-import numpy as np
-import math
 from scipy.sparse import csr_matrix
 from abc import ABC
 from typing import List, Union, Any, Tuple
 from scratchml.utils import convert_array_numpy
-from sklearn.preprocessing import OneHotEncoder as SkOneHotEncoder
+import numpy as np
+import math
 
 
 class BaseEncoder(ABC):
@@ -16,19 +15,32 @@ class BaseEncoder(ABC):
         pass
 
     def fit(self, y: np.ndarray) -> None:
-        pass
+        """
+        Abstract method to the fit the encoder.
+        """
 
     def transform(self, y: np.ndarray) -> np.ndarray:
-        pass
+        """
+        Abstract method to use the fitted encoder to transform the data.
+        """
 
     def fit_transform(self, y: np.ndarray) -> np.ndarray:
-        pass
+        """
+        Abstract method to fit the encoder and then used it to transform the data.
+        """
 
     def inverse_transform(self, y: np.ndarray) -> np.ndarray:
-        pass
+        """
+        Abstract method to use the fitted encoder to inverse transform the data
+        (get the original value).
+        """
 
 
 class LabelEncoder(BaseEncoder):
+    """
+    Creates a class (inherited from BaseScaler) for the LabelEncoder.
+    """
+
     def __init__(self) -> None:
         """
         Creates a LabelEncoder's instance.
@@ -43,7 +55,7 @@ class LabelEncoder(BaseEncoder):
         Args:
             y (np.array): the classes array.
         """
-        if not (isinstance(y, np.ndarray) or isinstance(y, List)):
+        if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         self.classes_ = np.sort(np.unique(y))
@@ -59,7 +71,7 @@ class LabelEncoder(BaseEncoder):
         Returns:
             y (np.ndarray): the encoded classes array.
         """
-        if not (isinstance(y, np.ndarray) or isinstance(y, List)):
+        if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         return np.array([self.classes_map_[v] for v in y])
@@ -74,7 +86,7 @@ class LabelEncoder(BaseEncoder):
         Returns:
             np.ndarray: the encoded classes array.
         """
-        if not (isinstance(y, np.ndarray) or isinstance(y, List)):
+        if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         self.fit(y)
@@ -91,7 +103,7 @@ class LabelEncoder(BaseEncoder):
         Returns:
             np.ndarray: the original classes array.
         """
-        if not (isinstance(y, np.ndarray) or isinstance(y, List)):
+        if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         inverse_classes_map = dict(map(reversed, self.classes_map_.items()))
@@ -99,6 +111,10 @@ class LabelEncoder(BaseEncoder):
 
 
 class OneHotEncoder(BaseEncoder):
+    """
+    Creates a class (inherited from BaseScaler) for the OneHotEncoder.
+    """
+
     def __init__(
         self,
         categories: Union[str, List] = "auto",
@@ -168,10 +184,10 @@ class OneHotEncoder(BaseEncoder):
         # if the min frequency parameter is specified, then detect
         # the infrequent categories within the features. moreover, we also
         # need to "delete" the infrequent categories and add a "infrequent" category
-        if self.min_frequency_ != None or self.max_categories_ != None:
+        if self.min_frequency_ is not None or self.max_categories_ is not None:
             _ordered_categories = self._check_infrequents(X, _ordered_categories)
 
-        self.categories_map_ = dict()
+        self.categories_map_ = {}
 
         # mapping the categories into integers that will be used as an auxiliary
         # step to one hot encode the categories
@@ -182,7 +198,7 @@ class OneHotEncoder(BaseEncoder):
             _features_map = {}
 
             for j, c in enumerate(_ordered_categories[i]):
-                if self.infrequents == None or not c in self.infrequents[i]:
+                if self.infrequents is not None or not c in self.infrequents[i]:
                     _features_map[c] = j
                 else:
                     if c in self.infrequents[i]:
@@ -214,25 +230,25 @@ class OneHotEncoder(BaseEncoder):
         self.infrequents = {}
 
         # validating the min frequency value
-        if self.min_frequency_ != None:
+        if self.min_frequency_ is not None:
             if isinstance(self.min_frequency_, int):
                 try:
                     assert self.min_frequency_ > 0
                     min_frequency = self.min_frequency_
-                except AssertionError:
+                except AssertionError as error:
                     raise ValueError(
                         "The min frequency value must be greater than 0.\n"
-                    )
+                    ) from error
             elif isinstance(self.min_frequency_, float):
                 try:
                     assert (self.min_frequency_ > 0) and (self.min_frequency_ < 1)
                     min_frequency = math.floor(
                         self.min_frequency_ * self.n_features_in_
                     )
-                except AssertionError:
+                except AssertionError as error:
                     raise ValueError(
                         "The min frequency value must be between [0, 1].\n"
-                    )
+                    ) from error
             else:
                 raise TypeError(
                     f"The min frequency value must be int or float, got {type(self.min_frequency_)}"
@@ -254,8 +270,8 @@ class OneHotEncoder(BaseEncoder):
                 else:
                     self.infrequents[feature] = []
 
-            if self.max_categories_ == None:
-                for c in range(len(categories)):
+            if self.max_categories_ is not None:
+                for c, _ in enumerate(categories):
                     if len(self.infrequents[c]) > 0:
                         _temp = list(categories[c])
                         _temp.append("infrequent")
@@ -265,14 +281,16 @@ class OneHotEncoder(BaseEncoder):
                         ]
                         categories[c] = np.delete(categories[c], _indexes)
 
-        if self.max_categories_ != None:
+        if self.max_categories_ is not None:
             # validating the max categories value
             try:
                 assert self.max_categories_ > 0
-            except AssertionError:
-                raise ValueError("The max categories value should be greater than 0.\n")
+            except AssertionError as error:
+                raise ValueError(
+                    "The max categories value should be greater than 0.\n"
+                ) from error
 
-            if self.min_frequency_ == None:
+            if self.min_frequency_ is None:
                 self.infrequents = {i: [] for i in range(self.n_features_in_)}
 
             for i in range(self.n_features_in_):
@@ -352,7 +370,7 @@ class OneHotEncoder(BaseEncoder):
         try:
             new_X.astype(self.dtype_)
         except Exception as e:
-            return str(e) + "\n"
+            raise e
 
         # transforming the new array into a sparse matrix
         if self.sparse_output_:
@@ -384,7 +402,7 @@ class OneHotEncoder(BaseEncoder):
             # detecting the number of categories within the features
             n_values = np.max(features_values) + 1
             encoded_features = []
-            is_binary = True if n_values == 2 else False
+            is_binary = n_values == 2
 
             # mapping the features information (this will be used in the
             # drop indexes function)
@@ -401,7 +419,7 @@ class OneHotEncoder(BaseEncoder):
                     try:
                         _X = np.array([self.categories_map_[i][v]])
                         encoded_features.append(np.eye(n_values)[_X])
-                    except KeyError as e:
+                    except KeyError:
                         # creating an array filled with zeros
                         encoded_features.append(np.zeros(n_values))
                 elif self.handle_unknown_ == "infrequent_if_exist":
@@ -419,8 +437,8 @@ class OneHotEncoder(BaseEncoder):
                     try:
                         _X = np.array([self.categories_map_[i][v]])
                         encoded_features.append(np.eye(n_values)[_X])
-                    except KeyError as e:
-                        raise KeyError()
+                    except KeyError as error:
+                        raise error
 
             new_X.append(np.vstack(encoded_features))
 
@@ -442,18 +460,16 @@ class OneHotEncoder(BaseEncoder):
             np.ndarray: the new features array.
         """
         # validating the drop parameter value
-        if self.drop_ != None:
+        if self.drop_ is not None:
             if isinstance(self.drop_, str):
                 try:
                     assert self.drop_ in self._valid_drop
-                except AssertionError:
+                except AssertionError as error:
                     raise ValueError(
                         f"Invalid drop option, must be {self._valid_drop}.\n"
-                    )
+                    ) from error
             else:
-                if not (
-                    isinstance(self.drop_, List) or isinstance(self.drop_, np.ndarray)
-                ):
+                if not isinstance(self.drop_, (List, np.ndarray)):
                     raise TypeError(
                         f"The drop type must be a list or np.ndarray, got {type(self.drop_)} instead.\n"
                     )
@@ -532,7 +548,7 @@ class OneHotEncoder(BaseEncoder):
         """
         X = convert_array_numpy(X)
 
-        # TODO: Think in a better way for validation the shape of array.
+        # FIXME: Think in a better way for validation the shape of array.
         # The commented code bellow only works when drop == None.
 
         # checking the shape of the array

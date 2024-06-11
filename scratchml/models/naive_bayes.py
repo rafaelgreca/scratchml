@@ -1,10 +1,14 @@
-import numpy as np
 from scratchml.metrics import accuracy, recall, precision, f1_score, confusion_matrix
 from scratchml.utils import convert_array_numpy
 from typing import Union, List
+import numpy as np
 
 
-class GaussianNB(object):
+class GaussianNB:
+    """
+    Creates a class for the Gaussian Naive Bayes model.
+    """
+
     def __init__(self, priors: np.ndarray = None, var_smoothing: float = 1e-09) -> None:
         """
         Creates an instance of the Gaussian Naive Bayes model.
@@ -44,8 +48,10 @@ class GaussianNB(object):
         # validating the var smoothing value
         try:
             assert self.epsilon_ > 0
-        except AssertionError:
-            raise ValueError("The var smoothing value should be bigger than 0.\n")
+        except AssertionError as error:
+            raise ValueError(
+                "The var smoothing value should be bigger than 0.\n"
+            ) from error
 
         self.n_features_in_ = X.shape[1]
         self.classes_ = np.unique(y)
@@ -58,8 +64,8 @@ class GaussianNB(object):
         if self.class_prior_ is not None:
             try:
                 assert np.sum(self.class_prior_) == 1
-            except AssertionError:
-                raise ValueError("The sum of the priors should be 1.\n")
+            except AssertionError as error:
+                raise ValueError("The sum of the priors should be 1.\n") from error
 
             self.class_prior_ = convert_array_numpy(self.class_prior_)
         else:
@@ -99,10 +105,12 @@ class GaussianNB(object):
         # validating the output format
         try:
             assert output_format in ["class", "proba", "log"]
-        except AssertionError:
-            raise ValueError("Output format should be 'class', 'proba', or 'log'.\n")
+        except AssertionError as error:
+            raise ValueError(
+                "Output format should be 'class', 'proba', or 'log'.\n"
+            ) from error
 
-        # TODO: Optimize this function (think how to do the same thing
+        # FIXME: Optimize this function (think how to do the same thing
         # using matrix multiplication)
         for i in range(X.shape[0]):
             _X = X[i, :].copy()
@@ -191,22 +199,26 @@ class GaussianNB(object):
         """
         try:
             assert metric in self._valid_metrics
-        except AssertionError:
+        except AssertionError as error:
             raise ValueError(
                 f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
-            )
+            ) from error
 
         y_hat = self.predict(X)
 
         if metric == "accuracy":
             return accuracy(y, y_hat)
-        elif metric == "precision":
+
+        if metric == "precision":
             return precision(y, y_hat)
-        elif metric == "recall":
+
+        if metric == "recall":
             return recall(y, y_hat)
-        elif metric == "f1_score":
+
+        if metric == "f1_score":
             return f1_score(y, y_hat)
-        elif metric == "confusion_matrix":
+
+        if metric == "confusion_matrix":
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
 
     def _gaussian(self, X: np.ndarray, index_class: int) -> np.ndarray:

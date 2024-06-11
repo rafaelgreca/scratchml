@@ -1,7 +1,7 @@
-import numpy as np
 from typing import Tuple, Union, List
 from abc import ABC
 from scratchml.utils import convert_array_numpy
+import numpy as np
 
 
 class BaseScaler(ABC):
@@ -13,19 +13,32 @@ class BaseScaler(ABC):
         pass
 
     def fit(self, X: np.ndarray, y: np.array) -> None:
-        pass
+        """
+        Abstract method to the fit the scaler.
+        """
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        pass
+        """
+        Abstract method to use the fitted scaler to transform the data.
+        """
 
     def fit_transform(self, X: np.ndarray, y: np.array) -> np.ndarray:
-        pass
+        """
+        Abstract method to fit the scaler and then used it to transform the data.
+        """
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
-        pass
+        """
+        Abstract method to use the fitted scaler to inverse transform the data
+        (get the original value).
+        """
 
 
 class MinMaxScaler(BaseScaler):
+    """
+    Creates a class (inherited from BaseScaler) for the MinMaxScaler.
+    """
+
     def __init__(
         self,
         feature_range: Tuple[float, float] = (0, 1),
@@ -140,6 +153,10 @@ class MinMaxScaler(BaseScaler):
 
 
 class StandardScaler(BaseScaler):
+    """
+    Creates a class (inherited from BaseScaler) for the StandardScaler.
+    """
+
     def __init__(
         self, copy: bool = True, with_mean: bool = True, with_std: bool = True
     ) -> None:
@@ -162,6 +179,7 @@ class StandardScaler(BaseScaler):
         self.var_ = None
         self.n_features_in_ = None
         self.n_samples_seen_ = None
+        self.std = None
 
     def fit(self, X: Union[np.ndarray, List], y: np.array = None) -> None:
         """
