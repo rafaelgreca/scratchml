@@ -1,7 +1,7 @@
 from numpy.testing import assert_allclose, assert_equal
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
-from scratchml.models.logistic_regression import LogisticRegression
-from test.utils import generate_classification_dataset, repeat
+from ...scratchml.models.logistic_regression import LogisticRegression
+from ..utils import generate_classification_dataset, repeat
 import unittest
 import math
 import numpy as np

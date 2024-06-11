@@ -1,7 +1,7 @@
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import recall_score
-from scratchml.metrics import recall
-from test.utils import generate_classification_dataset, repeat
+from ...scratchml.metrics import recall
+from ..utils import generate_classification_dataset, repeat
 import unittest
 import numpy as np
 

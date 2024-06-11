@@ -1,7 +1,7 @@
 from abc import ABC
-from scratchml.utils import convert_array_numpy
-from scratchml.distances import euclidean, minkowski, chebyshev, manhattan
-from scratchml.metrics import (
+from ..utils import convert_array_numpy
+from ..distances import euclidean, minkowski, chebyshev, manhattan
+from ..metrics import (
     accuracy,
     recall,
     precision,
@@ -123,6 +123,7 @@ class BaseKNN(ABC):
 
         distances = []
         indexes = []
+        dist = []
 
         # calculating the distances between the data points
         if self.effective_metric_ == "euclidean":
@@ -135,10 +136,10 @@ class BaseKNN(ABC):
             dist = minkowski(X, self.X_, self.p)
 
         # getting the n neighbors for each calculated distance
-        for i, _ in enumerate(dist):
-            n_indexes = dist[i].argsort()[:n_neighbors]
+        for d in dist:
+            n_indexes = d.argsort()[:n_neighbors]
             indexes.append(n_indexes)
-            distances.append(dist[i][n_indexes])
+            distances.append(d[n_indexes])
 
         indexes = convert_array_numpy(indexes)
         distances = convert_array_numpy(distances)
@@ -434,6 +435,7 @@ class KNNRegressor(BaseKNN):
 
         for index in indexes:
             _y = self.y_[index]
+            _mean = 0.0
 
             # getting the mean target value for the k neighbors
             if self.weights == "uniform":

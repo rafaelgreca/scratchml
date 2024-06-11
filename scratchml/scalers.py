@@ -1,6 +1,6 @@
 from typing import Tuple, Union, List
 from abc import ABC
-from scratchml.utils import convert_array_numpy
+from .utils import convert_array_numpy
 import numpy as np
 
 
@@ -114,8 +114,8 @@ class MinMaxScaler(BaseScaler):
         if self.copy:
             X = X_scaled.copy()
             return X
-        else:
-            return X_scaled
+
+        return X_scaled
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         """
@@ -242,9 +242,9 @@ class StandardScaler(BaseScaler):
 
         if self.copy:
             return X_
-        else:
-            X = X_.copy()
-            return X
+
+        X = X_.copy()
+        return X
 
     def inverse_transform(self, X: np.ndarray) -> np.ndarray:
         """

@@ -1,8 +1,8 @@
 from numpy.testing import assert_equal
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import confusion_matrix as SkCM
-from scratchml.metrics import confusion_matrix
-from test.utils import generate_classification_dataset, repeat
+from ...scratchml.metrics import confusion_matrix
+from ..utils import generate_classification_dataset, repeat
 import unittest
 
 

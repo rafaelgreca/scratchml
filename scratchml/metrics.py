@@ -1,5 +1,5 @@
-from scratchml.utils import convert_array_numpy
-from scratchml.encoders import OneHotEncoder
+from .utils import convert_array_numpy
+from .encoders import OneHotEncoder
 from typing import Union
 import numpy as np
 
@@ -239,33 +239,34 @@ def precision(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.f
         tp = np.sum((y == 1) & (y_hat == 1))
         fp = np.sum((y == 0) & (y_hat == 1))
         return tp / (tp + fp)
-    elif average == "micro":
+
+    if average == "micro":
         # calculate globally by counting the total true positives and false positives
         tp = np.sum((y == 1) & (y_hat == 1))
         fp = np.sum((y == 0) & (y_hat == 1))
         return tp / (tp + fp)
-    else:
-        # if macro, calculate for each label, and find their unweighted mean
-        # otherwise, if weighted calculate for each label, and find their weighted mean
-        # based on the true positive classes
-        unique_classes = np.unique(y)
-        precisions = []
-        weights = []
 
-        for c in unique_classes:
-            _y = np.where(y == c, 1, 0)
-            _y_hat = np.where(y_hat == c, 1, 0)
-            _tp = np.sum((_y == 1) & (_y_hat == 1))
-            _fp = np.sum((_y == 0) & (_y_hat == 1))
-            _precision = _tp / (_tp + _fp)
-            precisions.append(_precision)
-            weights.append(_y.shape[0] / y.shape[0])
+    # if macro, calculate for each label, and find their unweighted mean
+    # otherwise, if weighted calculate for each label, and find their weighted mean
+    # based on the true positive classes
+    unique_classes = np.unique(y)
+    precisions = []
+    weights = []
 
-        if average == "macro":
-            return sum(precisions) / len(precisions)
+    for c in unique_classes:
+        _y = np.where(y == c, 1, 0)
+        _y_hat = np.where(y_hat == c, 1, 0)
+        _tp = np.sum((_y == 1) & (_y_hat == 1))
+        _fp = np.sum((_y == 0) & (_y_hat == 1))
+        _precision = _tp / (_tp + _fp)
+        precisions.append(_precision)
+        weights.append(_y.shape[0] / y.shape[0])
 
-        if average == "weighted":
-            return np.dot(precisions, weights) / len(precisions)
+    if average == "macro":
+        return sum(precisions) / len(precisions)
+
+    if average == "weighted":
+        return np.dot(precisions, weights) / len(precisions)
 
 
 def recall(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.float32:
@@ -295,33 +296,34 @@ def recall(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.floa
         tp = np.sum((y == 1) & (y_hat == 1))
         fn = np.sum((y == 1) & (y_hat == 0))
         return tp / (tp + fn)
-    elif average == "micro":
+
+    if average == "micro":
         # calculate globally by counting the total true positives and false positives
         tp = np.sum((y == 1) & (y_hat == 1))
         fn = np.sum((y == 1) & (y_hat == 0))
         return tp / (tp + fn)
-    else:
-        # if macro, calculate for each label, and find their unweighted mean
-        # otherwise, if weighted calculate for each label, and find their weighted mean
-        # based on the true positive classes
-        unique_classes = np.unique(y)
-        recalls = []
-        weights = []
 
-        for c in unique_classes:
-            _y = np.where(y == c, 1, 0)
-            _y_hat = np.where(y_hat == c, 1, 0)
-            _tp = np.sum((_y == 1) & (_y_hat == 1))
-            _fn = np.sum((_y == 1) & (_y_hat == 0))
-            _recall = _tp / (_tp + _fn)
-            recalls.append(_recall)
-            weights.append(_y.shape[0] / y.shape[0])
+    # if macro, calculate for each label, and find their unweighted mean
+    # otherwise, if weighted calculate for each label, and find their weighted mean
+    # based on the true positive classes
+    unique_classes = np.unique(y)
+    recalls = []
+    weights = []
 
-        if average == "macro":
-            return sum(recalls) / len(recalls)
+    for c in unique_classes:
+        _y = np.where(y == c, 1, 0)
+        _y_hat = np.where(y_hat == c, 1, 0)
+        _tp = np.sum((_y == 1) & (_y_hat == 1))
+        _fn = np.sum((_y == 1) & (_y_hat == 0))
+        _recall = _tp / (_tp + _fn)
+        recalls.append(_recall)
+        weights.append(_y.shape[0] / y.shape[0])
 
-        if average == "weighted":
-            return np.dot(recalls, weights) / len(recalls)
+    if average == "macro":
+        return sum(recalls) / len(recalls)
+
+    if average == "weighted":
+        return np.dot(recalls, weights) / len(recalls)
 
 
 def f1_score(y: np.ndarray, y_hat: np.ndarray, average: str = "binary") -> np.float32:

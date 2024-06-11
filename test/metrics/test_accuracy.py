@@ -1,7 +1,7 @@
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import accuracy_score
-from scratchml.metrics import accuracy
-from test.utils import generate_classification_dataset, repeat
+from ...scratchml.metrics import accuracy
+from ..utils import generate_classification_dataset, repeat
 import unittest
 import numpy as np
 

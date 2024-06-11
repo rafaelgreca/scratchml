@@ -1,7 +1,7 @@
 from sklearn.metrics.pairwise import euclidean_distances as SkED
-from scratchml.distances import euclidean
+from ...scratchml.distances import euclidean
 from numpy.testing import assert_equal, assert_almost_equal
-from test.utils import repeat
+from ..utils import repeat
 import unittest
 import numpy as np
 

@@ -1,4 +1,4 @@
-from scratchml.metrics import (
+from ..metrics import (
     mean_squared_error,
     root_mean_squared_error,
     r_squared,
@@ -8,8 +8,8 @@ from scratchml.metrics import (
     mean_squared_logarithmic_error,
     max_error,
 )
-from scratchml.utils import convert_array_numpy
-from scratchml.regularizations import l1, l2
+from ..utils import convert_array_numpy
+from ..regularizations import l1, l2
 from typing import Union
 import numpy as np
 
@@ -109,7 +109,7 @@ class LinearRegression:
             assert self.verbose in [0, 1, 2]
         except AssertionError as error:
             raise ValueError(
-                f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
+                "Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
             ) from error
 
         self.intercept_ = 0.0
@@ -121,6 +121,7 @@ class LinearRegression:
         while True:
             # making the prediction
             y_hat = self.predict(X)
+            loss = 0.0
 
             # calculating the loss according to the chosen
             # loss function
@@ -134,6 +135,8 @@ class LinearRegression:
 
             # applying the regularization to the loss function
             if self.regularization is not None:
+                reg_coef, reg_intercept = 0.0, 0.0
+
                 if self.regularization == "l1":
                     reg_coef = l1(self.coef_, derivative=True)
                     reg_intercept = l1(self.intercept_, derivative=True)

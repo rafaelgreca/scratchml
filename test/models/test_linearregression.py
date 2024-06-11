@@ -1,7 +1,7 @@
 from numpy.testing import assert_almost_equal
 from sklearn.linear_model import LinearRegression as SkLinearRegression
-from scratchml.models.linear_regression import LinearRegression
-from test.utils import generate_regression_dataset, repeat
+from ...scratchml.models.linear_regression import LinearRegression
+from ..utils import generate_regression_dataset, repeat
 import unittest
 import numpy as np
 

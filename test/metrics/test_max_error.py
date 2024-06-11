@@ -1,7 +1,7 @@
 from sklearn.metrics import max_error as SkME
 from sklearn.linear_model import LinearRegression as SkLinearRegression
-from scratchml.metrics import max_error
-from test.utils import generate_regression_dataset, repeat
+from ...scratchml.metrics import max_error
+from ..utils import generate_regression_dataset, repeat
 import unittest
 import numpy as np
 

@@ -1,7 +1,7 @@
 from sklearn.metrics import mean_squared_error as SkMSE
 from sklearn.linear_model import LinearRegression as SkLinearRegression
-from scratchml.metrics import mean_squared_error, root_mean_squared_error
-from test.utils import generate_regression_dataset, repeat
+from ...scratchml.metrics import mean_squared_error, root_mean_squared_error
+from ..utils import generate_regression_dataset, repeat
 import unittest
 import numpy as np
 

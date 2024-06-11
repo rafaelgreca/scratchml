@@ -243,9 +243,9 @@ def train_test_split(
         # analysing the classes distribution
         unique, counts = np.unique(y, return_counts=True)
         counts = np.asarray((unique, counts)).T
-        classes_distribution = [(u, c) for u, c in counts]
+        classes_distribution = list(counts)
 
-        check_max_ocurrencies = max([v for (c, v) in classes_distribution])
+        check_max_ocurrencies = max(v for (_, v) in classes_distribution)
 
         if check_max_ocurrencies < 2:
             raise RuntimeError("Stratify should not be used for a regression task.\n")

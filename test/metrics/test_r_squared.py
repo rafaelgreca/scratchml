@@ -1,7 +1,7 @@
 from sklearn.metrics import r2_score as SkR2
 from sklearn.linear_model import LinearRegression as SkLinearRegression
-from scratchml.metrics import r_squared
-from test.utils import generate_regression_dataset, repeat
+from ...scratchml.metrics import r_squared
+from ..utils import generate_regression_dataset, repeat
 import unittest
 import numpy as np
 

@@ -1,14 +1,14 @@
 from sklearn.model_selection import train_test_split as SkTTS
 from sklearn.model_selection import KFold as SkKF
 from sklearn.model_selection import StratifiedKFold as SkSKF
-from scratchml.utils import train_test_split, KFold
+from ..scratchml.utils import train_test_split, KFold
 from numpy.testing import (
     assert_almost_equal,
     assert_equal,
     assert_raises,
     assert_array_equal,
 )
-from test.utils import repeat, generate_classification_dataset
+from .utils import repeat, generate_classification_dataset
 import unittest
 import random
 import numpy as np

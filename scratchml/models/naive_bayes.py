@@ -1,5 +1,5 @@
-from scratchml.metrics import accuracy, recall, precision, f1_score, confusion_matrix
-from scratchml.utils import convert_array_numpy
+from ..metrics import accuracy, recall, precision, f1_score, confusion_matrix
+from ..utils import convert_array_numpy
 from typing import Union, List
 import numpy as np
 

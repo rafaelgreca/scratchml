@@ -1,7 +1,7 @@
 from numpy.testing import assert_almost_equal, assert_equal
 from sklearn.preprocessing import MinMaxScaler as SkMinMaxScaler
-from scratchml.scalers import MinMaxScaler
-from test.utils import generate_regression_dataset, repeat
+from ...scratchml.scalers import MinMaxScaler
+from ..utils import generate_regression_dataset, repeat
 import unittest
 
 

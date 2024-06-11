@@ -1,8 +1,8 @@
-from scratchml.losses import binary_cross_entropy
-from scratchml.utils import convert_array_numpy
-from scratchml.activations import sigmoid, softmax
-from scratchml.metrics import accuracy, recall, precision, f1_score, confusion_matrix
-from scratchml.regularizations import l1, l2
+from ..losses import binary_cross_entropy
+from ..utils import convert_array_numpy
+from ..activations import sigmoid, softmax
+from ..metrics import accuracy, recall, precision, f1_score, confusion_matrix
+from ..regularizations import l1, l2
 from typing import Union, List, Tuple
 import numpy as np
 
@@ -106,7 +106,7 @@ class LogisticRegression:
             assert self.verbose in [0, 1, 2]
         except AssertionError as error:
             raise ValueError(
-                f"Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
+                "Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
             ) from error
 
         # validating the number of unique classes
@@ -166,6 +166,8 @@ class LogisticRegression:
 
             # applying the regularization to the loss function
             if self.regularization is not None:
+                derivative_coef, derivative_intercept = 0.0, 0.0
+
                 if self.regularization == "l1":
                     reg_coef = l1(coefs, derivative=True)
 

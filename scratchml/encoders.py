@@ -1,7 +1,7 @@
 from scipy.sparse import csr_matrix
 from abc import ABC
 from typing import List, Union, Any, Tuple
-from scratchml.utils import convert_array_numpy
+from .utils import convert_array_numpy
 import numpy as np
 import math
 
@@ -14,22 +14,22 @@ class BaseEncoder(ABC):
     def __init__(self) -> None:
         pass
 
-    def fit(self, y: np.ndarray) -> None:
+    def fit(self, *args: np.ndarray) -> None:
         """
         Abstract method to the fit the encoder.
         """
 
-    def transform(self, y: np.ndarray) -> np.ndarray:
+    def transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Abstract method to use the fitted encoder to transform the data.
         """
 
-    def fit_transform(self, y: np.ndarray) -> np.ndarray:
+    def fit_transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Abstract method to fit the encoder and then used it to transform the data.
         """
 
-    def inverse_transform(self, y: np.ndarray) -> np.ndarray:
+    def inverse_transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Abstract method to use the fitted encoder to inverse transform the data
         (get the original value).
@@ -48,20 +48,25 @@ class LabelEncoder(BaseEncoder):
         self.classes_ = None
         self.classes_map_ = None
 
-    def fit(self, y: np.ndarray) -> None:
+    def fit(self, *args: np.ndarray) -> None:
         """
         Fits the LabelEncoder.
 
         Args:
             y (np.array): the classes array.
         """
+        if len(args) > 1:
+            raise RuntimeError("Only the classes array is expected.\n")
+
+        y = args[0]
+
         if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         self.classes_ = np.sort(np.unique(y))
         self.classes_map_ = {c: i for i, c in enumerate(self.classes_)}
 
-    def transform(self, y: np.ndarray) -> np.ndarray:
+    def transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Using the fitted LabelEncoder to encode the classes.
 
@@ -71,12 +76,17 @@ class LabelEncoder(BaseEncoder):
         Returns:
             y (np.ndarray): the encoded classes array.
         """
+        if len(args) > 1:
+            raise RuntimeError("Only the classes array is expected.\n")
+
+        y = args[0]
+
         if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         return np.array([self.classes_map_[v] for v in y])
 
-    def fit_transform(self, y: np.ndarray) -> np.ndarray:
+    def fit_transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Fits the LabelEncoder and then transforms the given set of classes in sequence.
 
@@ -86,13 +96,18 @@ class LabelEncoder(BaseEncoder):
         Returns:
             np.ndarray: the encoded classes array.
         """
+        if len(args) > 1:
+            raise RuntimeError("Only the classes array is expected.\n")
+
+        y = args[0]
+
         if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
         self.fit(y)
         return self.transform(y)
 
-    def inverse_transform(self, y: np.ndarray) -> np.ndarray:
+    def inverse_transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Applies the inverse transformation (converts a encoded
         set of classes to its original values).
@@ -103,6 +118,11 @@ class LabelEncoder(BaseEncoder):
         Returns:
             np.ndarray: the original classes array.
         """
+        if len(args) > 1:
+            raise RuntimeError("Only the classes array is expected.\n")
+
+        y = args[0]
+
         if not isinstance(y, (List, np.ndarray)):
             raise TypeError(f"Expected type np.ndarray or list, got {type(y)}.\n")
 
@@ -145,14 +165,17 @@ class OneHotEncoder(BaseEncoder):
         self._valid_handle_unknown = ["error", "ignore", "infrequent_if_exist"]
         self._valid_drop = ["first", "if_binary"]
 
-    def fit(self, X: np.ndarray) -> None:
+    def fit(self, *args: np.ndarray) -> None:
         """
         Fits the OneHotEncoder.
 
         Args:
             X (np.array): the features array.
         """
-        X = convert_array_numpy(X)
+        if len(args) > 1:
+            raise RuntimeError("Only the features array is expected.\n")
+
+        X = convert_array_numpy(args[0])
         self.n_features_in_ = X.shape[1]
         self.drop_idx_ = np.empty(self.n_features_in_, dtype=object)
 
@@ -348,7 +371,7 @@ class OneHotEncoder(BaseEncoder):
 
         return categories
 
-    def transform(self, X: np.ndarray) -> np.ndarray:
+    def transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Using the fitted OneHotEncoder to encode the features.
 
@@ -358,7 +381,10 @@ class OneHotEncoder(BaseEncoder):
         Returns:
             y (np.ndarray): the encoded features array.
         """
-        X = convert_array_numpy(X)
+        if len(args) > 1:
+            raise RuntimeError("Only the features array is expected.\n")
+
+        X = convert_array_numpy(args[0])
 
         # mapping and transforming the features
         new_X, features_mapping = self._feature_transformation(X)
@@ -471,13 +497,13 @@ class OneHotEncoder(BaseEncoder):
             else:
                 if not isinstance(self.drop_, (List, np.ndarray)):
                     raise TypeError(
-                        f"The drop type must be a list or np.ndarray, got {type(self.drop_)} instead.\n"
+                        f"The drop type must be a list or np.ndarray, got {type(self.drop_)}.\n"
                     )
 
         indexes_to_drop = []
         res = []
 
-        if (self.drop_ == "first") or (self.drop_ == "if_binary"):
+        if self.drop_ in ["first", "if_binary"]:
             last_index = -1
 
             for i, b, n, p in features_mapping:
@@ -494,7 +520,7 @@ class OneHotEncoder(BaseEncoder):
                 else:
                     continue
 
-        elif isinstance(self.drop_, List) or isinstance(self.drop_, np.ndarray):
+        elif isinstance(self.drop_, (List, np.ndarray)):
             for i, b, n, p in features_mapping:
                 # checking if the feature's name is present in the list
                 # containing the features that will be dropped
@@ -520,22 +546,25 @@ class OneHotEncoder(BaseEncoder):
 
         return X
 
-    def fit_transform(self, y: np.ndarray) -> np.ndarray:
+    def fit_transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Fits the LabelEncoder and then transforms the given set of classes in sequence.
 
         Args:
-            y (np.array): the classes array.
+            X (np.array): the features array.
 
         Returns:
-            np.ndarray: the encoded classes array.
+            np.ndarray: the encoded features array.
         """
-        y = convert_array_numpy(y)
+        if len(args) > 1:
+            raise RuntimeError("Only the features array is expected.\n")
 
-        self.fit(y)
-        return self.transform(y)
+        X = convert_array_numpy(args[0])
 
-    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
+        self.fit(X)
+        return self.transform(X)
+
+    def inverse_transform(self, *args: np.ndarray) -> np.ndarray:
         """
         Applies the inverse transformation (converts a encoded
         set of features to its original values).
@@ -546,7 +575,10 @@ class OneHotEncoder(BaseEncoder):
         Returns:
             np.ndarray: the original features array.
         """
-        X = convert_array_numpy(X)
+        if len(args) > 1:
+            raise RuntimeError("Only the features array is expected.\n")
+
+        X = convert_array_numpy(args[0])
 
         # FIXME: Think in a better way for validation the shape of array.
         # The commented code bellow only works when drop == None.
@@ -590,8 +622,8 @@ class OneHotEncoder(BaseEncoder):
             hot_encoded = np.argwhere(X[i, :] == 1)
             hot_encoded = hot_encoded.reshape(-1)
 
-            for j in inreverse_mapping.keys():
-                indexes = list(inreverse_mapping[j].keys())
+            for k, v in inreverse_mapping.items():
+                indexes = list(v.keys())
                 encoded_index = list(set(indexes) & set(hot_encoded))
 
                 if len(encoded_index) == 0:
@@ -600,7 +632,7 @@ class OneHotEncoder(BaseEncoder):
 
                     continue
 
-                converted[j] = inreverse_mapping[j][encoded_index[0]]
+                converted[k] = inreverse_mapping[k][encoded_index[0]]
 
             Xt.append(converted)
 

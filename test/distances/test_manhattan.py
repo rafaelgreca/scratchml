@@ -1,7 +1,7 @@
 from sklearn.metrics.pairwise import manhattan_distances as SkMD
-from scratchml.distances import manhattan
+from ...scratchml.distances import manhattan
 from numpy.testing import assert_equal, assert_almost_equal
-from test.utils import repeat
+from ..utils import repeat
 import unittest
 import numpy as np
 

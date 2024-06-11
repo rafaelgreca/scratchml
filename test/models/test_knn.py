@@ -1,8 +1,8 @@
 from sklearn.neighbors import KNeighborsClassifier as SkKNNC
 from sklearn.neighbors import KNeighborsRegressor as SkKNNR
 from numpy.testing import assert_almost_equal, assert_equal, assert_allclose
-from scratchml.models.knn import KNNClassifier, KNNRegressor
-from test.utils import repeat, generate_blob_dataset, generate_regression_dataset
+from ...scratchml.models.knn import KNNClassifier, KNNRegressor
+from ..utils import repeat, generate_blob_dataset, generate_regression_dataset
 import unittest
 import math
 import numpy as np

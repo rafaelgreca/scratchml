@@ -1,7 +1,7 @@
 from sklearn.metrics import median_absolute_error as SkMedAE
 from sklearn.linear_model import LinearRegression as SkLinearRegression
-from scratchml.metrics import median_absolute_error
-from test.utils import generate_regression_dataset, repeat
+from ...scratchml.metrics import median_absolute_error
+from ..utils import generate_regression_dataset, repeat
 import unittest
 import numpy as np
 

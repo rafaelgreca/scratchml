@@ -1,7 +1,7 @@
 from numpy.testing import assert_equal, assert_almost_equal
 from sklearn.naive_bayes import GaussianNB as SkGNB
-from scratchml.models.naive_bayes import GaussianNB
-from test.utils import generate_classification_dataset, repeat
+from ...scratchml.models.naive_bayes import GaussianNB
+from ..utils import generate_classification_dataset, repeat
 import unittest
 import numpy as np
 

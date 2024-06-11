@@ -1,5 +1,5 @@
-from scratchml.models.knn import KNNClassifier, KNNRegressor
-from scratchml.utils import KFold
+from ..scratchml.models.knn import KNNClassifier, KNNRegressor
+from ..scratchml.utils import KFold
 from sklearn.datasets import make_blobs, make_regression
 from typing import Union
 import numpy as np

@@ -1,5 +1,5 @@
-from scratchml.models.logistic_regression import LogisticRegression
-from scratchml.utils import KFold
+from ..scratchml.models.logistic_regression import LogisticRegression
+from ..scratchml.utils import KFold
 from sklearn.datasets import make_classification
 
 

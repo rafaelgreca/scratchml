@@ -1,6 +1,6 @@
 from numpy.testing import assert_equal
 from sklearn.preprocessing import OneHotEncoder as SkOneHotEncoder
-from scratchml.encoders import OneHotEncoder
+from ...scratchml.encoders import OneHotEncoder
 import unittest
 
 

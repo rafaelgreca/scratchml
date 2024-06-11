@@ -1,7 +1,7 @@
 from sklearn.metrics import DistanceMetric
-from scratchml.distances import chebyshev
+from ...scratchml.distances import chebyshev
 from numpy.testing import assert_equal, assert_almost_equal
-from test.utils import repeat
+from ..utils import repeat
 import unittest
 import numpy as np
 

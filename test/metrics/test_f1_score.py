@@ -1,7 +1,7 @@
 from sklearn.linear_model import LogisticRegression as SkLogisticRegression
 from sklearn.metrics import f1_score as SkF1
-from scratchml.metrics import f1_score
-from test.utils import generate_classification_dataset, repeat
+from ...scratchml.metrics import f1_score
+from ..utils import generate_classification_dataset, repeat
 import unittest
 import numpy as np
 
