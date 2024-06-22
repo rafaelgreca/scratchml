@@ -1,5 +1,5 @@
-from ..scratchml.models.linear_regression import LinearRegression
-from ..scratchml.utils import train_test_split
+from scratchml.models.linear_regression import LinearRegression
+from scratchml.utils import train_test_split
 from sklearn.datasets import make_regression
 
 

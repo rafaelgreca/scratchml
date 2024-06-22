@@ -1,4 +1,0 @@
-from .knn import example_knn
-from .linear_regression import example_linear_regression
-from .logistic_regression import example_logistic_regression
-from .naive_bayes import example_gaussian_naive_bayes

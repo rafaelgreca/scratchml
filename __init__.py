@@ -1,2 +1,2 @@
-from . import scratchml
-from . import test
+from .scratchml import *
+from .tests import *

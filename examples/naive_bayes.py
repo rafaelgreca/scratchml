@@ -1,5 +1,5 @@
-from ..scratchml.models.naive_bayes import GaussianNB
-from ..scratchml.utils import train_test_split
+from scratchml.models.naive_bayes import GaussianNB
+from scratchml.utils import train_test_split
 from sklearn.datasets import make_classification
 
 
