@@ -208,6 +208,9 @@ def train_test_split(
                     f"Test size value should be between 0 and {X.shape[0]}.\n"
                 ) from error
 
+    train_split_ratio = 0
+    test_split_ratio = 0
+
     # validating the train size parameter
     if train_size is not None:
         if isinstance(train_size, float):

@@ -449,7 +449,8 @@ disable=raw-checker-failed,
         inconsistent-return-statements,
         too-many-return-statements,
         import-error,
-        no-name-in-module
+        no-name-in-module,
+        duplicate-code
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -468,9 +469,7 @@ timeout-methods=requests.api.delete,requests.api.get,requests.api.head,requests.
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
-notes=FIXME,
-      XXX,
-      TODO
+notes=
 
 # Regular expression of note tags to take in consideration.
 notes-rgx=

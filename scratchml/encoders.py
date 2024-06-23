@@ -621,6 +621,7 @@ class OneHotEncoder(BaseEncoder):
             # feature and mapping it back to the original value
             hot_encoded = np.argwhere(X[i, :] == 1)
             hot_encoded = hot_encoded.reshape(-1)
+            converted = []
 
             for k, v in inreverse_mapping.items():
                 indexes = list(v.keys())
