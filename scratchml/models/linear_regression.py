@@ -135,7 +135,8 @@ class LinearRegression:
 
             # applying the regularization to the loss function
             if self.regularization is not None:
-                reg_coef, reg_intercept = 0.0, 0.0
+                reg_coef = np.zeros((1, self.n_features_in_))
+                reg_intercept = np.zeros((1, self.n_features_in_))
 
                 if self.regularization == "l1":
                     reg_coef = l1(self.coef_, derivative=True)

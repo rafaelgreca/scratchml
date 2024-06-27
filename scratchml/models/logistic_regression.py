@@ -154,19 +154,22 @@ class LogisticRegression:
             # making the prediction
             y_hat = np.matmul(X, coefs.T) + intercept
             y_hat = np.squeeze(sigmoid(y_hat))
+            loss = 0.0
 
             # calculating the loss according to the chosen
             # loss function
             if self.loss_function == "bce":
                 loss = binary_cross_entropy(y, y_hat, derivative=True)
-                derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
 
-                if self.fit_intercept:
-                    derivative_intercept = (np.sum(loss)) / y.shape[0]
+            derivative_coef = (np.matmul(X.T, loss)) / y.shape[0]
+
+            if self.fit_intercept:
+                derivative_intercept = (np.sum(loss)) / y.shape[0]
 
             # applying the regularization to the loss function
             if self.regularization is not None:
-                derivative_coef, derivative_intercept = 0.0, 0.0
+                reg_coef = np.zeros((1, self.n_features_in_))
+                reg_intercept = np.zeros((1, self.n_features_in_))
 
                 if self.regularization == "l1":
                     reg_coef = l1(coefs, derivative=True)
