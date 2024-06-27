@@ -148,7 +148,7 @@ Implementations:
     - [x] Naive Bayes
     - [ ] Random Forest
     - [ ] Decision Tree
-    - [ ] Perceptron
+    - [x] Perceptron
     - [ ] MLP
 
 Features:
@@ -167,7 +167,7 @@ Issues:
 
 - [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
 - [ ] Optimize distance metrics and KNN looping functions
-- [ ] Fix pylint issues
+- [x] Fix pylint issues
 
 ## Feedback
 

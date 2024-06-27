@@ -177,6 +177,9 @@ def train_test_split(
     X = convert_array_numpy(X)
     y = convert_array_numpy(y)
 
+    train_split_ratio = 0
+    test_split_ratio = 0
+
     # validating the train_size and test_size parameters
     # as just one of them should be used
     try:
@@ -207,9 +210,6 @@ def train_test_split(
                 raise ValueError(
                     f"Test size value should be between 0 and {X.shape[0]}.\n"
                 ) from error
-
-    train_split_ratio = 0
-    test_split_ratio = 0
 
     # validating the train size parameter
     if train_size is not None:
