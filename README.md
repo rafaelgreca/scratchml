@@ -150,6 +150,7 @@ Implementations:
     - [ ] Decision Tree
     - [x] Perceptron
     - [ ] MLP
+    - [x] KMeans
 
 Features:
 
