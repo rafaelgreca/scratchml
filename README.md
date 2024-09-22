@@ -144,10 +144,18 @@ Implementations:
     - [x] Linear Regression
     - [x] Logistic Regression
     - [ ] SVM
+        - [ ] SVC
+        - [ ] SRV
     - [x] KNN
+        - [x] KNN Classifier
+        - [x] KNN Regressor
     - [x] Naive Bayes
     - [ ] Random Forest
+        - [ ] Random Forest Classifier
+        - [ ] Random Forest Regressor
     - [ ] Decision Tree
+        - [x] Decision Tree Classifier
+        - [ ] Decision Tree Regressor
     - [x] Perceptron
     - [ ] MLP
     - [x] KMeans
@@ -163,12 +171,17 @@ Features:
 - [x] Fix Logistic Regression
 - [ ] Update README
 - [ ] Add visualization plots
+- [ ] Add function to plot the trained Decision Tree
+- [ ] Add 'min_samples_leaf' and 'max_leaf_nodes' variables for the Decision Tree algorithm
+- [ ] Update and improve README
+- [ ] Optimize distance metrics and KNN looping functions
 
 Issues:
 
 - [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
-- [ ] Optimize distance metrics and KNN looping functions
 - [x] Fix pylint issues
+- [ ] Fix Decision Tree Regressor accuracy
+- [ ] Fix zero division warning in Decision Tree code
 
 ## Feedback
 
