@@ -35,10 +35,26 @@ class Node:
         right: "Node" = None,
         value: Union[int, float] = None,
     ) -> None:
+        """
+        Creates a Node class.
+
+        Args:
+            feature_index (int, optional): the best feature index.
+                Defaults to None.
+            threshold (Union[int, float], optional): the best threshold
+                for the best feature. Defaults to None.
+            left (Node, optional): the left node child. Defaults to None.
+            right (Node, optional): the right node child. Defaults to None.
+            value (Union[int, float], optional): the leaf node value.
+                Defaults to None.
+        """
+        # internal nodes
         self.feature_index = feature_index
         self.threshold = threshold
         self.left = left
         self.right = right
+
+        # leaf nodes
         self.value = value
 
 
@@ -76,11 +92,11 @@ class DecisionTreeBase(ABC):
                 decrease of the impurity greater than or equal to this value. Defaults to 0.0.
         """
         self.criterion = criterion
-        self.max_depth = np.inf if max_depth is None else max_depth
+        self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.min_samples_leaf = min_samples_leaf
         self.max_features = max_features
-        self.max_leaf_nodes = np.inf if max_leaf_nodes is None else max_features
+        self.max_leaf_nodes = max_leaf_nodes
         self.min_impurity_decrease = min_impurity_decrease
         self.max_features_ = None
         self.classes_ = None
@@ -92,6 +108,8 @@ class DecisionTreeBase(ABC):
         self.depth_ = None
         self.leaf_nodes_ = 0
 
+        # setting the valid criterions for the decision tree
+        # classifier and for the regressor
         if isinstance(self, DecisionTreeClassifier):
             self._valid_criterions = [
                 "gini",
@@ -109,15 +127,20 @@ class DecisionTreeBase(ABC):
             X (np.ndarray): the features array.
             y (np.ndarray): the classes array.
         """
+        self._validate_parameters()
+
         X = convert_array_numpy(X)
         y = convert_array_numpy(y)
 
         self.n_samples_, self.n_features_in_ = X.shape
 
+        # getting the number of unique classes and its values
+        # if it's a classification task
         if isinstance(self, DecisionTreeClassifier):
             self.classes_ = np.unique(y)
             self.n_classes_ = len(np.unique(y))
 
+        # setting the max features value
         if self.max_features is None:
             self.max_features_ = self.n_features_in_
         elif isinstance(self.max_features, int):
@@ -143,6 +166,9 @@ class DecisionTreeBase(ABC):
         """
         num_samples, num_feats = X.shape
         self.depth_ = depth
+
+        # getting the features indexes that are going to be used
+        # to build the current node of the tree
         features_indexes = np.arange(0, num_feats, 1, dtype=int)
 
         if self.max_features is not None:
@@ -178,13 +204,9 @@ class DecisionTreeBase(ABC):
                     value=None,
                 )
 
+        # creating leaf node
         return self._create_leaf_node(y)
-
-        # creating a leaf node
-        # if (len(y) > self.min_samples_leaf) and (self.leaf_nodes_ < self.max_leaf_nodes):
-        #     self.leaf_nodes_ += 1
-        #     return self._create_leaf_node(y)
-
+    
     def _create_leaf_node(self, y: np.ndarray) -> Node:
         """
         Auxiliary function to create a leaf node.
@@ -195,6 +217,8 @@ class DecisionTreeBase(ABC):
         Returns:
             Node: the leaf node.
         """
+        # if it's a classifier, than we get the most
+        # common value, otherwise we get the mean value
         if isinstance(self, DecisionTreeClassifier):
             counter = Counter(y)
             value = counter.most_common(1)[0][0]
@@ -222,15 +246,19 @@ class DecisionTreeBase(ABC):
         split_index = None
         split_threshold = None
 
+        # iterating over the features indexes
         for feature_index in feature_indexes:
             _X = X[:, feature_index].reshape(-1)
             thresholds = np.unique(_X)
 
+            # iterating over the unique values (thresholds)
+            # for that particular feature
             for threshold in thresholds:
                 information_gain = self._calculate_information_gain(
                     X=_X, y=y, threshold=threshold
                 )
 
+                # updating the best information gain
                 if information_gain > best_gain:
                     best_gain = information_gain
                     split_index = feature_index
@@ -260,7 +288,7 @@ class DecisionTreeBase(ABC):
         n_l, n_r = len(left), len(right)
         c_parent, c_l, c_r = 0, 0, 0
 
-        # calculating the weighted average entropy of children
+        # calculating the weighted average information gain of children
         if self.criterion in ["entropy", "log_loss"]:
             c_parent = entropy(y)
             c_l = entropy(y[left])
@@ -283,6 +311,8 @@ class DecisionTreeBase(ABC):
                 self.n_samples_ * (c_parent - ((n_r / n) * c_r) - ((n_l / n)) * c_l)
             )
 
+        # checking if the impurity decrease is bigger than
+        # the established minimum value
         if impurity_decrease >= self.min_impurity_decrease:
             return information_gain
 
@@ -340,6 +370,8 @@ class DecisionTreeBase(ABC):
             np.ndarray: the predicted classes.
         """
         X = convert_array_numpy(X)
+        
+        # iterating over the nodes of the tree until we reach a leaf node
         predictions = np.array([self._walk_on_tree(x, self.tree_) for x in X])
         return predictions
 
@@ -395,81 +427,84 @@ class DecisionTreeBase(ABC):
             ) from error
 
         # validating the max_depth value
-        try:
-            assert self.max_depth > 0 and isinstance(self.max_leaf_nodes, int)
-        except AssertionError as error:
-            raise ValueError(
-                "The value for 'max_depth' must be a positive number.\n"
-            ) from error
+        if self.max_depth is not None:
+            try:
+                assert self.max_depth > 0 and isinstance(self.max_depth, int)
+            except AssertionError as error:
+                raise ValueError(
+                    "The value for 'max_depth' must be a positive number.\n"
+                ) from error
 
         # validating the min_samples_split value
         try:
-            assert self.min_samples_split > 2 and isinstance(self.max_leaf_nodes, int)
+            assert self.min_samples_split >= 2 and isinstance(self.min_samples_split, int)
         except AssertionError as error:
             raise ValueError(
                 "The value for 'min_samples_split' must be a positive number "
-                + "bigger than 2.\n"
+                + "bigger than or equal to 2.\n"
             ) from error
 
         # validating the min_samples_leaf value
         try:
-            assert self.min_samples_leaf > 1 and isinstance(self.max_leaf_nodes, int)
+            assert self.min_samples_leaf >= 1 and isinstance(self.min_samples_leaf, int)
         except AssertionError as error:
             raise ValueError(
                 "The value for 'min_samples_leaf' must be a positive number "
-                + "bigger than 1.\n"
+                + "bigger than or equal to 1.\n"
             ) from error
 
         # validating the max_leaf_nodes value
-        try:
-            assert self.max_leaf_nodes > 0 and isinstance(self.max_leaf_nodes, int)
-        except AssertionError as error:
-            raise ValueError(
-                "The value for 'max_leaf_nodes' must be a positive number.\n"
-            ) from error
+        if self.max_leaf_nodes is not None:
+            try:
+                assert self.max_leaf_nodes > 0 and isinstance(self.max_leaf_nodes, int)
+            except AssertionError as error:
+                raise ValueError(
+                    "The value for 'max_leaf_nodes' must be a positive number.\n"
+                ) from error
 
         # validating the min_impurity_decrease value
         try:
-            assert (self.min_impurity_decrease > 0) and (
+            assert (self.min_impurity_decrease >= 0) and (
                 isinstance(self.min_impurity_decrease, float)
             )
         except AssertionError as error:
             raise ValueError(
-                "The value for 'min_impurity_decrease' must be a positive number.\n"
+                "The value for 'min_impurity_decrease' must be zero or a positive number.\n"
             ) from error
 
         # validating the max_features value
-        try:
-            assert isinstance(self.max_features, (int, float, str))
-        except AssertionError as error:
-            raise TypeError(
-                "The type for 'max_features' must be integer, float, or string.\n"
-            ) from error
+        if self.max_features is not None:
+            try:
+                assert isinstance(self.max_features, (int, float, str))
+            except AssertionError as error:
+                raise TypeError(
+                    "The type for 'max_features' must be integer, float, or string.\n"
+                ) from error
 
-        if isinstance(self.max_features, int):
-            try:
-                assert (self.max_features > 0) and (
-                    self.max_features < self.n_features_in_
-                )
-            except AssertionError as error:
-                raise ValueError(
-                    "The value for 'max_features' must be a positive number "
-                    + f"smaller than {self.n_features_in_}.\n"
-                ) from error
-        elif isinstance(self.max_features, float):
-            try:
-                assert (self.max_features > 0) and (self.max_features < 1)
-            except AssertionError as error:
-                raise ValueError(
-                    "The value for 'max_features' must be between 0 and 1.\n"
-                ) from error
-        elif isinstance(self.max_features, str):
-            try:
-                assert self.max_features in ["sqrt", "log2"]
-            except AssertionError as error:
-                raise ValueError(
-                    "The value for 'max_features' must be 'sqrt' or 'log2'.\n"
-                ) from error
+            if isinstance(self.max_features, int):
+                try:
+                    assert (self.max_features > 0) and (
+                        self.max_features < self.n_features_in_
+                    )
+                except AssertionError as error:
+                    raise ValueError(
+                        "The value for 'max_features' must be a positive number "
+                        + f"smaller than {self.n_features_in_}.\n"
+                    ) from error
+            elif isinstance(self.max_features, float):
+                try:
+                    assert (self.max_features > 0) and (self.max_features < 1)
+                except AssertionError as error:
+                    raise ValueError(
+                        "The value for 'max_features' must be between 0 and 1.\n"
+                    ) from error
+            elif isinstance(self.max_features, str):
+                try:
+                    assert self.max_features in ["sqrt", "log2"]
+                except AssertionError as error:
+                    raise ValueError(
+                        "The value for 'max_features' must be 'sqrt' or 'log2'.\n"
+                    ) from error
 
 
 class DecisionTreeClassifier(DecisionTreeBase):

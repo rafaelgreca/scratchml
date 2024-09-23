@@ -1,7 +1,7 @@
 from sklearn.tree import DecisionTreeClassifier as SkDTC
 from sklearn.tree import DecisionTreeRegressor as SkDTR
 from numpy.testing import assert_equal, assert_allclose
-from scratchml.models.decision_tree import DecisionTreeClassifier, DecisionTreeRegressor
+from scratchml.models.decision_tree import DecisionTreeClassifier#, DecisionTreeRegressor
 from ..utils import repeat, generate_classification_dataset, generate_regression_dataset
 import unittest
 import math

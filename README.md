@@ -182,6 +182,7 @@ Issues:
 - [x] Fix pylint issues
 - [ ] Fix Decision Tree Regressor accuracy
 - [ ] Fix zero division warning in Decision Tree code
+- [ ] Fix max depth None error in Decision Tree code
 
 ## Feedback
 
