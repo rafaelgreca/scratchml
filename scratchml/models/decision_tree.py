@@ -2,7 +2,7 @@ from collections import Counter
 from abc import ABC
 from typing import Union, List, Tuple
 from ..utils import convert_array_numpy
-from ..criterions import entropy, gini, squared_error
+from ..criterions import entropy, gini, squared_error, poisson, absolute_error
 from ..metrics import (
     accuracy,
     recall,
@@ -105,7 +105,6 @@ class DecisionTreeBase(ABC):
         self.n_outputs_ = None
         self.tree_ = None
         self.n_samples_ = None
-        self.depth_ = None
         self.leaf_nodes_ = 0
 
         # setting the valid criterions for the decision tree
@@ -117,7 +116,7 @@ class DecisionTreeBase(ABC):
                 "log_loss",
             ]
         elif isinstance(self, DecisionTreeRegressor):
-            self._valid_criterions = ["squared_error"]
+            self._valid_criterions = ["squared_error", "poisson", "absolute_error"]
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
@@ -164,20 +163,16 @@ class DecisionTreeBase(ABC):
             y (np.ndarray): the classes array.
             depth (int, optional): the current depth of the tree. Defaults to 0.
         """
-        num_samples, num_feats = X.shape
-        self.depth_ = depth
+        num_samples = X.shape[0]
 
         # getting the features indexes that are going to be used
         # to build the current node of the tree
-        features_indexes = np.arange(0, num_feats, 1, dtype=int)
-
-        if self.max_features is not None:
-            features_indexes = np.random.choice(
-                features_indexes, self.max_features_, replace=False
-            )
+        features_indexes = np.random.choice(
+            self.n_features_in_, self.max_features_, replace=False
+        )
 
         # creating an internal node
-        if (self.depth_ <= self.max_depth) and (num_samples >= self.min_samples_split):
+        if (depth <= self.max_depth) and (num_samples >= self.min_samples_split):
             # finding the best split
             best_gain, best_feature, best_threshold = self._get_best_split(
                 X=X, y=y, feature_indexes=features_indexes
@@ -189,11 +184,9 @@ class DecisionTreeBase(ABC):
                     X=X[:, best_feature], threshold=best_threshold
                 )
 
-                left_node = self._build_tree(
-                    X=X[left, :], y=y[left], depth=self.depth_ + 1
-                )
+                left_node = self._build_tree(X=X[left, :], y=y[left], depth=depth + 1)
                 right_node = self._build_tree(
-                    X=X[right, :], y=y[right], depth=self.depth_ + 1
+                    X=X[right, :], y=y[right], depth=depth + 1
                 )
 
                 return Node(
@@ -206,7 +199,7 @@ class DecisionTreeBase(ABC):
 
         # creating leaf node
         return self._create_leaf_node(y)
-    
+
     def _create_leaf_node(self, y: np.ndarray) -> Node:
         """
         Auxiliary function to create a leaf node.
@@ -301,6 +294,14 @@ class DecisionTreeBase(ABC):
             c_parent = squared_error(np.mean(y), y)
             c_l = squared_error(np.mean(y[left]), y[left])
             c_r = squared_error(np.mean(y[right]), y[right])
+        elif self.criterion == "poisson":
+            c_parent = poisson(np.mean(y), y)
+            c_l = poisson(np.mean(y[left]), y[left])
+            c_r = poisson(np.mean(y[right]), y[right])
+        elif self.criterion == "absolute_error":
+            c_parent = absolute_error(np.median(y), y)
+            c_l = absolute_error(np.median(y[left]), y[left])
+            c_r = absolute_error(np.median(y[right]), y[right])
 
         c_child = (n_l / n) * c_l + (n_r / n) * c_r
         information_gain = c_parent - c_child
@@ -370,7 +371,7 @@ class DecisionTreeBase(ABC):
             np.ndarray: the predicted classes.
         """
         X = convert_array_numpy(X)
-        
+
         # iterating over the nodes of the tree until we reach a leaf node
         predictions = np.array([self._walk_on_tree(x, self.tree_) for x in X])
         return predictions
@@ -392,15 +393,6 @@ class DecisionTreeBase(ABC):
             (np.float32, np.ndarray): the score achieved by the model
                 or its confusion matrix.
         """
-
-    def get_depth(self) -> int:
-        """
-        Get the depth of the tree.
-
-        Returns:
-            int: tree's depth.
-        """
-        return self.depth_
 
     def get_n_leaves(self) -> int:
         """
@@ -437,7 +429,9 @@ class DecisionTreeBase(ABC):
 
         # validating the min_samples_split value
         try:
-            assert self.min_samples_split >= 2 and isinstance(self.min_samples_split, int)
+            assert self.min_samples_split >= 2 and isinstance(
+                self.min_samples_split, int
+            )
         except AssertionError as error:
             raise ValueError(
                 "The value for 'min_samples_split' must be a positive number "
@@ -617,111 +611,111 @@ class DecisionTreeClassifier(DecisionTreeBase):
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
 
 
-# class DecisionTreeRegressor(DecisionTreeBase):
-#     """
-#     Creates a class for the Decision Tree Regressor model.
-#     """
+class DecisionTreeRegressor(DecisionTreeBase):
+    """
+    Creates a class for the Decision Tree Regressor model.
+    """
 
-#     def __init__(
-#         self,
-#         criterion: str = "squared_error",
-#         max_depth: int = None,
-#         min_samples_split: Union[int, float] = 2,
-#         min_samples_leaf: Union[int, float] = 1,
-#         max_features: Union[int, float, str] = None,
-#         max_leaf_nodes: int = None,
-#         min_impurity_decrease: float = 0.0,
-#     ) -> None:
-#         """
-#         Creates a Decision Tree Base.
+    def __init__(
+        self,
+        criterion: str = "squared_error",
+        max_depth: int = None,
+        min_samples_split: Union[int, float] = 2,
+        min_samples_leaf: Union[int, float] = 1,
+        max_features: Union[int, float, str] = None,
+        max_leaf_nodes: int = None,
+        min_impurity_decrease: float = 0.0,
+    ) -> None:
+        """
+        Creates a Decision Tree Base.
 
-#         Args:
-#             criterion (str, optional): The function to measure the quality of a split.
-#                 Defaults to "squared_error".
-#             max_depth (int, optional): The maximum depth of the tree. Defaults to None.
-#             min_samples_split (Union[int, float, optional): The minimum number of samples required
-#                 to split an internal node. Defaults to 2.
-#             min_samples_leaf (Union[int, float], optional): The minimum number of samples required
-#                 to be at a leaf node. Defaults to 1.
-#             max_features (Union[int, float, str], optional): The number of features to consider when
-#                 looking for the best split. Defaults to None.
-#             max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
-#                 Defaults to None.
-#             min_impurity_decrease (float, optional): A node will be split if this split induces a
-#                 decrease of the impurity greater than or equal to this value. Defaults to 0.0.
-#         """
-#         super().__init__(
-#             criterion,
-#             max_depth,
-#             min_samples_split,
-#             min_samples_leaf,
-#             max_features,
-#             max_leaf_nodes,
-#             min_impurity_decrease,
-#         )
-#         self._valid_score_metrics = [
-#             "r_squared",
-#             "mse",
-#             "mae",
-#             "rmse",
-#             "medae",
-#             "mape",
-#             "msle",
-#             "max_error",
-#         ]
+        Args:
+            criterion (str, optional): The function to measure the quality of a split.
+                Defaults to "squared_error".
+            max_depth (int, optional): The maximum depth of the tree. Defaults to None.
+            min_samples_split (Union[int, float, optional): The minimum number of samples required
+                to split an internal node. Defaults to 2.
+            min_samples_leaf (Union[int, float], optional): The minimum number of samples required
+                to be at a leaf node. Defaults to 1.
+            max_features (Union[int, float, str], optional): The number of features to consider when
+                looking for the best split. Defaults to None.
+            max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
+                Defaults to None.
+            min_impurity_decrease (float, optional): A node will be split if this split induces a
+                decrease of the impurity greater than or equal to this value. Defaults to 0.0.
+        """
+        super().__init__(
+            criterion,
+            max_depth,
+            min_samples_split,
+            min_samples_leaf,
+            max_features,
+            max_leaf_nodes,
+            min_impurity_decrease,
+        )
+        self._valid_score_metrics = [
+            "r_squared",
+            "mse",
+            "mae",
+            "rmse",
+            "medae",
+            "mape",
+            "msle",
+            "max_error",
+        ]
 
-#         try:
-#             assert criterion in ["squared_error"]
-#         except AssertionError as error:
-#             raise ValueError(
-#                 "The value for 'criterion' must be 'squared_error'.\n"
-#             ) from error
+        try:
+            assert criterion in self._valid_criterions
+        except AssertionError as error:
+            raise ValueError(
+                f"The value for 'criterion' must be {self._valid_criterions}.\n"
+            ) from error
 
-#     def score(
-#         self, X: np.ndarray, y: np.ndarray, metric: str = "r_squared"
-#     ) -> np.float64:
-#         """
-#         Uses the trained model to predict the classes of a given
-#         data points (also called features).
+    def score(
+        self, X: np.ndarray, y: np.ndarray, metric: str = "r_squared"
+    ) -> np.float64:
+        """
+        Uses the trained model to predict the classes of a given
+        data points (also called features).
 
-#         Args:
-#             X (np.ndarray): the features array.
-#             y (np.ndarray): the labels array.
-#             metric (string): which metric should be used to assess
-#                 the model's performance. Defaults to R Squared.
+        Args:
+            X (np.ndarray): the features array.
+            y (np.ndarray): the labels array.
+            metric (string): which metric should be used to assess
+                the model's performance. Defaults to R Squared.
 
-#         Returns:
-#             np.float32: the score achieved by the model.
-#         """
-#         try:
-#             assert metric in self._valid_score_metrics
-#         except AssertionError as error:
-#             raise ValueError(
-#                 f"Invalid value for 'metric'. Must be {self._valid_score_metrics}.\n"
-#             ) from error
+        Returns:
+            np.float32: the score achieved by the model.
+        """
+        try:
+            assert metric in self._valid_score_metrics
+        except AssertionError as error:
+            raise ValueError(
+                f"Invalid value for 'metric'. Must be {self._valid_score_metrics}.\n"
+            ) from error
 
-#         y_hat = self.predict(X)
+        y_hat = self.predict(X)
 
-#         if metric == "r_squared":
-#             return r_squared(y, y_hat)
+        if metric == "r_squared":
+            return r_squared(y, y_hat)
 
-#         if metric == "mse":
-#             return mean_squared_error(y, y_hat)
+        if metric == "mse":
+            return mean_squared_error(y, y_hat)
 
-#         if metric == "mae":
-#             return mean_absolute_error(y, y_hat)
+        if metric == "mae":
+            return mean_absolute_error(y, y_hat)
 
-#         if metric == "rmse":
-#             return root_mean_squared_error(y, y_hat)
+        if metric == "rmse":
+            return root_mean_squared_error(y, y_hat)
 
-#         if metric == "medae":
-#             return median_absolute_error(y, y_hat)
+        if metric == "medae":
+            return median_absolute_error(y, y_hat)
 
-#         if metric == "mape":
-#             return mean_absolute_percentage_error(y, y_hat)
+        if metric == "mape":
+            return mean_absolute_percentage_error(y, y_hat)
 
-#         if metric == "msle":
-#             return mean_squared_logarithmic_error(y, y_hat)
+        if metric == "msle":
+            return mean_squared_logarithmic_error(y, y_hat)
 
-#         if metric == "max_error":
-#             return max_error(y, y_hat)
+        if metric == "max_error":
+            return max_error(y, y_hat)

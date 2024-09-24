@@ -12,10 +12,10 @@ def train_model(
     metric: "str",
 ) -> None:
     """
-    Auxiliary function to train the KNN models.
+    Auxiliary function to train the Decision Tree models.
 
     Args:
-        model (Union[KNNRegressor, KNNClassifier]): the model instance which will
+        model (Union[DecisionTreeClassifier, DecisionTreeRegressor]): the model instance which will
             be trained.
         X (np.ndarray): the feature array.
         y (np.ndarray): the target/classes array.
@@ -56,17 +56,17 @@ def example_decision_tree() -> None:
 
     train_model(model=dt, X=X, y=y, metric="accuracy")
 
-    # # generating a dataset for the regression task
-    # X, y = make_regression(
-    #     n_samples=2000, n_features=4, n_targets=1, shuffle=True, noise=0, coef=False
-    # )
+    # generating a dataset for the regression task
+    X, y = make_regression(
+        n_samples=2000, n_features=4, n_targets=1, shuffle=True, noise=0, coef=False
+    )
 
-    # # creating a KNN model for regression
-    # dt_regression = DecisionTreeRegressor(
-    #     criterion="squared_error", max_depth=100, min_samples_split=3
-    # )
+    # creating a KNN model for regression
+    dt_regression = DecisionTreeRegressor(
+        criterion="squared_error", max_depth=100, min_samples_split=3
+    )
 
-    # train_model(model=dt_regression, X=X, y=y, metric="r_squared")
+    train_model(model=dt_regression, X=X, y=y, metric="r_squared")
 
 
 if __name__ == "__main__":
