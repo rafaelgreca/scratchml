@@ -71,7 +71,8 @@ class DecisionTreeBase(ABC):
         min_samples_leaf: Union[int, float] = 1,
         max_features: Union[int, float, str] = None,
         max_leaf_nodes: int = None,
-        min_impurity_decrease: float = 0.0,
+        min_impurity_decrease: Union[int, float] = 0.0,
+        verbose: int = 0,
     ) -> None:
         """
         Creates a Decision Tree Base.
@@ -88,8 +89,10 @@ class DecisionTreeBase(ABC):
                 looking for the best split. Defaults to None.
             max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
                 Defaults to None.
-            min_impurity_decrease (float, optional): A node will be split if this split induces a
+            min_impurity_decrease (Union[int, float], optional): A node will be split if this split induces a
                 decrease of the impurity greater than or equal to this value. Defaults to 0.0.
+            verbose (int, optional): how much information should be printed.
+                Should be 0, 1, or 2. Defaults to 0.
         """
         self.criterion = criterion
         self.max_depth = max_depth
@@ -98,6 +101,7 @@ class DecisionTreeBase(ABC):
         self.max_features = max_features
         self.max_leaf_nodes = max_leaf_nodes
         self.min_impurity_decrease = min_impurity_decrease
+        self.verbose = verbose
         self.max_features_ = None
         self.classes_ = None
         self.n_classes_ = None
@@ -153,6 +157,14 @@ class DecisionTreeBase(ABC):
                 self.max_features_ = math.floor(math.log2(self.n_features_in_))
 
         self.tree_ = self._build_tree(X=X, y=y, depth=0)
+
+        if self.verbose != 0:
+            if isinstance(self, DecisionTreeClassifier):
+                metric_msg = f"Score (Accuracy): {self.score(X, y)}"
+                print(f"{metric_msg}\n")
+            elif isinstance(self, DecisionTreeRegressor):
+                metric_msg = f"Score (R²): {self.score(X, y)}"
+                print(f"{metric_msg}\n")
 
     def _build_tree(self, X: np.ndarray, y: np.ndarray, depth: int = 0) -> Node:
         """
@@ -408,6 +420,14 @@ class DecisionTreeBase(ABC):
         Auxiliary function used to validate the values of the parameters
         passed during the initialization.
         """
+        # validating the verbose value
+        try:
+            assert self.verbose in [0, 1, 2]
+        except AssertionError as error:
+            raise ValueError(
+                "Indalid value for 'verbose'. Must be 0, 1, or 2.\n"
+            ) from error
+
         # validating the criterion value
         try:
             assert (self.criterion in self._valid_criterions) and (
@@ -459,7 +479,7 @@ class DecisionTreeBase(ABC):
         # validating the min_impurity_decrease value
         try:
             assert (self.min_impurity_decrease >= 0) and (
-                isinstance(self.min_impurity_decrease, float)
+                isinstance(self.min_impurity_decrease, (int, float))
             )
         except AssertionError as error:
             raise ValueError(
@@ -514,10 +534,11 @@ class DecisionTreeClassifier(DecisionTreeBase):
         min_samples_leaf: Union[int, float] = 1,
         max_features: Union[int, float, str] = None,
         max_leaf_nodes: int = None,
-        min_impurity_decrease: float = 0.0,
+        min_impurity_decrease: Union[int, float] = 0.0,
+        verbose: int = 0,
     ) -> None:
         """
-        Creates a Decision Tree Base.
+        Creates a Decision Tree Classifier instance.
 
         Args:
             criterion (str, optional): The function to measure the quality of a split.
@@ -531,8 +552,10 @@ class DecisionTreeClassifier(DecisionTreeBase):
                 looking for the best split. Defaults to None.
             max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
                 Defaults to None.
-            min_impurity_decrease (float, optional): A node will be split if this split induces a
+            min_impurity_decrease (Union[int, float], optional): A node will be split if this split induces a
                 decrease of the impurity greater than or equal to this value. Defaults to 0.0.
+            verbose (int, optional): how much information should be printed.
+                Should be 0, 1, or 2. Defaults to 0.
         """
         super().__init__(
             criterion,
@@ -542,6 +565,7 @@ class DecisionTreeClassifier(DecisionTreeBase):
             max_features,
             max_leaf_nodes,
             min_impurity_decrease,
+            verbose,
         )
         self._valid_score_metrics = [
             "accuracy",
@@ -624,10 +648,11 @@ class DecisionTreeRegressor(DecisionTreeBase):
         min_samples_leaf: Union[int, float] = 1,
         max_features: Union[int, float, str] = None,
         max_leaf_nodes: int = None,
-        min_impurity_decrease: float = 0.0,
+        min_impurity_decrease: Union[int, float] = 0.0,
+        verbose: int = 0,
     ) -> None:
         """
-        Creates a Decision Tree Base.
+        Creates a Decision Tree Regressor instance.
 
         Args:
             criterion (str, optional): The function to measure the quality of a split.
@@ -641,8 +666,10 @@ class DecisionTreeRegressor(DecisionTreeBase):
                 looking for the best split. Defaults to None.
             max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
                 Defaults to None.
-            min_impurity_decrease (float, optional): A node will be split if this split induces a
+            min_impurity_decrease (Union[int, float], optional): A node will be split if this split induces a
                 decrease of the impurity greater than or equal to this value. Defaults to 0.0.
+            verbose (int, optional): how much information should be printed.
+                Should be 0, 1, or 2. Defaults to 0.
         """
         super().__init__(
             criterion,
@@ -652,6 +679,7 @@ class DecisionTreeRegressor(DecisionTreeBase):
             max_features,
             max_leaf_nodes,
             min_impurity_decrease,
+            verbose,
         )
         self._valid_score_metrics = [
             "r_squared",

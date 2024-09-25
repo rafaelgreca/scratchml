@@ -33,7 +33,7 @@ def example_gaussian_naive_bayes() -> None:
     # assessing the model's performance
     score = gnb.score(X=X_test, y=y_test, metric="accuracy")
 
-    print(score)
+    print(f"The model achieved an accuracy score of {score}.\n")
 
 
 if __name__ == "__main__":

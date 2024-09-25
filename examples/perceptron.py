@@ -34,7 +34,7 @@ def example_perceptron() -> None:
     # splitting the data into training and testing using KFold
     folds = KFold(X, y, stratify=True, shuffle=True, n_splits=5)
 
-    for train_indexes, test_indexes in folds:
+    for fold, (train_indexes, test_indexes) in enumerate(folds):
         # getting the training and test sets
         X_train = X[train_indexes]
         y_train = y[train_indexes]
@@ -48,7 +48,7 @@ def example_perceptron() -> None:
         # assessing the model's performance
         score = perceptron.score(X=X_test, y=y_test, metric="accuracy")
 
-        print(score)
+        print(f"The model achieved an accuracy score of {score} on the fold {fold}.\n")
 
 
 if __name__ == "__main__":
