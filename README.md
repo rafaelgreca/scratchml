@@ -150,14 +150,16 @@ Implementations:
         - [x] KNN Classifier
         - [x] KNN Regressor
     - [x] Naive Bayes
-    - [ ] Random Forest
-        - [ ] Random Forest Classifier
-        - [ ] Random Forest Regressor
+    - [x] Random Forest
+        - [x] Random Forest Classifier
+        - [x] Random Forest Regressor
     - [x] Decision Tree
         - [x] Decision Tree Classifier
         - [x] Decision Tree Regressor
     - [x] Perceptron
     - [ ] MLP
+        - [ ] MLP Classifier
+        - [ ] MLP Regressor
     - [x] KMeans
 
 Features:
