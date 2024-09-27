@@ -1,7 +1,12 @@
 from numpy.testing import assert_almost_equal, assert_equal
 from sklearn.decomposition import PCA as SkPCA
 from scratchml.models.pca import PCA
-from ..utils import generate_regression_dataset, generate_classification_dataset, generate_blob_dataset, repeat
+from ..utils import (
+    generate_regression_dataset,
+    generate_classification_dataset,
+    generate_blob_dataset,
+    repeat,
+)
 import unittest
 
 
@@ -32,8 +37,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -84,8 +94,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -136,8 +151,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -165,7 +185,7 @@ class Test_PCA(unittest.TestCase):
         assert scaler.get_precision().shape, skscaler.get_precision().shape
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
-    
+
     @repeat(10)
     def test_4(self):
         """
@@ -188,8 +208,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -240,8 +265,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -292,8 +322,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -321,7 +356,7 @@ class Test_PCA(unittest.TestCase):
         assert scaler.get_precision().shape, skscaler.get_precision().shape
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
-    
+
     @repeat(10)
     def test_7(self):
         """
@@ -344,8 +379,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -396,8 +436,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 
@@ -448,8 +493,13 @@ class Test_PCA(unittest.TestCase):
         # assert_almost_equal(scaler.components_, skscaler.components_)
         assert scaler.explained_variance_.shape == skscaler.explained_variance_.shape
         assert_almost_equal(scaler.explained_variance_, skscaler.explained_variance_)
-        assert scaler.explained_variance_ratio_.shape == skscaler.explained_variance_ratio_.shape
-        assert_almost_equal(scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_)
+        assert (
+            scaler.explained_variance_ratio_.shape
+            == skscaler.explained_variance_ratio_.shape
+        )
+        assert_almost_equal(
+            scaler.explained_variance_ratio_, skscaler.explained_variance_ratio_
+        )
         assert scaler.mean_.shape == skscaler.mean_.shape
         assert_almost_equal(scaler.mean_, skscaler.mean_)
 

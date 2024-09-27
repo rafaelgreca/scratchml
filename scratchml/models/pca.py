@@ -1,15 +1,14 @@
 from ..utils import convert_array_numpy
 import numpy as np
 
+
 class PCA:
     """
     Creates a class for the Principal Component Analysis (PCA) dimension
     reduction method.
     """
-    def __init__(
-        self,
-        n_components: int = None
-    ) -> None:
+
+    def __init__(self, n_components: int = None) -> None:
         """
         Creates a PCA instance.
 
@@ -62,10 +61,12 @@ class PCA:
         eigenvectors = eigenvectors[idxs]
 
         # getting the n largests components of the eigenvectors
-        self.components_ = eigenvectors[:self.n_components_]
-        self.explained_variance_ratio_ = (eigenvalues/sum(eigenvalues))[:self.n_components_]
-        self.explained_variance_ = eigenvalues[:self.n_components_]
-    
+        self.components_ = eigenvectors[: self.n_components_]
+        self.explained_variance_ratio_ = (eigenvalues / sum(eigenvalues))[
+            : self.n_components_
+        ]
+        self.explained_variance_ = eigenvalues[: self.n_components_]
+
     def transform(self, X: np.ndarray) -> np.ndarray:
         """
         Using the fitted PCA to transform a given set of features.
@@ -93,7 +94,7 @@ class PCA:
 
         self.fit(X)
         return self.transform(X)
-    
+
     def inverse_transform(self, X_transformed: np.ndarray) -> np.ndarray:
         """
         Applies the inverse transformation (converts a transformed
@@ -106,7 +107,7 @@ class PCA:
             np.ndarray: the original features array.
         """
         return X_transformed.dot(self.components_) + self.mean_
-    
+
     def get_precision(self) -> np.ndarray:
         """
         Compute data precision matrix with the generative model.
@@ -115,7 +116,7 @@ class PCA:
             np.ndarray: the estimated precision of the data.
         """
         return np.linalg.inv(self.covariance_matrix_)
-    
+
     def get_covariance(self) -> np.ndarray:
         """
         Compute data covariance with the generative model.
@@ -124,7 +125,7 @@ class PCA:
             np.ndarray: the estimated covariance of the data.
         """
         return (self.components_.T * self.explained_variance_).dot(self.components_)
-    
+
     def _validate_parameters(self) -> None:
         """
         Auxiliary function used to validate the values of the parameters
@@ -133,10 +134,11 @@ class PCA:
         # validating the n_components value
         if self.n_components is not None:
             try:
-                assert (isinstance(self.n_components, int)) and \
-                        (0 < self.n_components < self.n_features_in_)
+                assert (isinstance(self.n_components, int)) and (
+                    0 < self.n_components < self.n_features_in_
+                )
             except AssertionError as error:
                 raise ValueError(
-                    "The 'n_components' value should be an integer, positive number " +
-                    f"bigger than zero and smaller than {self.n_features_in_}.\n"
+                    "The 'n_components' value should be an integer, positive number "
+                    + f"bigger than zero and smaller than {self.n_features_in_}.\n"
                 ) from error
