@@ -161,6 +161,7 @@ Implementations:
         - [ ] MLP Classifier
         - [ ] MLP Regressor
     - [x] KMeans
+    - [x] PCA
 
 Features:
 
