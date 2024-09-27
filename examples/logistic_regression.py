@@ -19,17 +19,6 @@ def example_logistic_regression() -> None:
         shuffle=True,
     )
 
-    # creating a logistic regression model
-    lr = LogisticRegression(
-        learning_rate=0.1,
-        tol=1e-05,
-        n_jobs=-1,
-        max_iters=-1,
-        loss_function="bce",
-        regularization=None,
-        verbose=0,
-    )
-
     # splitting the data into training and testing using KFold
     folds = KFold(X, y, stratify=True, shuffle=True, n_splits=5)
 
@@ -40,6 +29,17 @@ def example_logistic_regression() -> None:
 
         X_test = X[test_indexes]
         y_test = y[test_indexes]
+
+        # creating a logistic regression model
+        lr = LogisticRegression(
+            learning_rate=0.1,
+            tol=1e-05,
+            n_jobs=-1,
+            max_iters=-1,
+            loss_function="bce",
+            regularization=None,
+            verbose=0,
+        )
 
         # fitting the model
         lr.fit(X=X_train, y=y_train)

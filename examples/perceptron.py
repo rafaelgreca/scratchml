@@ -19,18 +19,6 @@ def example_perceptron() -> None:
         shuffle=True,
     )
 
-    # creating a logistic regression model
-    perceptron = Perceptron(
-        penalty=None,
-        lr=0.001,
-        alpha=0.0001,
-        fit_intercept=True,
-        max_iter=1000,
-        tol=0.001,
-        verbose=0,
-        n_jobs=None,
-    )
-
     # splitting the data into training and testing using KFold
     folds = KFold(X, y, stratify=True, shuffle=True, n_splits=5)
 
@@ -41,6 +29,18 @@ def example_perceptron() -> None:
 
         X_test = X[test_indexes]
         y_test = y[test_indexes]
+
+        # creating a logistic regression model
+        perceptron = Perceptron(
+            penalty=None,
+            lr=0.001,
+            alpha=0.0001,
+            fit_intercept=True,
+            max_iter=1000,
+            tol=0.001,
+            verbose=0,
+            n_jobs=None,
+        )
 
         # fitting the model
         perceptron.fit(X=X_train, y=y_train)

@@ -32,7 +32,7 @@ def example_decision_tree_classifier() -> None:
             min_impurity_decrease=0.0,
             verbose=0,
         )
-        
+
         # fitting the model
         dt.fit(X=X_train, y=y_train)
 
@@ -73,7 +73,7 @@ def example_decision_tree_regressor() -> None:
             min_impurity_decrease=0.0,
             verbose=0,
         )
-        
+
         # fitting the model
         dt.fit(X=X_train, y=y_train)
 
