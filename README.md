@@ -101,16 +101,19 @@ Implementations:
     - [x] L1
     - [x] L2
     - [ ] Batch Normalization
-- [ ] Activation functions
+- [x] Activation functions
     - [x] Sigmoid
-    - [ ] ReLU
-    - [ ] Linear
+    - [x] ReLU
+    - [x] Linear
     - [x] Softmax
-    - [ ] TanH
-    - [ ] Elu
-    - [ ] Leaky ReLU
+    - [x] TanH
+    - [x] ELU
+    - [x] Leaky ReLU
+    - [x] SoftPlus
+    - [x] SELU
 - [ ] Loss functions
     - [x] Binary Cross Entropy
+    - [ ] Cross Entropy
 - [x] Metrics
     - [x] Regression Metrics
         - [x] Mean Squared Error (MSE)
