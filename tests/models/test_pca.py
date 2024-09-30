@@ -1,4 +1,4 @@
-from numpy.testing import assert_almost_equal, assert_equal
+from numpy.testing import assert_almost_equal
 from sklearn.decomposition import PCA as SkPCA
 from scratchml.models.pca import PCA
 from ..utils import (

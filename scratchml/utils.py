@@ -1,5 +1,42 @@
-from typing import Any, Union, Tuple, List
+from typing import Any, Union, Tuple, List, Iterator
 import numpy as np
+
+
+def split_data_into_batches(
+    X: np.ndarray, y: np.ndarray, batch_size: int, shuffle: bool = True
+) -> Iterator[Tuple[np.ndarray, np.ndarray]]:
+    """
+    Auxiliary function to split the data into small batches.
+
+    Args:
+        X (np.ndarray): the features array.
+        y (np.ndarray): the labels array.
+        batch_size (int): the batch size.
+        shuffle (bool): whether to shuffle the data or not.
+            Defaults to True.
+
+    Yields:
+        Iterator[Tuple[np.ndarray, np.ndarray]]: the yielded batches.
+    """
+    if not isinstance(shuffle, bool):
+        raise TypeError(f"Shuffle should be a boolean, got {type(shuffle)}\n.")
+
+    if not isinstance(batch_size, int):
+        raise TypeError(f"Batch size must be an integer, got {type(batch_size)}\n.")
+
+    if batch_size <= 0:
+        raise ValueError(
+            f"Batch size value must be higher than 1, got {batch_size} instead\n."
+        )
+
+    # shuffling the array
+    if shuffle:
+        indices = np.arange(X.shape[0])
+        np.random.shuffle(indices)
+        X, y = X[indices], y[indices]
+
+    for i in range(0, X.shape[0], batch_size):
+        yield X[i : i + batch_size], y[i : i + batch_size]
 
 
 def KFold(

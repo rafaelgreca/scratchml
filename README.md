@@ -60,7 +60,7 @@ Run the Docker container using the following command:
 ```bash
 sudo docker run -d -p 8000:5000 --name scratchml scratchml
 ```
-    
+
 ## Usage/Examples
 
 See the `examples` folder to see some use cases.
@@ -111,9 +111,9 @@ Implementations:
     - [x] Leaky ReLU
     - [x] SoftPlus
     - [x] SELU
-- [ ] Loss functions
+- [x] Loss functions
     - [x] Binary Cross Entropy
-    - [ ] Cross Entropy
+    - [x] Cross Entropy
 - [x] Metrics
     - [x] Regression Metrics
         - [x] Mean Squared Error (MSE)
@@ -161,7 +161,7 @@ Implementations:
         - [x] Decision Tree Regressor
     - [x] Perceptron
     - [ ] MLP
-        - [ ] MLP Classifier
+        - [x] MLP Classifier
         - [ ] MLP Regressor
     - [x] KMeans
     - [x] PCA
@@ -213,4 +213,3 @@ Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. S
 ## Authors
 
 - [@rafaelgreca](https://www.github.com/rafaelgreca)
-

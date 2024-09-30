@@ -450,7 +450,10 @@ disable=raw-checker-failed,
         too-many-return-statements,
         import-error,
         no-name-in-module,
-        duplicate-code
+        duplicate-code,
+        too-few-public-methods,
+        too-many-public-methods,
+        arguments-differ
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

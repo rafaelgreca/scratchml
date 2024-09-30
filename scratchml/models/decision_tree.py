@@ -89,8 +89,9 @@ class DecisionTreeBase(ABC):
                 looking for the best split. Defaults to None.
             max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
                 Defaults to None.
-            min_impurity_decrease (Union[int, float], optional): A node will be split if this split induces a
-                decrease of the impurity greater than or equal to this value. Defaults to 0.0.
+            min_impurity_decrease (Union[int, float], optional): A node will be split if this split
+                induces a decrease of the impurity greater than or equal to this value.
+                Defaults to 0.0.
             verbose (int, optional): how much information should be printed.
                 Should be 0, 1, or 2. Defaults to 0.
         """
@@ -552,8 +553,9 @@ class DecisionTreeClassifier(DecisionTreeBase):
                 looking for the best split. Defaults to None.
             max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
                 Defaults to None.
-            min_impurity_decrease (Union[int, float], optional): A node will be split if this split induces a
-                decrease of the impurity greater than or equal to this value. Defaults to 0.0.
+            min_impurity_decrease (Union[int, float], optional): A node will be split if this split
+                induces a decrease of the impurity greater than or equal to this value.
+                Defaults to 0.0.
             verbose (int, optional): how much information should be printed.
                 Should be 0, 1, or 2. Defaults to 0.
         """
@@ -666,8 +668,9 @@ class DecisionTreeRegressor(DecisionTreeBase):
                 looking for the best split. Defaults to None.
             max_leaf_nodes (int, optional): Grow a tree with max_leaf_nodes in best-first fashion.
                 Defaults to None.
-            min_impurity_decrease (Union[int, float], optional): A node will be split if this split induces a
-                decrease of the impurity greater than or equal to this value. Defaults to 0.0.
+            min_impurity_decrease (Union[int, float], optional): A node will be split if this split
+                induces a decrease of the impurity greater than or equal to this value.
+                Defaults to 0.0.
             verbose (int, optional): how much information should be printed.
                 Should be 0, 1, or 2. Defaults to 0.
         """
