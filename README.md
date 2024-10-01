@@ -12,11 +12,8 @@
         <img src="https://img.shields.io/github/issues/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
     <a href="https://github.com/rafaelgreca/scratchml/pulse" alt="Activity">
         <img src="https://img.shields.io/github/commit-activity/m/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
-    <a href="https://circleci.com/gh/rafaelgreca/scratchml/tree/master">
-        <img src="https://img.shields.io/circleci/project/github/rafaelgreca/scratchml/main?color=greeb&style=for-the-badge" alt="build status"></a>
-    <a href="https://coveralls.io/github/rafaelgreca/scratchml">
-        <img src="https://img.shields.io/coveralls/github/rafaelgreca/scratchml?color=greeb&style=for-the-badge"
-            alt="coverage"></a>
+    <a alt="Downloads">
+        <img alt="GitHub Downloads (all assets, latest release)" src="https://img.shields.io/github/downloads-pre/rafaelgreca/scratchml/latest/total">
     <a alt="Version">
         <img src="https://img.shields.io/badge/version-9.0.0-orange.svg?color=greeb&style=for-the-badge" /></a>
     <a href="https://github.com/rafaelgreca/scratchml/blob/main/LICENSE" alt="License">
