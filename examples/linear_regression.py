@@ -25,6 +25,7 @@ def example_linear_regression() -> None:
         loss_function="mse",
         regularization=None,
         n_jobs=None,
+        verbose=0,
     )
 
     # fitting the model
@@ -33,7 +34,7 @@ def example_linear_regression() -> None:
     # assessing the model's performance
     score = lr.score(X=X_test, y=y_test, metric="r_squared")
 
-    print(score)
+    print(f"The model achieved a R² score of {score}.\n")
 
 
 if __name__ == "__main__":

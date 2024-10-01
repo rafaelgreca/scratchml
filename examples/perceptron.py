@@ -19,22 +19,10 @@ def example_perceptron() -> None:
         shuffle=True,
     )
 
-    # creating a logistic regression model
-    perceptron = Perceptron(
-        penalty=None,
-        lr=0.001,
-        alpha=0.0001,
-        fit_intercept=True,
-        max_iter=1000,
-        tol=0.001,
-        verbose=0,
-        n_jobs=None,
-    )
-
     # splitting the data into training and testing using KFold
     folds = KFold(X, y, stratify=True, shuffle=True, n_splits=5)
 
-    for train_indexes, test_indexes in folds:
+    for fold, (train_indexes, test_indexes) in enumerate(folds):
         # getting the training and test sets
         X_train = X[train_indexes]
         y_train = y[train_indexes]
@@ -42,13 +30,25 @@ def example_perceptron() -> None:
         X_test = X[test_indexes]
         y_test = y[test_indexes]
 
+        # creating a logistic regression model
+        perceptron = Perceptron(
+            penalty=None,
+            lr=0.001,
+            alpha=0.0001,
+            fit_intercept=True,
+            max_iter=1000,
+            tol=0.001,
+            verbose=0,
+            n_jobs=None,
+        )
+
         # fitting the model
         perceptron.fit(X=X_train, y=y_train)
 
         # assessing the model's performance
         score = perceptron.score(X=X_test, y=y_test, metric="accuracy")
 
-        print(score)
+        print(f"The model achieved an accuracy score of {score} on the fold {fold}.\n")
 
 
 if __name__ == "__main__":

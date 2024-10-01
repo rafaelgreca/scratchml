@@ -60,7 +60,7 @@ Run the Docker container using the following command:
 ```bash
 sudo docker run -d -p 8000:5000 --name scratchml scratchml
 ```
-    
+
 ## Usage/Examples
 
 See the `examples` folder to see some use cases.
@@ -101,16 +101,19 @@ Implementations:
     - [x] L1
     - [x] L2
     - [ ] Batch Normalization
-- [ ] Activation functions
+- [x] Activation functions
     - [x] Sigmoid
-    - [ ] ReLU
-    - [ ] Linear
+    - [x] ReLU
+    - [x] Linear
     - [x] Softmax
-    - [ ] TanH
-    - [ ] Elu
-    - [ ] Leaky ReLU
-- [ ] Loss functions
+    - [x] TanH
+    - [x] ELU
+    - [x] Leaky ReLU
+    - [x] SoftPlus
+    - [x] SELU
+- [x] Loss functions
     - [x] Binary Cross Entropy
+    - [x] Cross Entropy
 - [x] Metrics
     - [x] Regression Metrics
         - [x] Mean Squared Error (MSE)
@@ -144,13 +147,24 @@ Implementations:
     - [x] Linear Regression
     - [x] Logistic Regression
     - [ ] SVM
+        - [ ] SVC
+        - [ ] SRV
     - [x] KNN
+        - [x] KNN Classifier
+        - [x] KNN Regressor
     - [x] Naive Bayes
-    - [ ] Random Forest
-    - [ ] Decision Tree
+    - [x] Random Forest
+        - [x] Random Forest Classifier
+        - [x] Random Forest Regressor
+    - [x] Decision Tree
+        - [x] Decision Tree Classifier
+        - [x] Decision Tree Regressor
     - [x] Perceptron
     - [ ] MLP
+        - [x] MLP Classifier
+        - [ ] MLP Regressor
     - [x] KMeans
+    - [x] PCA
 
 Features:
 
@@ -163,12 +177,18 @@ Features:
 - [x] Fix Logistic Regression
 - [ ] Update README
 - [ ] Add visualization plots
+- [ ] Add function to print the Decision Tree
+- [ ] Add 'min_samples_leaf' and 'max_leaf_nodes' variables for the Decision Tree algorithm
+- [ ] Update and improve README
+- [ ] Optimize distance metrics and KNN looping functions
 
 Issues:
 
 - [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
-- [ ] Optimize distance metrics and KNN looping functions
 - [x] Fix pylint issues
+- [x] Fix Decision Tree Regressor accuracy
+- [ ] Fix zero division warning in Decision Tree code
+- [ ] Fix max depth None error in Decision Tree code
 
 ## Feedback
 
@@ -193,4 +213,3 @@ Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. S
 ## Authors
 
 - [@rafaelgreca](https://www.github.com/rafaelgreca)
-

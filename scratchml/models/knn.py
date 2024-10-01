@@ -22,7 +22,7 @@ import numpy as np
 
 class BaseKNN(ABC):
     """
-    Creates a class for the KNN base model.
+    Creates a base class for the K-Nearest Neighbors (KNN) model.
     """
 
     def __init__(

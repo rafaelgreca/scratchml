@@ -1,17 +1,17 @@
-from scratchml.models.logistic_regression import LogisticRegression
+from scratchml.models.multilayer_perceptron import MLPClassifier
 from scratchml.utils import KFold
 from sklearn.datasets import make_classification
 
 
-def example_logistic_regression() -> None:
+def example_mlp_classifier() -> None:
     """
-    Practical example of how to use the Logistic Regression model.
+    Practical example of how to use the Multilayer Perceptron (MLP) Classifier model.
     """
     # generating a dataset for the classfication set
     X, y = make_classification(
-        n_samples=10000,
+        n_samples=1000,
         n_features=5,
-        n_classes=3,
+        n_classes=2,
         n_clusters_per_class=1,
         n_informative=2,
         n_redundant=1,
@@ -30,25 +30,26 @@ def example_logistic_regression() -> None:
         X_test = X[test_indexes]
         y_test = y[test_indexes]
 
-        # creating a logistic regression model
-        lr = LogisticRegression(
-            learning_rate=0.1,
-            tol=1e-05,
-            n_jobs=-1,
-            max_iters=-1,
-            loss_function="bce",
-            regularization=None,
+        # creating a MLP model instance
+        mlp = MLPClassifier(
+            loss_function="cross_entropy",
+            hidden_layer_sizes=(
+                32,
+                64,
+            ),
+            max_iter=100,
+            batch_size=64,
             verbose=0,
         )
 
         # fitting the model
-        lr.fit(X=X_train, y=y_train)
+        mlp.fit(X=X_train, y=y_train)
 
         # assessing the model's performance
-        score = lr.score(X=X_test, y=y_test, metric="accuracy")
+        score = mlp.score(X=X_test, y=y_test, metric="accuracy")
 
         print(f"The model achieved an accuracy score of {score} on the fold {fold}.\n")
 
 
 if __name__ == "__main__":
-    example_logistic_regression()
+    example_mlp_classifier()

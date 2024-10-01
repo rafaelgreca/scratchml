@@ -16,7 +16,9 @@ def example_kmeans() -> None:
 
     kmeans.fit(X, y)
 
-    print(kmeans.score(X, y))
+    score = kmeans.score()
+
+    print(f"The model achieved a negative inertia score of {score}.\n")
 
 
 if __name__ == "__main__":
