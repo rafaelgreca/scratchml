@@ -13,7 +13,7 @@
     <a href="https://github.com/rafaelgreca/scratchml/pulse" alt="Activity">
         <img src="https://img.shields.io/github/commit-activity/m/rafaelgreca/scratchml?color=greeb&style=for-the-badge" /></a>
     <a alt="Downloads">
-        <img alt="GitHub Downloads (all assets, latest release)" src="https://img.shields.io/github/downloads-pre/rafaelgreca/scratchml/latest/total">
+        <img src="https://img.shields.io/github/downloads-pre/rafaelgreca/scratchml/latest/total?color=greeb&style=for-the-badge">
     <a alt="Version">
         <img src="https://img.shields.io/badge/version-9.0.0-orange.svg?color=greeb&style=for-the-badge" /></a>
     <a href="https://github.com/rafaelgreca/scratchml/blob/main/LICENSE" alt="License">
