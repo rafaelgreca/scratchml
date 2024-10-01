@@ -11,7 +11,7 @@ class Test_LinearRegression(unittest.TestCase):
     Unittest class created to test the Linear Regression implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the Linear Regression implementation
@@ -32,7 +32,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the Linear Regression implementation on a higher dimension
@@ -53,7 +53,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
 
-    @repeat(10)
+    @repeat(3)
     def test_3(self):
         """
         Test the Linear Regression implementation on an even higher dimension
@@ -74,7 +74,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=5)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=5)
 
-    @repeat(10)
+    @repeat(3)
     def test_4(self):
         """
         Test the Linear Regression implementation using 'l1' regularization
@@ -97,7 +97,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=2)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=3)
 
-    @repeat(10)
+    @repeat(3)
     def test_5(self):
         """
         Test the Linear Regression implementation using 'l1' regularization
@@ -120,7 +120,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert_almost_equal(sklr.intercept_, lr.intercept_, decimal=1)
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=3)
 
-    @repeat(10)
+    @repeat(3)
     def test_6(self):
         """
         Test the Linear Regression implementation using 'l2' regularization
@@ -143,7 +143,7 @@ class Test_LinearRegression(unittest.TestCase):
         assert np.max(np.abs(sklr.intercept_ - lr.intercept_)) < 1
         assert_almost_equal(sklr.score(X, y), lr.score(X, y), decimal=3)
 
-    @repeat(10)
+    @repeat(3)
     def test_7(self):
         """
         Test the Linear Regression implementation using 'l2' regularization

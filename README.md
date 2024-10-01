@@ -26,9 +26,10 @@
 
 # ScratchML
 
-A Python library called ScratchML was created to build the most fundamental Machine Learning models from scratch (using only Numpy), emphasizing producing user-friendly, straightforward, and easy-to-use implementations for novices and enthusiasts.
+A Python library called ScratchML was created to build the most fundamental Machine Learning models from scratch (using only Numpy), emphasizing producing user-friendly, straightforward, easy-to-use, well-organized implementations for novices and enthusiasts.
 
-Disclaimer: This library is not intended to surpass those that already exist and which are better, more optimized and with more diversity of implemented algorithms (such as scikit-learn, PyTorch, Keras and Tensorflow), but rather to provide code that is easier to understand, simple and friendly for beginners and enthusiasts in the field of artificial intelligence who wish to gain a deeper understanding of how algorithms work.
+Disclaimer: This library is not intended to surpass those that already exist and which are better, more optimized, and with more diversity of implemented algorithms (such as scikit-learn, PyTorch, Keras, and Tensorflow), but rather to provide code that is easier to understand, simple, and friendly for beginners and enthusiasts in the field of artificial intelligence who wish to gain a deeper understanding of how algorithms work or who want to contribute to an open-source repository.
+
 ## Installation
 
 To install this package, first clone the repository to the directory of your choice using the following command:
@@ -73,7 +74,7 @@ See the `examples` folder to see some use cases.
 Run the following command on the root folder:
 
 ```bash
-python3 -m unittest discover
+python3 -m unittest discover -p 'test_*.py'
 ```
 
 ### Using Docker
@@ -95,100 +96,79 @@ sudo docker run -d -p 8001:5000 --name test_scratchml test_scratchml
 Implementations:
 
 - [x] Scalers
-    - [x] StandardScaler
-    - [x] MinMaxScaler
+    - [x] [StandardScaler](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/scalers.py#L155)
+    - [x] [MinMaxScaler](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/scalers.py#L37)
 - [ ] Regularizations
-    - [x] L1
-    - [x] L2
+    - [x] [L1](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/regularizations.py#L4)
+    - [x] [L2](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/regularizations.py#L27)
     - [ ] Batch Normalization
 - [x] Activation functions
-    - [x] Sigmoid
-    - [x] ReLU
-    - [x] Linear
-    - [x] Softmax
-    - [x] TanH
-    - [x] ELU
-    - [x] Leaky ReLU
-    - [x] SoftPlus
-    - [x] SELU
+    - [x] [Sigmoid](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L109)
+    - [x] [ReLU](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L23)
+    - [x] [Linear](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L4)
+    - [x] [Softmax](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L132)
+    - [x] [TanH](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L84)
+    - [x] [ELU](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L42)
+    - [x] [Leaky ReLU](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L65)
+    - [x] [SoftPlus](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L157)
+    - [x] [SELU](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/activations.py#L180)
 - [x] Loss functions
-    - [x] Binary Cross Entropy
-    - [x] Cross Entropy
+    - [x] [Binary Cross Entropy](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/losses.py#L4)
+    - [x] [Cross Entropy](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/losses.py#L33)
 - [x] Metrics
     - [x] Regression Metrics
-        - [x] Mean Squared Error (MSE)
-        - [x] Root Mean Squared Error (RMSE)
-        - [x] Mean Absolute Error (MAE)
-        - [x] Median Absolute Error (MedAE)
-        - [x] Mean Absolute Percentage Error (MAPE)
-        - [x] Mean Squared Logarithmic Error (MSLE)
-        - [x] Max Error (ME)
-        - [x] R Squared (R2)
+        - [x] [Mean Squared Error (MSE)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L7)
+        - [x] [Root Mean Squared Error (RMSE)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L29)
+        - [x] [Mean Absolute Error (MAE)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L51)
+        - [x] [Median Absolute Error (MedAE)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L73)
+        - [x] [Mean Absolute Percentage Error (MAPE)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L95)
+        - [x] [Mean Squared Logarithmic Error (MSLE)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L128)
+        - [x] [Max Error (ME)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L156)
+        - [x] [R Squared (R2)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L180)
     - [x] Classification Metrics
-        - [x] Accuracy
-        - [x] Precision
-        - [x] Recall
-        - [x] F1-Score
-        - [x] Confusion Matrix
-        - [x] ROC AUC Score
+        - [x] [Accuracy](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L200)
+        - [x] [Precision](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L215)
+        - [x] [Recall](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L272)
+        - [x] [F1-Score](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L329)
+        - [x] [Confusion Matrix](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L373)
+        - [x] [ROC AUC Score](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L474)
+        - [x] [False Positive Rate (FPR)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L458)
+        - [x] [True Positive Rate (TPR)](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/metrics.py#L442)
 - [x] Distances
-    - [x] Euclidean
-    - [x] Manhattan
-    - [x] Chebyshev
-    - [x] Minkowski
+    - [x] [Euclidean](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/distances.py#L6)
+    - [x] [Manhattan](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/distances.py#L26)
+    - [x] [Chebyshev](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/distances.py#L46)
+    - [x] [Minkowski](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/distances.py#L66)
 - [x] Encoders
-    - [x] One-hot encoding
-    - [x] Label encoding
+    - [x] [One-hot Encoding](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/encoders.py#L133)
+    - [x] [Label Encoding](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/encoders.py#L39)
 - [x] Splitters
-    - [x] KFold
-    - [x] Stratify KFold
-    - [x] Simple data split
+    - [x] [KFold](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/utils.py#L42)
+    - [x] [Stratify KFold](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/utils.py#L42)
+    - [x] [Train Test Split](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/utils.py#L187)
+    - [x] [Split Into Batches](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/utils.py#L5)
 - [ ] Models
-    - [x] Linear Regression
-    - [x] Logistic Regression
+    - [x] [Linear Regression](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/linear_regression.py)
+    - [x] [Logistic Regression](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/logistic_regression.py)
     - [ ] SVM
         - [ ] SVC
         - [ ] SRV
     - [x] KNN
-        - [x] KNN Classifier
-        - [x] KNN Regressor
-    - [x] Naive Bayes
+        - [x] [KNN Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/knn.py#L236)
+        - [x] [KNN Regressor](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/knn.py#L375)
+    - [x] [Naive Bayes](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/naive_bayes.py)
     - [x] Random Forest
-        - [x] Random Forest Classifier
-        - [x] Random Forest Regressor
+        - [x] [Random Forest Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/random_forest.py#L291)
+        - [x] [Random Forest Regressor](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/random_forest.py#L445)
     - [x] Decision Tree
-        - [x] Decision Tree Classifier
-        - [x] Decision Tree Regressor
-    - [x] Perceptron
+        - [x] [Decision Tree Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/decision_tree.py#L525)
+        - [x] [Decision Tree Regressor](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/decision_tree.py#L640)
+    - [x] [Perceptron](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/perceptron.py)
     - [ ] MLP
-        - [x] MLP Classifier
+        - [x] [MLP Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/multilayer_perceptron.py)
         - [ ] MLP Regressor
-    - [x] KMeans
-    - [x] PCA
-
-Features:
-
-- [x] Extend classification metrics to multi-class output
-- [ ] Run Linear Regression, Logistic Regression, KNN, and Gaussian Naive Bayes on multiple CPUs using joblib
-- [x] Create examples folder
-- [x] Upgrade Linear and Regression models to use more than one loss function and metric
-- [ ] Improving testing
-- [x] Add verbose mode for Linear Regression and Logistic Regression
-- [x] Fix Logistic Regression
-- [ ] Update README
-- [ ] Add visualization plots
-- [ ] Add function to print the Decision Tree
-- [ ] Add 'min_samples_leaf' and 'max_leaf_nodes' variables for the Decision Tree algorithm
-- [ ] Update and improve README
-- [ ] Optimize distance metrics and KNN looping functions
-
-Issues:
-
-- [ ] Sometimes the Logistic Regression model gets stuck. This happens intermittently and was observed when wasn't a binary problem
-- [x] Fix pylint issues
-- [x] Fix Decision Tree Regressor accuracy
-- [ ] Fix zero division warning in Decision Tree code
-- [ ] Fix max depth None error in Decision Tree code
+    - [x] [KMeans](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/kmeans.py)
+    - [x] [PCA](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/pca.py)
 
 ## Feedback
 
@@ -198,13 +178,18 @@ If you have any feedback, please feel free to create an issue pointing out whate
 
 Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+If you have a suggestion that would make this better, please read carefully the [Contributing Guide](https://github.com/rafaelgreca/scratchml/blob/main/docs/CONTRIBUTING.md) and the [Code of Conduct](https://github.com/rafaelgreca/scratchml/blob/main/docs/CODE_OF_CONDUCT.md) before contributing.
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## Acknowledge
+
+We would like to thank all these amazing materials and repositories for their amazing work, which indirectly contributed in some sort or that inspired us to create this project.
+
+- [REPOSITORY] [SKADI by Douglas Oliveira](https://github.com/Dellonath/SKADI/)
+- [REPOSITORY] [ML From Scratch by Erik Linder-Norén](https://github.com/eriklindernoren/ML-From-Scratch)
+- [REPOSITORY] [Machine Learning from Scratch by AssemblyAI](https://github.com/AssemblyAI-Community/Machine-Learning-From-Scratch)
+- [COURSE] [Machine Learning Specialization by Andrew Ng](https://www.coursera.org/specializations/machine-learning-introduction)
+- [COURSE] [Machine Learning From Scratch by AssemblyAI](https://www.youtube.com/watch?v=p1hGz0w_OCo&list=PLcWfeUsAys2k_xub3mHks85sBHZvg24Jd)
+
 
 ## License
 
@@ -212,4 +197,4 @@ Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. S
 
 ## Authors
 
-- [@rafaelgreca](https://www.github.com/rafaelgreca)
+A huge shoutout to everyone who contributed to the success of the project. [Check everyone here!](https://github.com/rafaelgreca/scratchml/blob/main/docs/AUTHORS.md).

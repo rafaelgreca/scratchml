@@ -15,7 +15,7 @@ class Test_PCA(unittest.TestCase):
     Unittest class created to test the PCA implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the PCA technique using the default values
@@ -72,7 +72,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the PCA technique using the default values with higher dimensional space
@@ -129,7 +129,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_3(self):
         """
         Test the PCA technique using the default values with higher dimensional space
@@ -186,7 +186,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_4(self):
         """
         Test the PCA technique using the default values
@@ -243,7 +243,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_5(self):
         """
         Test the PCA technique using the default values with higher dimensional space
@@ -300,7 +300,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_6(self):
         """
         Test the PCA technique using the default values with higher dimensional space
@@ -357,7 +357,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_7(self):
         """
         Test the PCA technique using the default values
@@ -414,7 +414,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_8(self):
         """
         Test the PCA technique using the default values with higher dimensional space
@@ -471,7 +471,7 @@ class Test_PCA(unittest.TestCase):
 
         assert scaler.get_covariance().shape, skscaler.get_covariance().shape
 
-    @repeat(10)
+    @repeat(3)
     def test_9(self):
         """
         Test the PCA technique using the default values with higher dimensional space

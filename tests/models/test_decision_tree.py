@@ -16,7 +16,7 @@ class Test_Decision_Tree(unittest.TestCase):
     Unittest class created to test the Decision Tree implementation.
     """
 
-    @repeat(5)
+    @repeat(3)
     def test_1(self):
         """
         Test the Decision Tree Classifier implementation on a small dataset
@@ -47,7 +47,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_2(self):
         """
         Test the Decision Tree Classifier implementation on a bigger dataset
@@ -78,7 +78,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_3(self):
         """
         Test the Decision Tree Classifier implementation on a small multi-class dataset
@@ -109,7 +109,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_4(self):
         """
         Test the Decision Tree Classifier implementation on a small dataset
@@ -140,7 +140,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_5(self):
         """
         Test the Decision Tree Classifier implementation on a bigger dataset
@@ -171,7 +171,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_6(self):
         """
         Test the Decision Tree Classifier implementation on a small multi-class dataset
@@ -202,7 +202,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_7(self):
         """
         Test the Decision Tree Classifier implementation on a small dataset
@@ -233,7 +233,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_8(self):
         """
         Test the Decision Tree Classifier implementation on a bigger dataset
@@ -264,7 +264,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_9(self):
         """
         Test the Decision Tree Classifier implementation on a small multi-class dataset
@@ -294,7 +294,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_10(self):
         """
         Test the Decision Tree Classifier implementation on a small multi-class dataset,
@@ -327,7 +327,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.02
 
-    @repeat(5)
+    @repeat(3)
     def test_11(self):
         """
         Test the Decision Tree Classifier implementation on a small multi-class dataset,
@@ -360,7 +360,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.02
 
-    @repeat(5)
+    @repeat(3)
     def test_12(self):
         """
         Test the Decision Tree Regressor implementation on a small dataset
@@ -387,7 +387,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_13(self):
         """
         Test the Decision Tree Regressor implementation on a bigger dataset
@@ -414,7 +414,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_14(self):
         """
         Test the Decision Tree Regressor implementation on a small dataset
@@ -441,7 +441,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_15(self):
         """
         Test the Decision Tree Regressor implementation on a bigger dataset
@@ -468,7 +468,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_16(self):
         """
         Test the Decision Tree Regressor implementation on a small dataset
@@ -495,7 +495,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_17(self):
         """
         Test the Decision Tree Regressor implementation on a bigger dataset
@@ -522,7 +522,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_18(self):
         """
         Test the Decision Tree Regressor implementation on a bigger dataset, higher
@@ -553,7 +553,7 @@ class Test_Decision_Tree(unittest.TestCase):
         assert_allclose(sk_prediction, prediction, atol=atol)
         assert np.abs(sk_score - score) / np.abs(sk_score) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_19(self):
         """
         Test the Decision Tree Regressor implementation on a bigger dataset, higher

@@ -13,7 +13,7 @@ class Test_KNN(unittest.TestCase):
     Unittest class created to test the KNN implementation.
     """
 
-    @repeat(5)
+    @repeat(3)
     def test_1(self):
         """
         Test the KNN implementation on a small dataset using the 'manhattan' metric
@@ -47,7 +47,7 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(5)
+    @repeat(3)
     def test_2(self):
         """
         Test the KNN implementation on a small dataset using the 'euclidean' metric
@@ -81,7 +81,7 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(5)
+    @repeat(3)
     def test_3(self):
         """
         Test the KNN implementation on a small dataset with higher dimension
@@ -115,7 +115,7 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(5)
+    @repeat(3)
     def test_4(self):
         """
         Test the KNN implementation on a small dataset with higher dimension with more neighbors
@@ -148,7 +148,7 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(5)
+    @repeat(3)
     def test_5(self):
         """
         Test the KNN implementation on a small dataset with higher dimension

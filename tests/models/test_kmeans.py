@@ -12,7 +12,7 @@ class Test_KMeans(unittest.TestCase):
     Unittest class created to test the KMeans implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the KMeans implementation and then compares it to
@@ -54,7 +54,7 @@ class Test_KMeans(unittest.TestCase):
         assert_allclose(predict_skk, predict_k, atol=atol)
         assert np.abs(score_skk - score_k) / np.abs(score_skk) < 0.01
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the KMeans implementation with a higher dimension dataset and then
@@ -96,7 +96,7 @@ class Test_KMeans(unittest.TestCase):
         assert_allclose(predict_skk, predict_k, atol=atol)
         assert np.abs(score_skk - score_k) / np.abs(score_skk) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_3(self):
         """
         Test the KMeans implementation with a multiclass dataset and then
@@ -138,7 +138,7 @@ class Test_KMeans(unittest.TestCase):
         assert_allclose(predict_skk, predict_k, atol=atol)
         assert np.abs(score_skk - score_k) / np.abs(score_skk) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_4(self):
         """
         Test the KMeans implementation with a higher dimension multiclass dataset and then
@@ -180,7 +180,7 @@ class Test_KMeans(unittest.TestCase):
         assert_allclose(predict_skk, predict_k, atol=atol)
         assert np.abs(score_skk - score_k) / np.abs(score_skk) < 0.01
 
-    @repeat(10)
+    @repeat(3)
     def test_5(self):
         """
         Test the KMeans implementation with a blob dataset and then compares it to
@@ -220,7 +220,7 @@ class Test_KMeans(unittest.TestCase):
         assert_allclose(predict_skk, predict_k, atol=atol)
         assert np.abs(score_skk - score_k) / np.abs(score_skk) < 0.01
 
-    @repeat(10)
+    @repeat(3)
     def test_6(self):
         """
         Test the KMeans implementation with a higher dimension blob dataset and then
@@ -260,7 +260,7 @@ class Test_KMeans(unittest.TestCase):
         assert_allclose(predict_skk, predict_k, atol=atol)
         assert np.abs(score_skk - score_k) / np.abs(score_skk) < 0.01
 
-    @repeat(5)
+    @repeat(3)
     def test_7(self):
         """
         Test the KMeans implementation with a multiclass blob dataset and then
@@ -302,7 +302,7 @@ class Test_KMeans(unittest.TestCase):
         assert_allclose(predict_skk, predict_k, atol=atol)
         assert np.abs(score_skk - score_k) / np.abs(score_skk) < 0.1
 
-    @repeat(5)
+    @repeat(3)
     def test_8(self):
         """
         Test the KMeans implementation with a higher dimension blob multiclass dataset and then

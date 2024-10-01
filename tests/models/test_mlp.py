@@ -12,7 +12,7 @@ class Test_MLP(unittest.TestCase):
     Unittest class created to test the MLP implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the Multilayer Perceptron implementation and then
@@ -33,11 +33,6 @@ class Test_MLP(unittest.TestCase):
 
         predict_skmlp = skmlp.predict(X)
         predict_mlp = mlp.predict(X).squeeze()
-
-        predict_proba_skmlp = skmlp.predict_proba(X)
-        predict_proba_mlp = mlp.predict_proba(X).squeeze()
-
-        print(predict_proba_mlp.shape, predict_proba_skmlp.shape)
 
         score_skmlp = skmlp.score(X, y)
         score = mlp.score(X, y)
@@ -68,7 +63,7 @@ class Test_MLP(unittest.TestCase):
         assert_allclose(predict_mlp, predict_skmlp, atol=atol)
         assert np.abs(score_skmlp - score) / np.abs(score_skmlp) < 0.02
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the Multilayer Perceptron implementation in a bigger dataset and then

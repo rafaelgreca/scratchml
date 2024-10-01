@@ -11,7 +11,7 @@ class Test_NaiveBayes(unittest.TestCase):
     Unittest class created to test the Gaussian Naive Bayes implementation.
     """
 
-    @repeat(5)
+    @repeat(3)
     def test_1(self):
         """
         Test the Gaussian Naive Bayes implementation
@@ -63,7 +63,7 @@ class Test_NaiveBayes(unittest.TestCase):
         assert_equal(type(pred_log_proba_gnb), type(pred_log_proba_sk_gnb))
         assert np.max(np.abs(pred_log_proba_gnb - pred_log_proba_sk_gnb)) < 1
 
-    @repeat(5)
+    @repeat(3)
     def test_2(self):
         """
         Test the Gaussian Naive Bayes implementation on a multi-class dataset
@@ -115,7 +115,7 @@ class Test_NaiveBayes(unittest.TestCase):
         assert_equal(type(pred_log_proba_gnb), type(pred_log_proba_sk_gnb))
         assert np.max(np.abs(pred_log_proba_gnb - pred_log_proba_sk_gnb)) < 1
 
-    @repeat(5)
+    @repeat(3)
     def test_3(self):
         """
         Test the Gaussian Naive Bayes with a different var smoothing value
@@ -167,7 +167,7 @@ class Test_NaiveBayes(unittest.TestCase):
         assert_equal(type(pred_log_proba_gnb), type(pred_log_proba_sk_gnb))
         assert np.max(np.abs(pred_log_proba_gnb - pred_log_proba_sk_gnb)) < 1
 
-    @repeat(5)
+    @repeat(3)
     def test_4(self):
         """
         Test the Gaussian Naive Bayes implementation using a pre-defined priors

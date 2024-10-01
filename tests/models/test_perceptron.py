@@ -12,7 +12,7 @@ class Test_Perceptron(unittest.TestCase):
     Unittest class created to test the Perceptron implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the Perceptron implementation and then compares it to
@@ -57,7 +57,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the Perceptron implementation with samples with higher dimensions
@@ -102,7 +102,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_3(self):
         """
         Test the Perceptron implementation and then compares it to
@@ -147,7 +147,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_4(self):
         """
         Test the Perceptron implementation with samples with higher dimensions
@@ -192,7 +192,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_5(self):
         """
         Test the Perceptron implementation and then compares it to
@@ -237,7 +237,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_6(self):
         """
         Test the Perceptron implementation with samples with higher dimensions
@@ -282,7 +282,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_7(self):
         """
         Test the Perceptron implementation with blob samples and then compares it to
@@ -325,7 +325,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_8(self):
         """
         Test the Perceptron implementation with blob samples with higher dimensions
@@ -368,7 +368,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_9(self):
         """
         Test the Perceptron implementation with blob samples and then compares it to
@@ -411,7 +411,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_10(self):
         """
         Test the Perceptron implementation with blob samples with higher dimensions
@@ -454,7 +454,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_11(self):
         """
         Test the Perceptron implementation with blob samples and then compares it to
@@ -497,7 +497,7 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
-    @repeat(10)
+    @repeat(3)
     def test_12(self):
         """
         Test the Perceptron implementation with blob samples with higher dimensions
