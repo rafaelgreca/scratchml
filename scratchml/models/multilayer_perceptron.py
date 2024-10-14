@@ -19,6 +19,9 @@ from ..metrics import (
     precision,
     f1_score,
     confusion_matrix,
+    mean_squared_error,
+    mean_absolute_error,
+    r_squared
 )
 from ..regularizations import l2
 import numpy as np
@@ -677,3 +680,111 @@ class MLPClassifier(BaseMLP):
 
         if metric == "confusion_matrix":
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
+
+class MLPRegressor(BaseMLP):
+    """
+    Creates a class for the Multilayer Perceptron (MLP) regressor model.
+    """
+
+    def __init__(
+        self,
+        hidden_layer_sizes: np.ndarray = (100,),
+        activation: str = "relu",
+        alpha: float = 0.0001,
+        momentum: float = 0.9,
+        batch_size: np.int16 | str = "auto",
+        learning_rate: str = "constant",
+        learning_rate_init: float = 0.001,
+        max_iter: int = 200,
+        tol: float = 0.0001,
+        verbose: int = 0,
+    ) -> None:
+        """
+        Creates a MLP Regressor instance.
+
+        Args:
+            hidden_layer_sizes (np.ndarray, optional): _description_. Defaults to (100,).
+            activation (str, optional): the activation function that will be used.
+                Defaults to "relu".
+            alpha (float, optional): the strength of the L2 regularization term. Defaults to 0.0001.
+            momentum (float, optional): the momentum for gradient descent update.
+                Defaults to None.
+            batch_size (Union[np.int16, str], optional): the batch size. Defaults to "auto".
+            learning_rate (str, optional): learning rate schedule for weight updates.
+                Defaults to "constant".
+            learning_rate_init (float, optional): the initial value for the learning rate.
+                Defaults to 0.001.
+            max_iter (int, optional): the number of max iterations. Defaults to 200.
+            tol (float, optional): the tolerance for optimization. Defaults to 1e-4.
+            verbose (int, optional): whether to print progress messages. Defaults to 0.
+        """
+        super().__init__(
+            loss_function="mse",
+            hidden_layer_sizes=hidden_layer_sizes,
+            activation=activation,
+            alpha=alpha,
+            momentum=momentum,
+            batch_size=batch_size,
+            learning_rate=learning_rate,
+            learning_rate_init=learning_rate_init,
+            max_iter=max_iter,
+            tol=tol,
+            verbose=verbose,
+        )
+        self._valid_metrics = ["r_squared", "mse", "mae"]
+
+        self.n_outputs_ = 1  # Setting the number of output units for regression
+        self.out_activation_ = "linear"  # Using a linear activation function for regression
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Uses the trained model to predict the outputs of a given set
+        (also called features).
+
+        Args:
+            X (np.ndarray): the features.
+
+        Returns:
+            np.ndarray: the predicted outputs.
+        """
+        # forward propagation
+        y_hat = self._forward(input_=X.copy())
+        return y_hat
+
+    def score(
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+        metric: str = "r_squared",
+    ) -> Union[np.float32, np.ndarray]:
+        """
+        Calculates the score of the model on a given set for a
+        determined metric.
+
+        Args:
+            X (np.ndarray): the features.
+            y (np.ndarray): the targets of the features.
+            metric (str, optional): which metric to use. Defaults to "r_squared".
+
+        Returns:
+            np.float32: the score achieved by the model.
+        """
+        try:
+            assert metric in self._valid_metrics
+        except AssertionError as error:
+            raise ValueError(
+                f"Invalid value for 'metric'. Must be {self._valid_metrics}.\n"
+            ) from error
+
+        y_hat = self.predict(X)
+
+        if metric == "r_squared":
+            return 1 - np.sum((y_hat - y) ** 2) / np.sum((y - np.mean(y)) ** 2)
+
+        if metric == "mse":
+            return np.mean((y_hat - y) ** 2)
+
+        if metric == "mae":
+            return np.mean(np.abs(y_hat - y))
+
+        raise ValueError(f"Invalid value for 'metric'. Must be one of {self._valid_metrics}.\n")

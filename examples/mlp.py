@@ -1,6 +1,6 @@
-from scratchml.models.multilayer_perceptron import MLPClassifier
+from scratchml.models.multilayer_perceptron import MLPClassifier, MLPRegressor
 from scratchml.utils import KFold
-from sklearn.datasets import make_classification
+from sklearn.datasets import make_classification, make_regression
 
 
 def example_mlp_classifier() -> None:
@@ -50,6 +50,41 @@ def example_mlp_classifier() -> None:
 
         print(f"The model achieved an accuracy score of {score} on the fold {fold}.\n")
 
+def example_mlp_regressor() -> None:
+    """
+    Practical example of how to use the MLPRegressor model.
+    """
+    # generating a dataset for the regression task
+    X, y = make_regression(n_samples=1000, n_features=5, n_targets=1, shuffle=True, noise=30)
+
+    # splitting the data into training and testing using KFold
+    folds = KFold(X, y, stratify=False, shuffle=True, n_splits=5)
+
+    for fold, (train_indexes, test_indexes) in enumerate(folds):
+        # getting the training and test sets
+        X_train = X[train_indexes]
+        y_train = y[train_indexes]
+
+        X_test = X[test_indexes]
+        y_test = y[test_indexes]
+
+        # creating an MLP Regressor instance
+        mlp = MLPRegressor(
+            hidden_layer_sizes=(100,),
+            activation="relu",
+            learning_rate_init=0.01,
+            max_iter=200
+        )
+
+        # fitting the model
+        mlp.fit(X=X_train, y=y_train)
+
+        # assessing the model's performance
+        score = mlp.score(X=X_test, y=y_test, metric="r_squared")
+
+        print(f"The model achieved a R² score of {score} on the fold {fold}.\n")
+
 
 if __name__ == "__main__":
     example_mlp_classifier()
+    example_mlp_regressor()
