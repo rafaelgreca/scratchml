@@ -50,12 +50,15 @@ def example_mlp_classifier() -> None:
 
         print(f"The model achieved an accuracy score of {score} on the fold {fold}.\n")
 
+
 def example_mlp_regressor() -> None:
     """
-    Practical example of how to use the MLPRegressor model.
+    Practical example of how to use the Multilayer Perceptron (MLP) Regressor model.
     """
     # generating a dataset for the regression task
-    X, y = make_regression(n_samples=1000, n_features=5, n_targets=1, shuffle=True, noise=30)
+    X, y = make_regression(
+        n_samples=2000, n_features=4, n_targets=1, shuffle=True, noise=0.1
+    )
 
     # splitting the data into training and testing using KFold
     folds = KFold(X, y, stratify=False, shuffle=True, n_splits=5)
@@ -70,10 +73,12 @@ def example_mlp_regressor() -> None:
 
         # creating an MLP Regressor instance
         mlp = MLPRegressor(
-            hidden_layer_sizes=(100,),
-            activation="relu",
-            learning_rate_init=0.01,
-            max_iter=200
+            loss_function="mse",
+            hidden_layer_sizes=(32, 64),
+            max_iter=100,
+            batch_size=32,
+            verbose=0,
+            learning_rate_init=0.001,
         )
 
         # fitting the model
@@ -82,7 +87,7 @@ def example_mlp_regressor() -> None:
         # assessing the model's performance
         score = mlp.score(X=X_test, y=y_test, metric="r_squared")
 
-        print(f"The model achieved a R² score of {score} on the fold {fold}.\n")
+        print(f"The model achieved an R² score of {score} on the fold {fold}.\n")
 
 
 if __name__ == "__main__":
