@@ -352,10 +352,11 @@ class BaseMLP(ABC):
                         loss = cross_entropy(batch_y, y_hat, derivative=True)
                 elif isinstance(self, MLPRegressor):
                     if self.loss_function == "mse":
-                        loss = 2 * (y_hat - batch_y) / len(batch_y)  # Derivative of MSE w.r.t predictions
-
-                if loss is None:
-                    raise ValueError("Loss function computation failed. Check configuration.")
+                        loss = (
+                            2
+                            * mean_squared_error(batch_y, y_hat, derivative=True)
+                            / len(batch_y)
+                        )
 
                 total_loss += np.sum(loss)
 
@@ -366,7 +367,11 @@ class BaseMLP(ABC):
 
             if self.verbose != 0:
                 loss_msg = f"Loss ({self.loss_function}): {total_loss}"
-                metric_msg = f"Metric (Accuracy): {self.score(X, y)}" if isinstance(self, MLPClassifier) else ""
+                metric_msg = (
+                    f"Metric (Accuracy): {self.score(X, y)}"
+                    if isinstance(self, MLPClassifier)
+                    else ""
+                )
                 epoch_msg = f"Epoch: {i}/{self.max_iter}"
 
                 if self.verbose == 1:
@@ -387,6 +392,7 @@ class BaseMLP(ABC):
 
         self.coefs_ = [layer.weights for layer in self.layers_]
         self.intercepts_ = [layer.bias for layer in self.layers_]
+
     def predict(
         self,
         X: np.ndarray,
@@ -699,7 +705,6 @@ class MLPClassifier(BaseMLP):
 
         if metric == "confusion_matrix":
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
-        
 
 
 class MLPRegressor(BaseMLP):
@@ -780,7 +785,9 @@ class MLPRegressor(BaseMLP):
         """
         X = convert_array_numpy(X)
         if X.shape[1] != self.n_features_in_:
-            raise ValueError(f"Expected input features of size {self.n_features_in_}, but got {X.shape[1]}.")
+            raise ValueError(
+                f"Expected input features of size {self.n_features_in_}, but got {X.shape[1]}."
+            )
 
         # Forward pass through the network
         y_hat = self._forward(X)
@@ -838,4 +845,6 @@ class MLPRegressor(BaseMLP):
         if metric == "max_error":
             return max_error(y, y_hat)
 
-        raise ValueError(f"Invalid value for 'metric'. Must be one of {self._valid_score_metrics}.")
+        raise ValueError(
+            f"Invalid value for 'metric'. Must be one of {self._valid_score_metrics}."
+        )

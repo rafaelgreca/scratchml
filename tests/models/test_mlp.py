@@ -1,5 +1,8 @@
 from numpy.testing import assert_allclose, assert_equal
-from sklearn.neural_network import MLPClassifier as SkMLP, MLPRegressor as SkMLPRegressor
+from sklearn.neural_network import (
+    MLPClassifier as SkMLP,
+    MLPRegressor as SkMLPRegressor,
+)
 from scratchml.models.multilayer_perceptron import MLPClassifier, MLPRegressor
 from ..utils import generate_classification_dataset, repeat, generate_regression_dataset
 import unittest
@@ -76,7 +79,7 @@ class Test_MLP(unittest.TestCase):
         mlp = MLPClassifier(loss_function="bce", hidden_layer_sizes=(32, 64, 128))
         skmlp = SkMLP(
             hidden_layer_sizes=(32, 64, 128),
-            solver="adam",
+            solver="sgd",
             early_stopping=False,
             n_iter_no_change=200,
         )
@@ -134,7 +137,7 @@ class Test_MLP(unittest.TestCase):
         )
         skmlp = SkMLPRegressor(
             hidden_layer_sizes=(32, 64),
-            solver="sgd",
+            solver="adam",
             early_stopping=False,
             n_iter_no_change=200,
             random_state=42,
