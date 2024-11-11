@@ -73,7 +73,6 @@ class KMeans:
             current_inertia = 0.0
 
             while True:
-
                 # stopping criterias
                 if last_centroids is not None:
                     # applying the Frobenius norm as a stop criteria to see if the clusters
