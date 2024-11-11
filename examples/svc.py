@@ -1,8 +1,15 @@
 from scratchml.models.svc import SVC
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
 import numpy as np
+
 
 def example_svc():
     """
@@ -16,25 +23,27 @@ def example_svc():
         n_informative=15,
         n_redundant=5,
         class_sep=1.8,
-        random_state=42
+        random_state=42,
     )
     y = np.where(y == 0, -1, 1)  # Convert labels to -1 and 1 for SVM compatibility
 
     # Split the dataset into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     # Initialize the SVC model with optimal parameters
     model = SVC(
         C=0.4,
         alpha=0.015,
-        kernel='linear',
+        kernel="linear",
         degree=4,
         max_iter=1000,
         tol=1e-5,
         learning_rate=5e-4,
         decay=0.995,
         batch_size=16,
-        adaptive_lr=True
+        adaptive_lr=True,
     )
 
     # Train the model
@@ -55,6 +64,7 @@ def example_svc():
     print(f"Recall: {recall * 100:.2f}%")
     print(f"F1 Score: {f1:.2f}")
     print(f"ROC-AUC Score: {roc_auc:.2f}")
+
 
 if __name__ == "__main__":
     example_svc()

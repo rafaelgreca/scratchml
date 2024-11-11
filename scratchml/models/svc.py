@@ -1,40 +1,38 @@
 from scratchml.utils import split_data_into_batches
-from scratchml.metrics import mean_squared_error, accuracy, f1_score, confusion_matrix
+from ..metrics import accuracy, recall, precision, f1_score, confusion_matrix
 from scratchml.regularizations import l2
 from scratchml.scalers import StandardScaler
 import numpy as np
+
 
 class SVC:
     """
     Support Vector Classifier (SVC) with options for linear, polynomial, and RBF kernels.
     """
-    
+
+    _valid_metrics = ["accuracy", "precision", "recall", "f1_score", "confusion_matrix"]
+
     def __init__(
         self,
         C=0.35,
         alpha=0.01,
         kernel="linear",
         degree=3,
-        gamma=None,
-        coef0=1,
-        max_iter=3000,
+        max_iter=1500,
         tol=1e-4,
-        learning_rate=1e-5,  # Lower initial learning rate
-        decay=0.999,  # Slower decay
+        learning_rate=1e-5,
+        decay=0.999,
         batch_size=64,
         early_stopping=True,
         adaptive_lr=False,
     ):
-        # Parameter validation
         if C <= 0:
             raise ValueError("Regularization parameter C must be positive.")
-        
+
         self.C = C
         self.alpha = alpha
         self.kernel = kernel
         self.degree = degree
-        self.gamma = gamma
-        self.coef0 = coef0
         self.max_iter = max_iter
         self.tol = tol
         self.learning_rate = learning_rate
@@ -46,22 +44,32 @@ class SVC:
         self.classes_ = None
         self.bias = 0
         self.scaler = StandardScaler()
+        self._validate_parameters()
 
     def _apply_kernel(self, X1, X2):
         """Applies the selected kernel function."""
         if self.kernel == "linear":
             return np.dot(X1, X2.T)
         elif self.kernel == "polynomial":
-            return (self.coef0 + np.dot(X1, X2.T)) ** self.degree
+            return (1 + np.dot(X1, X2.T)) ** self.degree
         elif self.kernel == "rbf":
-            gamma = self.gamma if self.gamma is not None else 1 / X1.shape[1]
-            return np.exp(-gamma * np.square(np.linalg.norm(X1[:, np.newaxis] - X2, axis=2)))
+            gamma = 1 / X1.shape[1]
+            return np.exp(
+                -gamma * np.square(np.linalg.norm(X1[:, np.newaxis] - X2, axis=2))
+            )
 
+    def _validate_parameters(self):
+        if self.C <= 0:
+            raise ValueError("Regularization parameter C must be positive.")
+
+    def _check_is_fitted(self):
+        if self.weights is None:
+            raise ValueError("Model must be trained before prediction.")
 
     def fit(self, X, y):
         """
         Trains the SVC model using mini-batch gradient descent.
-        
+
         Parameters
         ----------
         X : ndarray, shape (n_samples, n_features)
@@ -79,16 +87,20 @@ class SVC:
         n_samples, n_features = X.shape
         self.weights = np.zeros(n_features)
 
-        no_improvement_count = 0  # Track convergence across iterations
+        no_improvement_count = 0
         for iteration in range(self.max_iter):
-            lr = self.learning_rate * (self.decay ** iteration)
+            lr = self.learning_rate * (self.decay**iteration)
             avg_update_norm = 0
-            for X_batch, y_batch in split_data_into_batches(X, y_, self.batch_size, shuffle=True):
+            for X_batch, y_batch in split_data_into_batches(
+                X, y_, self.batch_size, shuffle=True
+            ):
                 weight_update = np.zeros_like(self.weights)
                 bias_update = 0
                 for idx in range(X_batch.shape[0]):
-                    instance = X_batch[idx:idx+1]
-                    margin = y_batch[idx] * (np.dot(instance.flatten(), self.weights) - self.bias)
+                    instance = X_batch[idx : idx + 1]
+                    margin = y_batch[idx] * (
+                        np.dot(instance.flatten(), self.weights) - self.bias
+                    )
 
                     if margin < 1:
                         weight_update += -self.C * y_batch[idx] * instance.flatten()
@@ -96,27 +108,30 @@ class SVC:
 
                 weight_update += self.alpha * l2(self.weights)
 
-                lr_adjusted = lr / (1 + np.linalg.norm(weight_update)) if self.adaptive_lr else lr
+                lr_adjusted = (
+                    lr / (1 + np.linalg.norm(weight_update)) if self.adaptive_lr else lr
+                )
                 self.weights -= lr_adjusted * weight_update
                 self.bias -= lr_adjusted * bias_update
                 avg_update_norm += np.linalg.norm(weight_update)
 
-            avg_update_norm /= (X.shape[0] / self.batch_size)
+            avg_update_norm /= X.shape[0] / self.batch_size
             if self.early_stopping and avg_update_norm < self.tol:
                 no_improvement_count += 1
-                if no_improvement_count > 10:  # Terminate if no improvement for 10 iterations
-                    print(f"Converged after {iteration} iterations.")
+                if (
+                    no_improvement_count > 10
+                ):  # Terminate if no improvement for 10 iterations
+                    # print(f"Converged after {iteration} iterations.")
                     break
             else:
                 no_improvement_count = 0
 
-            if iteration % 100 == 0:
-                print(f"Iteration {iteration}: Avg norm of batch updates = {avg_update_norm}")
+        #     if iteration % 100 == 0:
+        #         print(f"Iteration {iteration}: Avg norm of batch updates = {avg_update_norm}")
 
-        print(f"Final weight norm: {np.linalg.norm(self.weights)}")
-        print(f"Final bias: {self.bias}")
+        # print(f"Final weight norm: {np.linalg.norm(self.weights)}")
+        # print(f"Final bias: {self.bias}")
 
-    
     def predict(self, X):
         """
         Predicts class labels for input data.
@@ -140,24 +155,48 @@ class SVC:
         return {
             "accuracy": accuracy(y, predictions),
             "f1_score": f1_score(y, predictions),
-            "confusion_matrix": confusion_matrix(y, predictions)
+            "confusion_matrix": confusion_matrix(y, predictions),
         }
-    
-    def score(self, X, y):
+
+    def score(self, X, y, metric="accuracy", labels_cm=None, normalize_cm=False):
         """
-        Returns the mean accuracy on the given test data and labels.
-        
+        Calculates the score of the model on a given dataset using the specified metric.
+
         Parameters
         ----------
         X : ndarray, shape (n_samples, n_features)
             Test data.
         y : ndarray, shape (n_samples,)
             True labels.
-        
+        metric : str, optional
+            Metric to use for evaluation ("accuracy", "precision", "recall", "f1_score", "confusion_matrix").
+            Defaults to "accuracy".
+        labels_cm : list, optional
+            Labels for confusion matrix computation, ignored for other metrics. Defaults to None.
+        normalize_cm : bool, optional
+            Whether to normalize the confusion matrix. Defaults to False.
+
         Returns
         -------
-        score : float
-            Mean accuracy of the model on the test data.
+        score : float or ndarray
+            Computed score based on the specified metric.
         """
+
+        self._check_is_fitted()
+        if metric not in self._valid_metrics:
+            raise ValueError(f"Invalid metric. Must be one of {self._valid_metrics}.")
+
         predictions = self.predict(X)
-        return accuracy(y, predictions)
+
+        if metric == "accuracy":
+            return accuracy(y, predictions)
+        elif metric == "precision":
+            return precision(y, predictions)
+        elif metric == "recall":
+            return recall(y, predictions)
+        elif metric == "f1_score":
+            return f1_score(y, predictions)
+        elif metric == "confusion_matrix":
+            return confusion_matrix(
+                y, predictions, labels=labels_cm, normalize=normalize_cm
+            )
