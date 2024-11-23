@@ -1,6 +1,6 @@
 from scratchml.models.svc import SVC
 from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split, cross_val_score
+from scratchml.utils import train_test_split
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -28,9 +28,7 @@ def example_svc():
     y = np.where(y == 0, -1, 1)  # Convert labels to -1 and 1 for SVM compatibility
 
     # Split the dataset into training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
     # Initialize the SVC model with optimal parameters
     model = SVC(

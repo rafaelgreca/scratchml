@@ -13,3 +13,8 @@ The incomplete list of individuals below have provided patches or otherwise
 contributed to the project prior to the project being hosted on GitHub. See the
 GitHub commit log for a list of recent contributors. We would like to thank
 everyone who has contributed to the project in any way.
+
+* __[Rene Ivancak](https://github.com/Renkooo)__
+
+    @Renkooo implemented a classification solution for the SVM model, 
+    complete with testing and an example script.
