@@ -15,10 +15,18 @@ from ..activations import (
 )
 from ..metrics import (
     accuracy,
+    max_error,
+    mean_absolute_error,
+    mean_absolute_percentage_error,
+    mean_squared_error,
+    mean_squared_logarithmic_error,
+    median_absolute_error,
+    r_squared,
     recall,
     precision,
     f1_score,
     confusion_matrix,
+    root_mean_squared_error,
 )
 from ..regularizations import l2
 import numpy as np
@@ -85,7 +93,7 @@ class Layer:
             self.output_ = np.matmul(self.input_, self.weights) + self.bias
             activated_output = np.zeros_like(self.output_, dtype=np.float64)
 
-            # applying the activation function to the output of the layer
+            # Apply activation function
             if self.activation == "relu":
                 activated_output = relu(self.output_)
             elif self.activation == "linear":
@@ -110,8 +118,7 @@ class Layer:
         if propagation == "backward":
             activation_derivative = np.zeros_like(self.output_, dtype=np.float64)
 
-            # applying the derivative of the activation function to
-            # the output of the layer
+            # Apply derivative of the activation function
             if self.activation == "relu":
                 activation_derivative = relu(self.output_, derivative=True)
             elif self.activation == "linear":
@@ -134,16 +141,21 @@ class Layer:
             activation_derivative = activation_derivative * loss
             last_loss = np.matmul(activation_derivative, self.weights.T)
 
-            # updating the weights and bias of the current layer
+            # Gradient clipping to prevent overflow
+            np.clip(activation_derivative, -1e3, 1e3, out=activation_derivative)
+
+            # Update weights and biases
             self.weights -= learning_rate * np.matmul(
                 self.input_.T, activation_derivative
             ) * self.momentum + l2(self.weights, reg_lambda=self.alpha, derivative=True)
+
+            np.clip(self.weights, -1e3, 1e3, out=self.weights)
+
             self.bias -= learning_rate * np.sum(
                 activation_derivative, axis=0, keepdims=False
             )
+            np.clip(self.bias, -1e3, 1e3, out=self.bias)
 
-            # returning the updated loss of the current layer, which will be used
-            # in the previous layers to update its weights and bias
             return last_loss
 
     def set_input_size(self, input_size: int) -> None:
@@ -282,11 +294,13 @@ class BaseMLP(ABC):
                 )
             )
 
+            # Set input size for the layer
             if i == 0:
                 self.layers_[0].set_input_size(self.n_features_in_)
             else:
-                self.layers_[i].set_input_size(self.layers_[i - 1].n_units)
+                self.layers_[i].set_input_size(self.hidden_layer_sizes[i - 1])
 
+            # Initialize weights for the layer
             self.layers_[i].initialize_weights()
 
         # defining the parameters for the output layer
@@ -297,8 +311,11 @@ class BaseMLP(ABC):
             else:
                 self.n_outputs_ = len(self.classes_)
                 self.out_activation_ = "softmax"
+        elif isinstance(self, MLPRegressor):
+            self.n_outputs_ = 1
+            self.out_activation_ = "linear"  # Typically used in regression
 
-        # creating and initializing the input layer
+        # creating and initializing the output layer
         self.layers_.append(
             Layer(
                 n_units=self.n_outputs_,
@@ -307,7 +324,7 @@ class BaseMLP(ABC):
                 momentum=self.momentum,
             )
         )
-        self.layers_[-1].set_input_size(self.layers_[-2].n_units)
+        self.layers_[-1].set_input_size(self.hidden_layer_sizes[-1])
         self.layers_[-1].initialize_weights()
 
         self.n_layers_ = len(self.layers_) + 1  # adding the input layer
@@ -333,6 +350,13 @@ class BaseMLP(ABC):
                         loss = binary_cross_entropy(batch_y, y_hat, derivative=True)
                     elif self.loss_function == "cross_entropy":
                         loss = cross_entropy(batch_y, y_hat, derivative=True)
+                elif isinstance(self, MLPRegressor):
+                    if self.loss_function == "mse":
+                        loss = (
+                            2
+                            * mean_squared_error(batch_y, y_hat, derivative=True)
+                            / len(batch_y)
+                        )
 
                 total_loss += np.sum(loss)
 
@@ -343,7 +367,11 @@ class BaseMLP(ABC):
 
             if self.verbose != 0:
                 loss_msg = f"Loss ({self.loss_function}): {total_loss}"
-                metric_msg = f"Metric (Accuracy): {self.score(X, y)}"
+                metric_msg = (
+                    f"Metric (Accuracy): {self.score(X, y)}"
+                    if isinstance(self, MLPClassifier)
+                    else ""
+                )
                 epoch_msg = f"Epoch: {i}/{self.max_iter}"
 
                 if self.verbose == 1:
@@ -677,3 +705,146 @@ class MLPClassifier(BaseMLP):
 
         if metric == "confusion_matrix":
             return confusion_matrix(y, y_hat, labels_cm, normalize_cm)
+
+
+class MLPRegressor(BaseMLP):
+    """
+    Creates a class for the Multilayer Perceptron (MLP) Regressor model.
+    """
+
+    def __init__(
+        self,
+        loss_function: str = "mse",
+        hidden_layer_sizes: Tuple[int, ...] = (100,),
+        activation: str = "relu",
+        alpha: float = 0.0001,
+        momentum: float = 0.9,
+        batch_size: Union[int, str] = "auto",
+        learning_rate: str = "constant",
+        learning_rate_init: float = 0.001,
+        max_iter: int = 200,
+        tol: float = 1e-4,
+        verbose: int = 0,
+    ) -> None:
+        """
+        Creates a MLP Regressor instance.
+
+        Args:
+            loss_function (str, optional): The loss function that will be used. Defaults to "mse".
+            hidden_layer_sizes (Tuple[int, ...], optional): The sizes of the hidden layers. Defaults to (100,).
+            activation (str, optional): The activation function that will be used. Defaults to "relu".
+            alpha (float, optional): The strength of the L2 regularization term. Defaults to 0.0001.
+            momentum (float, optional): The momentum for gradient descent update. Defaults to 0.9.
+            batch_size (Union[int, str], optional): The batch size. Defaults to "auto".
+            learning_rate (str, optional): Learning rate schedule for weight updates. Defaults to "constant".
+            learning_rate_init (float, optional): The initial value for the learning rate. Defaults to 0.001.
+            max_iter (int, optional): The number of max iterations. Defaults to 200.
+            tol (float, optional): The tolerance for optimization. Defaults to 1e-4.
+            verbose (int, optional): Whether to print progress messages. Defaults to 0.
+        """
+        super().__init__(
+            loss_function,
+            hidden_layer_sizes,
+            activation,
+            alpha,
+            momentum,
+            batch_size,
+            learning_rate,
+            learning_rate_init,
+            max_iter,
+            tol,
+            verbose,
+        )
+        self._valid_loss_functions = ["mse"]
+        self._valid_score_metrics = [
+            "r_squared",
+            "mse",
+            "mae",
+            "rmse",
+            "medae",
+            "mape",
+            "msle",
+            "max_error",
+        ]
+
+        # Validate the loss function
+        if self.loss_function not in self._valid_loss_functions:
+            raise ValueError(
+                f"The value for 'loss_function' must be one of {self._valid_loss_functions}."
+            )
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Uses the trained model to predict the values of a given set of features.
+
+        Args:
+            X (np.ndarray): The features.
+
+        Returns:
+            np.ndarray: The predicted values.
+        """
+        X = convert_array_numpy(X)
+        if X.shape[1] != self.n_features_in_:
+            raise ValueError(
+                f"Expected input features of size {self.n_features_in_}, but got {X.shape[1]}."
+            )
+
+        # Forward pass through the network
+        y_hat = self._forward(X)
+
+        # If the output is a 2D array with shape (n_samples, 1), flatten it to 1D array
+        if y_hat.shape[1] == 1:
+            y_hat = y_hat.flatten()
+
+        return y_hat
+
+    def score(
+        self, X: np.ndarray, y: np.ndarray, metric: str = "r_squared"
+    ) -> np.float64:
+        """
+        Calculates the score of the model on a given set for a determined metric.
+
+        Args:
+            X (np.ndarray): The features.
+            y (np.ndarray): The targets of the features.
+            metric (str, optional): Which metric to use. Defaults to "r_squared".
+
+        Returns:
+            np.float64: The score achieved by the model.
+        """
+        try:
+            assert metric in self._valid_score_metrics
+        except AssertionError as error:
+            raise ValueError(
+                f"Invalid value for 'metric'. Must be one of {self._valid_score_metrics}."
+            ) from error
+
+        y_hat = self.predict(X)
+
+        if metric == "r_squared":
+            return r_squared(y, y_hat)
+
+        if metric == "mse":
+            return mean_squared_error(y, y_hat)
+
+        if metric == "mae":
+            return mean_absolute_error(y, y_hat)
+
+        if metric == "rmse":
+            return root_mean_squared_error(y, y_hat)
+
+        if metric == "medae":
+            return median_absolute_error(y, y_hat)
+
+        if metric == "mape":
+            return mean_absolute_percentage_error(y, y_hat)
+
+        if metric == "msle":
+            return mean_squared_logarithmic_error(y, y_hat)
+
+        if metric == "max_error":
+            return max_error(y, y_hat)
+
+        raise ValueError(
+            f"Invalid value for 'metric'. Must be one of {self._valid_score_metrics}."
+        )

@@ -161,9 +161,9 @@ Implementations:
         - [x] [Decision Tree Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/decision_tree.py#L525)
         - [x] [Decision Tree Regressor](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/decision_tree.py#L640)
     - [x] [Perceptron](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/perceptron.py)
-    - [ ] MLP
-        - [x] [MLP Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/multilayer_perceptron.py)
-        - [ ] MLP Regressor
+    - [x] MLP
+        - [x] [MLP Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/multilayer_perceptron.py#L569)
+        - [x] [MLP Regressor](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/multilayer_perceptron.py#L710)
     - [x] [KMeans](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/kmeans.py)
     - [x] [PCA](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/pca.py)
 
