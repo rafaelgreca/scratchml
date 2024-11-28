@@ -148,7 +148,7 @@ Implementations:
     - [x] [Linear Regression](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/linear_regression.py)
     - [x] [Logistic Regression](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/logistic_regression.py)
     - [ ] SVM
-        - [ ] SVC
+        - [x] [SVC](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/svc.py)
         - [ ] SRV
     - [x] KNN
         - [x] [KNN Classifier](https://github.com/rafaelgreca/scratchml/blob/main/scratchml/models/knn.py#L236)
