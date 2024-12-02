@@ -1,6 +1,7 @@
 from abc import ABC
 import numpy as np
 from ..utils import convert_array_numpy
+from cvxopt import matrix, solvers
 from ..metrics import (
     mean_squared_error,
     root_mean_squared_error,
@@ -19,7 +20,14 @@ class BaseSVR(ABC):
     Base class for Support Vector Regression (SVR).
     """
 
-    def __init__(self, kernel="rbf", C=1.0, epsilon=0.1, degree=3, gamma="scale"):
+    def __init__(
+        self,
+        kernel: str = "rbf",
+        C: float = 1.0,
+        epsilon: float = 0.1,
+        degree: int = 3,
+        gamma: str = "scale",
+    ) -> None:
         """
         Initializes SVR with default parameters.
 
@@ -41,7 +49,32 @@ class BaseSVR(ABC):
         self.b_ = None
         self.K_ = None
 
-    def _kernel_function(self, X1, X2):
+        self._validate_parameters()
+
+    def _validate_parameters(self) -> None:
+        """
+        Validates the parameters passed during initialization.
+        """
+        if not isinstance(self.C, (int, float)) or self.C <= 0:
+            raise ValueError("C must be a positive number.")
+
+        if self.kernel not in ["linear", "poly", "rbf"]:
+            raise ValueError("Kernel must be one of 'linear', 'poly', or 'rbf'.")
+
+        if not isinstance(self.epsilon, (int, float)) or self.epsilon < 0:
+            raise ValueError("Epsilon must be a non-negative number.")
+
+        if not isinstance(self.degree, int) or self.degree <= 0:
+            raise ValueError("Degree must be a positive integer.")
+
+        if not isinstance(self.gamma, (str, float)) or (
+            isinstance(self.gamma, str) and self.gamma not in ["scale", "auto"]
+        ):
+            raise ValueError("Gamma must be 'scale', 'auto', or a positive float.")
+        if isinstance(self.gamma, float) and self.gamma <= 0:
+            raise ValueError("Gamma must be a positive float.")
+
+    def _kernel_function(self, X1: np.ndarray, X2: np.ndarray) -> np.ndarray:
         """
         Computes the kernel between two sets of data points.
 
@@ -61,7 +94,7 @@ class BaseSVR(ABC):
         else:
             raise ValueError("Unknown kernel specified")
 
-    def fit(self, X, y):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Fits the SVR model to the training data.
 
@@ -76,9 +109,9 @@ class BaseSVR(ABC):
         self.y_ = y
 
         # Set gamma if necessary
-        if self.gamma == 'scale':
+        if self.gamma == "scale":
             self.gamma_ = 1 / (X.shape[1] * X.var())
-        elif self.gamma == 'auto':
+        elif self.gamma == "auto":
             self.gamma_ = 1 / X.shape[1]
         else:
             self.gamma_ = float(self.gamma)
@@ -108,8 +141,6 @@ class BaseSVR(ABC):
         A = np.hstack((np.ones(n_samples), -np.ones(n_samples))).reshape(1, -1)
         b = np.array([0.0])
 
-        # Convert to cvxopt matrices
-        from cvxopt import matrix, solvers
         P = matrix(P)
         q = matrix(q)
         G = matrix(G_std)
@@ -118,11 +149,11 @@ class BaseSVR(ABC):
         b = matrix(b)
 
         # Solve QP problem
-        solvers.options['show_progress'] = False  # Suppress output
+        solvers.options["show_progress"] = False  # Suppress output
         solution = solvers.qp(P, q, G, h, A, b)
 
         # Extract alphas
-        z = np.array(solution['x']).flatten()
+        z = np.array(solution["x"]).flatten()
         alpha = z[:n_samples]
         alpha_star = z[n_samples:]
         self.alphas_ = alpha - alpha_star
@@ -147,7 +178,7 @@ class BaseSVR(ABC):
         else:
             self.b_ = 0.0  # Default to zero if no support vectors found
 
-    def predict(self, X):
+    def predict(self, X: np.ndarray) -> np.ndarray:
         """
         Predicts target values for the given feature matrix.
 
@@ -158,14 +189,18 @@ class BaseSVR(ABC):
             np.ndarray: Predicted target values.
         """
         if self.X_ is None or self.alphas_ is None:
-            raise ValueError("The model has not been trained yet. Please call the fit method first.")
+            raise ValueError(
+                "The model has not been trained yet. Please call the fit method first."
+            )
 
         X = convert_array_numpy(X)
         K_pred = self._kernel_function(self.X_, X)
         predictions = (self.alphas_ @ K_pred) + self.b_
         return predictions
 
-    def score(self, X, y, metric="r_squared"):
+    def score(
+        self, X: np.ndarray, y: np.ndarray, metric: str = "r_squared"
+    ) -> np.float64:
         """
         Evaluates the model on a test dataset.
 
@@ -197,4 +232,3 @@ class BaseSVR(ABC):
             return max_error(y, y_hat)
         else:
             raise ValueError(f"Unknown metric: {metric}")
-

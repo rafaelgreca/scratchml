@@ -1,6 +1,7 @@
 import numpy as np
 
-def linear_kernel(X1, X2):
+
+def linear_kernel(X1: np.ndarray, X2: np.ndarray) -> np.ndarray:
     """
     Computes the linear kernel between two sets of data points.
 
@@ -13,7 +14,10 @@ def linear_kernel(X1, X2):
     """
     return np.dot(X1, X2.T)
 
-def polynomial_kernel(X1, X2, degree=3, coef0=1):
+
+def polynomial_kernel(
+    X1: np.ndarray, X2: np.ndarray, degree: int = 3, coef0: float = 1
+) -> np.ndarray:
     """
     Computes the polynomial kernel between two sets of data points.
 
@@ -28,7 +32,8 @@ def polynomial_kernel(X1, X2, degree=3, coef0=1):
     """
     return (np.dot(X1, X2.T) + coef0) ** degree
 
-def rbf_kernel(X1, X2, gamma="scale"):
+
+def rbf_kernel(X1: np.ndarray, X2: np.ndarray, gamma: str = "scale") -> np.ndarray:
     """
     Computes the Radial Basis Function (RBF) kernel between two sets of data points.
 
@@ -45,6 +50,6 @@ def rbf_kernel(X1, X2, gamma="scale"):
     elif gamma == "auto":
         gamma = 1.0
 
-    X1_norm = np.sum(X1 ** 2, axis=1).reshape(-1, 1)
-    X2_norm = np.sum(X2 ** 2, axis=1).reshape(1, -1)
+    X1_norm = np.sum(X1**2, axis=1).reshape(-1, 1)
+    X2_norm = np.sum(X2**2, axis=1).reshape(1, -1)
     return np.exp(-gamma * (X1_norm + X2_norm - 2 * np.dot(X1, X2.T)))

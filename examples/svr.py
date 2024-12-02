@@ -1,23 +1,33 @@
-import numpy as np
-from scratchml.models.svr  import BaseSVR
+from scratchml.models.svr import BaseSVR
+from scratchml.utils import train_test_split
+from sklearn.datasets import make_regression
 
-X_train = np.array([[1], [2], [3], [4], [5]])
-y_train = np.array([2.1, 2.9, 3.7, 4.1, 5.2])
 
-# Test dataset
-X_test = np.array([[1.5], [2.5], [3.5], [4.5]])
+def example_svr() -> None:
+    """
+    Practical example of how to use the Support Vector Regression (SVR) model.
+    """
+    # generating a dataset for the regression task
+    X, y = make_regression(
+        n_samples=2000, n_features=5, n_targets=1, shuffle=True, noise=30
+    )
 
-# Initialize and fit the SVR model
-svr_model = BaseSVR(kernel="linear", C=1.0, epsilon=0.1)
-svr_model.fit(X_train, y_train)
+    # splitting the data into training and test
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.15, shuffle=True, stratify=False
+    )
 
-# Make predictions on test data
-predictions = svr_model.predict(X_test)
+    # creating a linear regression model
+    svr = BaseSVR(kernel="linear", C=1.0, epsilon=0.1)
 
-# Output the predictions
-print("Test data:", X_test.flatten())
-print("Predicted values:", predictions)
+    # fitting the model
+    svr.fit(X=X_train, y=y_train)
 
-# Evaluate the model (R-squared score)
-r2_score = svr_model.score(X_test, np.array([2.0, 3.0, 4.0, 5.0]), metric="r_squared")
-print("R-squared score:", r2_score)
+    # assessing the model's performance
+    score = svr.score(X=X_test, y=y_test, metric="r_squared")
+
+    print(f"The model achieved a R² score of {score}.\n")
+
+
+if __name__ == "__main__":
+    example_svr()

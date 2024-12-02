@@ -1,4 +1,3 @@
-import math
 import unittest
 import numpy as np
 from numpy.testing import assert_allclose, assert_array_equal
@@ -17,7 +16,7 @@ class Test_SVR(unittest.TestCase):
         """
         Test the custom SVR with linear kernel against Scikit-Learn's SVR.
         """
-        X, y = generate_regression_dataset(n_samples=200, n_features=5)
+        X, y = generate_regression_dataset(n_samples=1000, n_features=3)
 
         custom_svr = BaseSVR(kernel="linear", C=1.0, epsilon=0.1)
         sklearn_svr = SkSVR(kernel="linear", C=1.0, epsilon=0.1)
@@ -34,7 +33,6 @@ class Test_SVR(unittest.TestCase):
         atol = 1e-1
         assert_allclose(custom_pred, sklearn_pred, atol=atol, rtol=1e-2)
         assert abs(custom_score - sklearn_score) / abs(sklearn_score) < 0.1
-
 
     def test_untrained_model_prediction_error(self):
         """
@@ -109,6 +107,28 @@ class Test_SVR(unittest.TestCase):
                 f"Score for metric {metric} should be a float.",
             )
             self.assertFalse(np.isnan(score), f"Score for metric {metric} is NaN.")
+
+    def test_parameter_validation(self):
+        """
+        Test parameter validation for the custom SVR implementation.
+        """
+        with self.assertRaises(ValueError):
+            BaseSVR(kernel="invalid_kernel")
+
+        with self.assertRaises(ValueError):
+            BaseSVR(C=-1.0)
+
+        with self.assertRaises(ValueError):
+            BaseSVR(epsilon=-0.1)
+
+        with self.assertRaises(ValueError):
+            BaseSVR(degree=-1)
+
+        with self.assertRaises(ValueError):
+            BaseSVR(gamma="invalid_gamma")
+
+        with self.assertRaises(ValueError):
+            BaseSVR(gamma=-1.0)
 
 
 if __name__ == "__main__":
