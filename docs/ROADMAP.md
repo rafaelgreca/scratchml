@@ -88,7 +88,7 @@
 ## Known Issues
 
 - [x] Binary Labeling Issue in Perceptron Model
-- [ ] CI Unit test workflow not working (Numpy version error)
+- [x] CI Unit test workflow not working (Numpy version error)
 - [ ] MLP not working properly when dealing with a multiclass classification problem (I think it's a vanishing gradient problem)
 - [ ] Sometimes the Logistic Regression model gets stuck (I think it's a vanishing gradient problem)
 - [ ] Recursion error when max depth is None in the Decision Tree model
