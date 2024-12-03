@@ -80,6 +80,12 @@ class Perceptron:
         y = convert_array_numpy(y).reshape(-1, 1)
 
         if len(self.classes_) == 2:
+            if -1 in self.classes_:
+                print("WARNING: Changing the -1 class label to 0.\n")
+
+                # Map the unique classes to 0 and 1
+                y = np.where(y == self.classes_[0], 0, 1)
+
             self.intercept_ = np.zeros((1,), dtype=np.float64)
             self.coef_ = np.zeros((X.shape[1], 1), dtype=np.float64)
             self.coef_, self.intercept_ = self._fitting_model(

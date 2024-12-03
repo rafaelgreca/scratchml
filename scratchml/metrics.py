@@ -472,7 +472,7 @@ def false_positive_rate(y: np.ndarray, y_hat: np.ndarray) -> np.float32:
 
 
 def roc_auc_score(
-    y: np.ndarray, y_hat: np.ndarray, average: str = "micro"
+    y: np.ndarray, y_hat: np.ndarray, average: str = "binary"
 ) -> np.float32:
     """
     Calculates the False Positive Rate (FPR).
@@ -486,7 +486,7 @@ def roc_auc_score(
     Returns:
         np.float32: the value of the FPR.
     """
-    _valid_averages = ["micro", "macro", "weighted"]
+    _valid_averages = ["micro", "macro", "weighted", "binary"]
 
     # validating the average value
     try:

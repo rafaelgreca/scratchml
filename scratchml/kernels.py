@@ -45,11 +45,11 @@ def rbf_kernel(X1: np.ndarray, X2: np.ndarray, gamma: str = "scale") -> np.ndarr
     Returns:
         np.ndarray: RBF kernel matrix.
     """
+    _gamma = 1.0
+
     if gamma == "scale":
-        gamma = 1.0 / X1.shape[1]
-    elif gamma == "auto":
-        gamma = 1.0
+        _gamma = 1.0 / X1.shape[1]
 
     X1_norm = np.sum(X1**2, axis=1).reshape(-1, 1)
     X2_norm = np.sum(X2**2, axis=1).reshape(1, -1)
-    return np.exp(-gamma * (X1_norm + X2_norm - 2 * np.dot(X1, X2.T)))
+    return np.exp((-1 * _gamma) * (X1_norm + X2_norm - 2 * np.dot(X1, X2.T)))

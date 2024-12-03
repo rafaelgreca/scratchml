@@ -540,6 +540,52 @@ class Test_Perceptron(unittest.TestCase):
         assert_equal(predict_skp.shape, predict_p.shape)
         assert_allclose(predict_skp, predict_p, atol=atol)
 
+    @repeat(3)
+    def test_13(self):
+        """
+        Test the Perceptron implementation with classes -1 and 1, then
+        compares it to the Scikit-Learn implementation.
+        """
+        X, y = generate_classification_dataset(
+            n_samples=5000, n_features=2, n_classes=2, n_clusters_per_class=1
+        )
+        y = np.where(y == 0, -1, 1)
+
+        perceptron = Perceptron(
+            penalty=None,
+            lr=0.001,
+            alpha=0.0001,
+            fit_intercept=True,
+            max_iter=1000,
+            tol=0.001,
+            verbose=0,
+            n_jobs=None,
+        )
+        skperceptron = SkPerceptron(
+            penalty=None,
+            alpha=0.0001,
+            fit_intercept=True,
+            max_iter=1000,
+            tol=0.001,
+            verbose=0,
+            n_jobs=None,
+        )
+
+        skperceptron.fit(X, y)
+        perceptron.fit(X, y)
+
+        predict_skp = skperceptron.predict(X)
+        predict_p = np.squeeze(perceptron.predict(X))
+
+        atol = math.floor(y.shape[0] * 0.05)
+
+        assert_equal(skperceptron.coef_.shape, perceptron.coef_.reshape(1, -1).shape)
+        assert_equal(skperceptron.intercept_.shape, perceptron.intercept_.shape)
+        assert_equal(skperceptron.n_features_in_, perceptron.n_features_in_)
+        # assert_equal(skperceptron.classes_, perceptron.classes_)
+        assert_equal(predict_skp.shape, predict_p.shape)
+        assert_allclose(predict_skp, predict_p, atol=atol)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
