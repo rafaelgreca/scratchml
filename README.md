@@ -128,7 +128,9 @@ Algorithms:
 - Perceptron (added in version 4.0.0)
 - PCA (added in version 8.0.0)
 - Random Forest Classifier and Random Forest Regressor (added in version 7.0.0)
-- Support Vector Classifier and Support Vector Regressor (added in version 10.0.0)
+- Support Vector Classifier** and Support Vector Regressor (added in version 10.0.0)
+
+** only available for binary classification at the moment
 
 Data split functions:
 
@@ -148,6 +150,12 @@ Encoders:
 
 - Label Encoding (added in version 1.0.0)
 - One-hot Encoding (added in version 1.0.0)
+
+Kernels:
+
+- Linear (added in version 10.0.0)
+- Polynomial (added in version 10.0.0)
+- RBF (added in version 10.0.0)
 
 Loss functions:
 

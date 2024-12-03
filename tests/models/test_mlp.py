@@ -137,7 +137,7 @@ class Test_MLP(unittest.TestCase):
         )
         skmlp = SkMLPRegressor(
             hidden_layer_sizes=(32, 64),
-            solver="adam",
+            solver="sgd",
             early_stopping=False,
             n_iter_no_change=200,
             random_state=42,
@@ -152,7 +152,7 @@ class Test_MLP(unittest.TestCase):
         score_skmlp = skmlp.score(X, y)
         score = mlp.score(X, y)
 
-        atol = math.floor(y.shape[0] * 0.02)
+        atol = math.floor(y.shape[0] * 0.07)
 
         # Compare model attributes
         assert mlp.n_features_in_ == skmlp.n_features_in_

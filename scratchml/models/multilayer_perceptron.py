@@ -731,13 +731,17 @@ class MLPRegressor(BaseMLP):
 
         Args:
             loss_function (str, optional): The loss function that will be used. Defaults to "mse".
-            hidden_layer_sizes (Tuple[int, ...], optional): The sizes of the hidden layers. Defaults to (100,).
-            activation (str, optional): The activation function that will be used. Defaults to "relu".
+            hidden_layer_sizes (Tuple[int, ...], optional): The sizes of the hidden layers.
+                Defaults to (100,).
+            activation (str, optional): The activation function that will be used.
+                Defaults to "relu".
             alpha (float, optional): The strength of the L2 regularization term. Defaults to 0.0001.
             momentum (float, optional): The momentum for gradient descent update. Defaults to 0.9.
             batch_size (Union[int, str], optional): The batch size. Defaults to "auto".
-            learning_rate (str, optional): Learning rate schedule for weight updates. Defaults to "constant".
-            learning_rate_init (float, optional): The initial value for the learning rate. Defaults to 0.001.
+            learning_rate (str, optional): Learning rate schedule for weight updates.
+                Defaults to "constant".
+            learning_rate_init (float, optional): The initial value for the learning rate.
+                Defaults to 0.001.
             max_iter (int, optional): The number of max iterations. Defaults to 200.
             tol (float, optional): The tolerance for optimization. Defaults to 1e-4.
             verbose (int, optional): Whether to print progress messages. Defaults to 0.
@@ -844,7 +848,3 @@ class MLPRegressor(BaseMLP):
 
         if metric == "max_error":
             return max_error(y, y_hat)
-
-        raise ValueError(
-            f"Invalid value for 'metric'. Must be one of {self._valid_score_metrics}."
-        )
