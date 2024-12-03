@@ -22,3 +22,7 @@ everyone who has contributed to the project in any way.
 * __[Sebastian Ondrus](https://github.com/SebastianOndrus)__
 
     @SebastianOndrus has contributed to the project by implementing a Regressor for the Multilayer Perceptron model, including test and example script.
+
+* __[Matus Pohorenec](https://github.com/MatusPohorenec)__
+
+  @MatusPohorenec has contributed to the project by introducing support for SVR Classification in `svr.py`, including tests and a usage example.
