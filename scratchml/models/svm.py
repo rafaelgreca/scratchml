@@ -632,8 +632,8 @@ class SVR(SVMBase):
         K = self.K_
 
         # Create P matrix
-        P_top = np.hstack((K, -K))
-        P_bottom = np.hstack((-K, K))
+        P_top = np.hstack((K, -1 * K))
+        P_bottom = np.hstack((-1 * K, K))
         P = np.vstack((P_top, P_bottom))
 
         # Ensure P is positive semi-definite
