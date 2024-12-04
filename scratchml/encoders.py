@@ -207,7 +207,7 @@ class OneHotEncoder(BaseEncoder):
         # if the min frequency parameter is specified, then detect
         # the infrequent categories within the features. moreover, we also
         # need to "delete" the infrequent categories and add a "infrequent" category
-        if self.min_frequency_ is not None or self.max_categories_ is not None:
+        if not self.min_frequency_ is None or not self.max_categories_ is None:
             _ordered_categories = self._check_infrequents(X, _ordered_categories)
 
         self.categories_map_ = {}
@@ -221,7 +221,7 @@ class OneHotEncoder(BaseEncoder):
             _features_map = {}
 
             for j, c in enumerate(_ordered_categories[i]):
-                if self.infrequents is not None or not c in self.infrequents[i]:
+                if self.infrequents is None or not c in self.infrequents[i]:
                     _features_map[c] = j
                 else:
                     if c in self.infrequents[i]:
@@ -253,7 +253,7 @@ class OneHotEncoder(BaseEncoder):
         self.infrequents = {}
 
         # validating the min frequency value
-        if self.min_frequency_ is not None:
+        if not self.min_frequency_ is None:
             if isinstance(self.min_frequency_, int):
                 try:
                     assert self.min_frequency_ > 0
@@ -293,7 +293,7 @@ class OneHotEncoder(BaseEncoder):
                 else:
                     self.infrequents[feature] = []
 
-            if self.max_categories_ is not None:
+            if self.max_categories_ is None:
                 for c, _ in enumerate(categories):
                     if len(self.infrequents[c]) > 0:
                         _temp = list(categories[c])
@@ -304,7 +304,7 @@ class OneHotEncoder(BaseEncoder):
                         ]
                         categories[c] = np.delete(categories[c], _indexes)
 
-        if self.max_categories_ is not None:
+        if not self.max_categories_ is None:
             # validating the max categories value
             try:
                 assert self.max_categories_ > 0
@@ -486,7 +486,7 @@ class OneHotEncoder(BaseEncoder):
             np.ndarray: the new features array.
         """
         # validating the drop parameter value
-        if self.drop_ is not None:
+        if not self.drop_ is None:
             if isinstance(self.drop_, str):
                 try:
                     assert self.drop_ in self._valid_drop
@@ -621,7 +621,7 @@ class OneHotEncoder(BaseEncoder):
             # feature and mapping it back to the original value
             hot_encoded = np.argwhere(X[i, :] == 1)
             hot_encoded = hot_encoded.reshape(-1)
-            converted = []
+            converted = [None] * len(inreverse_mapping.items())
 
             for k, v in inreverse_mapping.items():
                 indexes = list(v.keys())
