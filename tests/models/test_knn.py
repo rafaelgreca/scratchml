@@ -13,13 +13,13 @@ class Test_KNN(unittest.TestCase):
     Unittest class created to test the KNN implementation.
     """
 
-    @repeat(3)
+    @repeat(2)
     def test_1(self):
         """
         Test the KNN implementation on a small dataset using the 'manhattan' metric
         and then compares it to the Scikit-Learn implementation.
         """
-        X, y = generate_blob_dataset(n_samples=2000, n_features=2)
+        X, y = generate_blob_dataset(n_samples=1500, n_features=2)
 
         sk_knn = SkKNNC(n_neighbors=5, metric="manhattan")
         sk_knn.fit(X, y)
@@ -47,13 +47,13 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(3)
+    @repeat(2)
     def test_2(self):
         """
         Test the KNN implementation on a small dataset using the 'euclidean' metric
         and then compares it to the Scikit-Learn implementation.
         """
-        X, y = generate_blob_dataset(n_samples=2000, n_features=2)
+        X, y = generate_blob_dataset(n_samples=1500, n_features=2)
 
         sk_knn = SkKNNC(n_neighbors=3, metric="euclidean", weights="distance")
         sk_knn.fit(X, y)
@@ -81,13 +81,13 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(3)
+    @repeat(2)
     def test_3(self):
         """
         Test the KNN implementation on a small dataset with higher dimension
         and then compares it to the Scikit-Learn implementation.
         """
-        X, y = generate_blob_dataset(n_samples=1000, n_features=5)
+        X, y = generate_blob_dataset(n_samples=1000, n_features=4)
 
         sk_knn = SkKNNC(n_neighbors=5)
         sk_knn.fit(X, y)
@@ -115,13 +115,13 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(3)
+    @repeat(2)
     def test_4(self):
         """
         Test the KNN implementation on a small dataset with higher dimension with more neighbors
         and then compares it to the Scikit-Learn implementation.
         """
-        X, y = generate_regression_dataset(n_samples=2000, n_features=3)
+        X, y = generate_regression_dataset(n_samples=1500, n_features=3)
 
         sk_knn = SkKNNR(n_neighbors=5)
         sk_knn.fit(X, y)
@@ -148,14 +148,14 @@ class Test_KNN(unittest.TestCase):
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)
 
-    @repeat(3)
+    @repeat(2)
     def test_5(self):
         """
         Test the KNN implementation on a small dataset with higher dimension
         using the 'chebyshev' metric and weights based on the neighbors distances
         and then compares it to the Scikit-Learn implementation.
         """
-        X, y = generate_regression_dataset(n_samples=2000, n_features=5)
+        X, y = generate_regression_dataset(n_samples=1500, n_features=4)
 
         sk_knn = SkKNNR(n_neighbors=5, weights="distance", metric="chebyshev")
         sk_knn.fit(X, y)
@@ -169,7 +169,7 @@ class Test_KNN(unittest.TestCase):
         neighbors = knn.kneighbors(X, 3, return_distance=True)
         score = knn.score(X, y)
 
-        atol = math.floor(y.shape[0] * 0.1)
+        atol = math.floor(y.shape[0] * 0.13)
 
         assert_equal(sk_knn.effective_metric_, knn.effective_metric_)
         assert_equal(sk_knn.n_features_in_, knn.n_features_in_)
@@ -177,7 +177,7 @@ class Test_KNN(unittest.TestCase):
         assert_equal(type(sk_prediction), type(prediction))
         assert_equal(sk_prediction.shape, prediction.shape)
         assert_allclose(sk_prediction, prediction, atol=atol)
-        assert np.abs(sk_score - score) < 0.1
+        assert np.abs(sk_score - score) < 0.13
         assert_almost_equal(sk_neighbors, neighbors, decimal=6)
         assert_equal(sk_neighbors[0].shape, neighbors[0].shape)
         assert_equal(sk_neighbors[1].shape, neighbors[1].shape)

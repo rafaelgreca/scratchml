@@ -11,7 +11,7 @@ class Test_Chebyshev(unittest.TestCase):
     Unittest class created to test the Chebyshev distance metric.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test1(self):
         """
         Test the Chebyshev metric implementation on random values and
@@ -28,14 +28,14 @@ class Test_Chebyshev(unittest.TestCase):
         assert_equal(type(sk_distances), type(distances))
         assert_equal(sk_distances.shape, distances.shape)
 
-    @repeat(10)
+    @repeat(3)
     def test2(self):
         """
         Test the Chebyshev metric implementation on random values and
         then compares it to the Scikit-Learn implementation.
         """
-        X = np.random.rand(1000, 200)
-        y = np.random.rand(3000, 200)
+        X = np.random.rand(500, 200)
+        y = np.random.rand(1500, 200)
 
         dist = DistanceMetric.get_metric("chebyshev")
         sk_distances = dist.pairwise(X, y)

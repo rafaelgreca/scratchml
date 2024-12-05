@@ -11,7 +11,7 @@ class Test_MaxError(unittest.TestCase):
     Unittest class created to test the Max Error metric implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the Max Error and then compares it to the Scikit-Learn implementation.

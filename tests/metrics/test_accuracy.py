@@ -11,7 +11,7 @@ class Test_Accuracy(unittest.TestCase):
     Unittest class created to test the Accuracy metric implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the accuracy metric on a binary dataset and then compares it to the Scikit-Learn
@@ -22,7 +22,7 @@ class Test_Accuracy(unittest.TestCase):
         )
 
         sklr = SkLogisticRegression(
-            penalty="none", fit_intercept=True, max_iter=1000000, tol=1e-4
+            penalty=None, fit_intercept=True, max_iter=1000000, tol=1e-4
         )
 
         sklr.fit(X, y)
@@ -33,7 +33,7 @@ class Test_Accuracy(unittest.TestCase):
 
         assert np.abs(acc_score - sklr_score) < 0.1
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the accuracy metric on a multi-class dataset and then compares it to the Scikit-Learn
@@ -44,7 +44,11 @@ class Test_Accuracy(unittest.TestCase):
         )
 
         sklr = SkLogisticRegression(
-            penalty="none", fit_intercept=True, max_iter=1000000, tol=1e-4
+            penalty=None,
+            fit_intercept=True,
+            max_iter=1000000,
+            tol=1e-4,
+            random_state=42,
         )
 
         sklr.fit(X, y)

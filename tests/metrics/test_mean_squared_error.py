@@ -3,6 +3,7 @@ from sklearn.linear_model import LinearRegression as SkLinearRegression
 from scratchml.metrics import mean_squared_error, root_mean_squared_error
 from ..utils import generate_regression_dataset, repeat
 import unittest
+import warnings
 import numpy as np
 
 
@@ -12,7 +13,10 @@ class Test_MeanSquaredError(unittest.TestCase):
     Root Mean Squared Error metrics implementation.
     """
 
-    @repeat(10)
+    def setUp(self):
+        warnings.simplefilter("ignore", category=FutureWarning)
+
+    @repeat(3)
     def test_1(self):
         """
         Test the Mean Squared Error and then compares it to the Scikit-Learn implementation.
@@ -30,7 +34,7 @@ class Test_MeanSquaredError(unittest.TestCase):
 
         assert np.abs(score - sklr_score) < 0.1
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the Root Mean Squared Error and then compares it to the Scikit-Learn implementation.

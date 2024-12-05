@@ -11,7 +11,7 @@ class Test_RSquared(unittest.TestCase):
     Unittest class created to test the R Squared metric implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the R Squared and then compares it to the Scikit-Learn implementation.

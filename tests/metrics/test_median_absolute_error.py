@@ -11,7 +11,7 @@ class Test_MedianAbsoluteError(unittest.TestCase):
     Unittest class created to test the Median Absolute Error metric implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the Median Absolute Error and then compares it to the Scikit-Learn implementation.

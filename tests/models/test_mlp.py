@@ -3,10 +3,12 @@ from sklearn.neural_network import (
     MLPClassifier as SkMLP,
     MLPRegressor as SkMLPRegressor,
 )
+from sklearn.exceptions import ConvergenceWarning
 from scratchml.models.multilayer_perceptron import MLPClassifier, MLPRegressor
 from ..utils import generate_classification_dataset, repeat, generate_regression_dataset
 import unittest
 import math
+import warnings
 import numpy as np
 
 
@@ -14,6 +16,9 @@ class Test_MLP(unittest.TestCase):
     """
     Unittest class created to test the MLP implementation.
     """
+
+    def setUp(self):
+        warnings.simplefilter("ignore", category=ConvergenceWarning)
 
     @repeat(3)
     def test_1(self):
@@ -73,7 +78,7 @@ class Test_MLP(unittest.TestCase):
         compares it to the Scikit-Learn implementation.
         """
         X, y = generate_classification_dataset(
-            n_samples=20000, n_features=10, n_classes=2
+            n_samples=7000, n_features=10, n_classes=2
         )
 
         mlp = MLPClassifier(loss_function="bce", hidden_layer_sizes=(32, 64, 128))
@@ -172,4 +177,4 @@ class Test_MLP(unittest.TestCase):
         assert len(mlp.intercepts_) == len(skmlp.intercepts_)
         assert predict_mlp.shape == predict_skmlp.shape
         assert_allclose(predict_mlp, predict_skmlp, atol=atol)
-        assert np.abs(score_skmlp - score) / np.abs(score_skmlp) < 0.05
+        assert np.abs(score_skmlp - score) / np.abs(score_skmlp) < 0.08

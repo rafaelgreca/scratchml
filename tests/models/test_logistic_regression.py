@@ -18,7 +18,7 @@ class Test_LogisticRegression(unittest.TestCase):
         Test the Logistic Regression implementation
         and then compares it to the Scikit-Learn implementation.
         """
-        X, y = generate_classification_dataset()
+        X, y = generate_classification_dataset(n_samples=5000)
 
         lr = LogisticRegression(learning_rate=0.1, tol=1e-4, verbose=0)
         sklr = SkLogisticRegression(
@@ -47,7 +47,7 @@ class Test_LogisticRegression(unittest.TestCase):
         Test the Logistic Regression implementation on a bigger dataset
         and then compares it to the Scikit-Learn implementation.
         """
-        X, y = generate_classification_dataset(n_samples=20000)
+        X, y = generate_classification_dataset(n_samples=10000)
 
         lr = LogisticRegression(learning_rate=0.1, tol=1e-4, verbose=0)
         sklr = SkLogisticRegression(

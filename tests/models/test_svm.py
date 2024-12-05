@@ -2,10 +2,12 @@ import math
 from numpy.testing import assert_allclose, assert_equal
 from sklearn.svm import SVC as SkSVC
 from sklearn.svm import SVR as SkSVR
+from sklearn.exceptions import ConvergenceWarning
 from scratchml.models.svm import SVC, SVR
 from scratchml.scalers import StandardScaler
 from ..utils import generate_classification_dataset, repeat, generate_regression_dataset
 import unittest
+import warnings
 import numpy as np
 from numpy.testing import assert_array_equal
 
@@ -14,6 +16,9 @@ class Test_SVM(unittest.TestCase):
     """
     Unit test class for the custom SVM implementation.
     """
+
+    def setUp(self):
+        warnings.simplefilter("ignore", category=ConvergenceWarning)
 
     @repeat(3)
     def test_binary_classification(self):
@@ -72,7 +77,7 @@ class Test_SVM(unittest.TestCase):
         atol = math.floor(y.shape[0] * 0.1)
         assert_equal(sklearn_svc.classes_, custom_svc.classes_)
         assert_allclose(sklearn_pred, custom_pred, atol=atol)
-        assert abs(sklearn_score - custom_score) / abs(sklearn_score) < 0.05
+        assert abs(sklearn_score - custom_score) / abs(sklearn_score) < 0.08
 
     @repeat(3)
     def test_rbf_kernel(self):

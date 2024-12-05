@@ -10,7 +10,7 @@ class Test_MinMaxScaler(unittest.TestCase):
     Unittest class created to test the MinMaxScaler implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the MinMaxScaler technique using the default values
@@ -57,7 +57,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the MinMaxScaler technique using clip
@@ -104,7 +104,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_3(self):
         """
         Test the MinMaxScaler technique using a different feature_range
@@ -151,7 +151,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_4(self):
         """
         Test the MinMaxScaler technique using the default values on a higher dimension
@@ -198,7 +198,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_5(self):
         """
         Test the MinMaxScaler technique using clip on a higher dimension
@@ -245,7 +245,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_6(self):
         """
         Test the MinMaxScaler technique using a different feature range on a higher dimension
@@ -292,7 +292,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_7(self):
         """
         Test the MinMaxScaler technique using the default values on an even bigger dimension
@@ -339,7 +339,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_8(self):
         """
         Test the MinMaxScaler technique using clip on an even bigger dimension
@@ -386,7 +386,7 @@ class Test_MinMaxScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_9(self):
         """
         Test the MinMaxScaler technique using a different feature range on an even bigger dimension

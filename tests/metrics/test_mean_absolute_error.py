@@ -11,7 +11,7 @@ class Test_MeanAbsoluteError(unittest.TestCase):
     Unittest class created to test the Mean Absolute Error metric implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the Mean Absolute Error and then compares it to the

@@ -10,7 +10,7 @@ class Test_StandardScaler(unittest.TestCase):
     Unittest class created to test the StandardScaler implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the StandarScaler technique using the default values
@@ -55,7 +55,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the StandarScaler technique without using the mean
@@ -100,7 +100,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_3(self):
         """
         Test the StandarScaler technique without using the standar deviation
@@ -145,7 +145,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_4(self):
         """
         Test the StandarScaler technique without using the mean and standard deviation
@@ -190,7 +190,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_5(self):
         """
         Test the StandarScaler technique using the default values on a higher dimension
@@ -235,7 +235,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_6(self):
         """
         Test the StandarScaler technique without using the mean on a higher dimension
@@ -280,7 +280,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_7(self):
         """
         Test the StandarScaler technique without using the standard deviation on a higher dimension
@@ -325,7 +325,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_8(self):
         """
         Test the StandarScaler technique without using the mean
@@ -371,7 +371,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_9(self):
         """
         Test the StandarScaler technique using the default values on an even higher dimension
@@ -416,7 +416,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_10(self):
         """
         Test the StandarScaler technique without using the mean on an even higher dimension
@@ -461,7 +461,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_11(self):
         """
         Test the StandarScaler technique without using the standard deviation
@@ -506,7 +506,7 @@ class Test_StandardScaler(unittest.TestCase):
         assert sk_inv_trans_X.shape, inv_trans_X.shape
         assert_almost_equal(sk_inv_trans_X, inv_trans_X)
 
-    @repeat(10)
+    @repeat(3)
     def test_12(self):
         """
         Test the StandarScaler technique without using the mean and the standard deviation

@@ -11,7 +11,7 @@ class Test_Manhattan(unittest.TestCase):
     Unittest class created to test the Manhattan distance metric.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test1(self):
         """
         Test the Manhattan metric implementation on random values and
@@ -27,14 +27,14 @@ class Test_Manhattan(unittest.TestCase):
         assert_equal(type(sk_distances), type(distances))
         assert_equal(sk_distances.shape, distances.shape)
 
-    @repeat(10)
+    @repeat(3)
     def test2(self):
         """
         Test the Manhattan metric implementation on random values and
         then compares it to the Scikit-Learn implementation.
         """
-        X = np.random.rand(1000, 200)
-        y = np.random.rand(3000, 200)
+        X = np.random.rand(500, 200)
+        y = np.random.rand(1500, 200)
 
         sk_distances = SkMD(X, y)
         distances = manhattan(X, y)

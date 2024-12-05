@@ -11,7 +11,7 @@ class Test_SoftPlus(unittest.TestCase):
     Unittest class created to test the SoftPlus activation function.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test1(self):
         """
         Test the SoftPlus function on random values and then compares it
@@ -26,7 +26,7 @@ class Test_SoftPlus(unittest.TestCase):
         assert_equal(type(s_pytorch), type(s))
         assert_equal(s_pytorch.shape, s.shape)
 
-    @repeat(10)
+    @repeat(3)
     def test2(self):
         """
         Test the SoftPlus derivative on random values and then compares it

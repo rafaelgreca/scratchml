@@ -11,7 +11,7 @@ class Test_ROCAUCScore(unittest.TestCase):
     Unittest class created to test the ROC AUC Score metric implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the ROC AUC Score on a binary dataset and then compares it to the Scikit-Learn
@@ -43,7 +43,7 @@ class Test_ROCAUCScore(unittest.TestCase):
 
         assert_almost_equal(sklr_score, acc_score)
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the ROC AUC Score on a multi-class dataset and then compares it

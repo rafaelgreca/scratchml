@@ -16,7 +16,7 @@
     <a alt="Downloads">
         <img src="https://img.shields.io/github/downloads-pre/rafaelgreca/scratchml/latest/total?color=greeb&style=for-the-badge">
     <a alt="Version">
-        <img src="https://img.shields.io/badge/version-10.1.0-orange.svg?color=greeb&style=for-the-badge" /></a>
+        <img src="https://img.shields.io/badge/version-10.1.1-orange.svg?color=greeb&style=for-the-badge" /></a>
     <a href="https://github.com/rafaelgreca/scratchml/blob/main/LICENSE" alt="License">
         <img src="https://img.shields.io/badge/license-MIT-blue?color=greeb&style=for-the-badge" /></a>
 

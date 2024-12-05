@@ -2,12 +2,16 @@ from numpy.testing import assert_equal
 from sklearn.preprocessing import OneHotEncoder as SkOneHotEncoder
 from scratchml.encoders import OneHotEncoder
 import unittest
+import warnings
 
 
 class Test_OneHotEncoder(unittest.TestCase):
     """
     Unittest class created to test the One Hot Encoder technique.
     """
+
+    def setUp(self):
+        warnings.simplefilter("ignore", category=UserWarning)
 
     def test_1(self):
         """

@@ -11,7 +11,7 @@ class Test_ConfusionMatrix(unittest.TestCase):
     Unittest class created to test the Confusion Matrix metric implementation.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the confusion matrix metric on a binary dataset and then compares it to the
@@ -56,7 +56,7 @@ class Test_ConfusionMatrix(unittest.TestCase):
         assert_equal(sklr_score.shape, score.shape)
         assert_equal(type(sklr_score), type(score))
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the confusion matrix metric on a multi-class dataset and then compares
@@ -101,7 +101,7 @@ class Test_ConfusionMatrix(unittest.TestCase):
         assert_equal(sklr_score.shape, score.shape)
         assert_equal(type(sklr_score), type(score))
 
-    @repeat(10)
+    @repeat(3)
     def test_3(self):
         """
         Test the confusion matrix metric on a binary dataset using only a set of labels

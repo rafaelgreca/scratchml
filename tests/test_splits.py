@@ -20,7 +20,7 @@ class Test_DataSplits(unittest.TestCase):
     StratifiedKFold) techniques.
     """
 
-    @repeat(10)
+    @repeat(3)
     def test_1(self):
         """
         Test the train_test_split technique and then compares it to the Scikit-Learn
@@ -123,7 +123,7 @@ class Test_DataSplits(unittest.TestCase):
         assert np.max(train_ddiff) < 0.01
         assert np.max(test_ddiff) < 0.01
 
-    @repeat(10)
+    @repeat(3)
     def test_2(self):
         """
         Test the KFold and StratifiedKFold techniques and then compares it

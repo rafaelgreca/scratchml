@@ -4,6 +4,7 @@ from scratchml.models.perceptron import Perceptron
 from ..utils import generate_classification_dataset, generate_blob_dataset, repeat
 import unittest
 import math
+import warnings
 import numpy as np
 
 
@@ -11,6 +12,9 @@ class Test_Perceptron(unittest.TestCase):
     """
     Unittest class created to test the Perceptron implementation.
     """
+
+    def setUp(self):
+        warnings.simplefilter("ignore", category=RuntimeWarning)
 
     @repeat(3)
     def test_1(self):
